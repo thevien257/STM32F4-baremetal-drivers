@@ -1,0 +1,4 @@
+#define __IO volatile
+// Mask
+#define GPIO_Pin_Mask 0x1 // 1-bit mask
+#define GPIO_2_bit_Mask 0x3 // 2-bit mask

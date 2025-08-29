@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Delete resource &apos;Protocols/Inc/stm32f4xx.h&apos;" deleteContents="false" description="Delete resource &apos;Protocols/Inc/stm32f4xx.h&apos;" element1="/Protocols/Inc/stm32f4xx.h" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1756453561452"/>
+</session>

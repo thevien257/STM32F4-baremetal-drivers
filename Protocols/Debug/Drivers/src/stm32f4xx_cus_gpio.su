@@ -1,0 +1,4 @@
+../Drivers/src/stm32f4xx_cus_gpio.c:3:6:GPIO_INIT	24	static
+../Drivers/src/stm32f4xx_cus_gpio.c:66:9:GPIO_INPUT	24	static
+../Drivers/src/stm32f4xx_cus_gpio.c:71:6:GPIO_TOGGLE	16	static
+../Drivers/src/stm32f4xx_cus_gpio.c:75:6:GPIO_OUTPUT	16	static

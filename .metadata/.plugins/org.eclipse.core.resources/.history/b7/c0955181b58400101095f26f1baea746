@@ -1,0 +1,6 @@
+#define __IO volatile
+// Mask
+#define Shift_2_pos 0x2
+#define Shift_4_pos 0x4
+#define GPIO_BIT_1_Mask 0x1
+#define GPIO_BIT_11_Mask 0x3

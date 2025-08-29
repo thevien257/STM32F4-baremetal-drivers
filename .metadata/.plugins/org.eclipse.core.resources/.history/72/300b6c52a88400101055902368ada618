@@ -1,0 +1,15 @@
+#include "stm32f4xx_cus_gpio.h"
+
+void GPIO_INIT(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
+	// Handle init input
+	if(gpiox->MODER == GPIO_)
+}
+
+uint8_t GPIO_INPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
+
+}
+
+void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val) {
+
+}
+

@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdint.h>
+
+#define __IO volatile
+
+#define GPIOA_EN() ()
+
+// Input/Output Result
+#define LOW 0
+#define HIGH 1
+
+// Mask
+#define Shift_2_pos 0x2
+#define Shift_4_pos 0x4
+#define Shift_16_pos 0x10
+#define Divide_ALT_Function 0x8
+#define GPIO_BIT_1_Mask 0x1
+#define GPIO_BIT_11_Mask 0x3
+
+#include <stm32f4xx_cus_clock.h>
+#include <stm32f4xx_cus_gpio.h>

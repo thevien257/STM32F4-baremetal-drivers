@@ -1,0 +1,11 @@
+#include <stdint.h>
+#include <main.h>
+
+void GPIO_USER_INIT();
+
+int main(void) {
+
+	/* Loop forever */
+	for (;;)
+		;
+}

@@ -1,0 +1,23 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+
+void GPIO_USER_INIT(void);
+
+int main(void) {
+	GPIO_USER_INIT();
+	while (1) {
+
+	}
+}
+
+void GPIO_USER_INIT(void) {
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_8;
+	gpio_handle.mode = GPIO_MODE_OUTPUT;
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	gpio_handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+}

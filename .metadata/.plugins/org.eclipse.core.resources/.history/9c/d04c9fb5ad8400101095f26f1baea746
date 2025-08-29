@@ -1,0 +1,30 @@
+#include "stm32f4xx_cus_gpio.h"
+
+void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
+	// Enable clock source
+
+	// Pull-up or Pull-down
+
+	// Handle input mode
+	if (gpioHandle->mode == GPIO_Input_Mode) {
+		gpioHandle->GPIOX->MODER &=
+				~(GPIO_BIT_11_Mask << gpioHandle->pin_number);
+		gpioHandle->GPIOX->PUPDR &= ~(gpioHandle->pull_up_pull_down
+				<< gpioHandle->pin_number);
+		gpioHandle->GPIOX->PUPDR |= (gpioHandle->pull_up_pull_down
+				<< gpioHandle->pin_number);
+	}
+// Handle output mode
+	else if (gpiox->MODER == GPIO_Output_Mode) {
+		gpiox->MODER = GPIO_Output_Mode;
+	}
+}
+
+uint8_t GPIO_INPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
+	return 0;
+}
+
+void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val) {
+
+}
+

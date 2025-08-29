@@ -1,0 +1,45 @@
+#include "stm32f4xx_cus_gpio.h"
+
+void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
+	// Enable clock source
+
+	gpioHandle->GPIOX->MODER &= ~(GPIO_BIT_11_Mask
+			<< (Shift_2_pos * gpioHandle->pin_number));
+	// Handle input mode
+	if (gpioHandle->mode == GPIO_Input_Mode) {
+		// Pull-up or Pull-down
+		gpioHandle->GPIOX->PUPDR &= ~(GPIO_BIT_11_Mask
+				<< (Shift_2_pos * gpioHandle->pin_number));
+
+		gpioHandle->GPIOX->PUPDR |= (gpioHandle->pull_up_pull_down
+				<< (Shift_2_pos * gpioHandle->pin_number));
+	}
+// Handle output mode
+	else if (gpiox->MODER == GPIO_Output_Mode) {
+
+		// Set output mode
+		gpioHandle->GPIOX->MODER |= (gpioHandle->mode
+				<< (Shift_2_pos * gpioHandle->pin_number));
+
+		// Set output type
+		gpioHandle->GPIOX->OTYPER &= ~(GPIO_BIT_11_Mask
+				<< (gpioHandle->pin_number));
+		gpioHandle->GPIOX->OTYPER |= (gpioHandle->output_type)
+				<< (gpioHandle->pin_number);
+
+		// Set output speed
+		gpioHandle->GPIOX->OSPEEDR &= ~(GPIO_BIT_11_Mask
+				<< (Shift_2_pos * gpioHandle->pin_number));
+		gpioHandle->GPIOX->OSPEEDR |= (gpioHandle->output_speed)
+				<< (Shift_2_pos * gpioHandle->pin_number);
+	}
+}
+
+uint8_t GPIO_INPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
+	return 0;
+}
+
+void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val) {
+
+}
+

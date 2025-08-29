@@ -1,0 +1,16 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+
+void GPIO_USER_INIT(void);
+
+int main(void) {
+
+	/* Loop forever */
+	for (;;)
+		;
+}
+
+void GPIO_USER_INIT(void) {
+}

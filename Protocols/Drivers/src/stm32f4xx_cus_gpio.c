@@ -36,7 +36,7 @@ void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
 //
 //	}
 // Handle output mode
-	if (gpioHandle->mode == GPIO_MODE_OUTPUT) {
+	if (gpioHandle->mode <= GPIO_MODE_OUTPUT) {
 		// Set output mode
 		gpioHandle->GPIOX->MODER |= (gpioHandle->mode
 				<< (Shift_2_pos * gpioHandle->pin_number));
@@ -60,6 +60,30 @@ void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
 		gpioHandle->GPIOX->AFR[ALT_low_high] |=
 				(gpioHandle->alternate_function_select << Shift_4_pos * ALT_bit);
 
+	} else {
+		// Interrupt mode
+		SYSCFG_EN();
+		// Configuration RISING/FALLING or RISING AND FALLING
+		if (gpioHandle->mode == GPIO_MODE_INTERRUPT_CHANGE) {
+			EXTI->RTSR &= ~(HIGH << gpioHandle->pin_number);
+			EXTI->FTSR &= ~(HIGH << gpioHandle->pin_number);
+			EXTI->RTSR |= (HIGH << gpioHandle->pin_number);
+			EXTI->FTSR |= (HIGH << gpioHandle->pin_number);
+		} else if (gpioHandle->mode == GPIO_MODE_INTERRUPT_FALLING) {
+			EXTI->FTSR &= ~(HIGH << gpioHandle->pin_number);
+			EXTI->FTSR |= (HIGH << gpioHandle->pin_number);
+		} else if (gpioHandle->mode == GPIO_MODE_INTERRUPT_RISING) {
+			EXTI->RTSR &= ~(HIGH << gpioHandle->pin_number);
+			EXTI->RTSR |= (HIGH << gpioHandle->pin_number);
+		}
+		// Map EXTI to GPIO --> USING SYSCFG
+		uint8_t cal_reg = (gpioHandle->pin_number / 4);
+		uint8_t cal_bit = (gpioHandle->pin_number % 4);
+		SYSCFG->EXTICR[cal_reg] |= (gpioHandle->exti_select << 4 * cal_bit);
+
+		// Config Mask bit (Enable EXTI line)
+		EXTI->IMR &= ~(HIGH << gpioHandle->pin_number);
+		EXTI->IMR |= (HIGH << gpioHandle->pin_number);
 	}
 }
 
@@ -76,7 +100,49 @@ void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val) {
 	if (val == HIGH) {
 		gpiox->BSRR |= (HIGH << gpio_pins);
 	} else {
-		gpiox->BSRR |= (HIGH << Shift_16_pos + gpio_pins);
+		gpiox->BSRR |= (HIGH << (Shift_16_pos + gpio_pins));
+	}
+}
+
+void GPIO_IRQ_Config(uint8_t IRQn, uint8_t EN) {
+	uint8_t cal_reg = IRQn / Shift_32_pos;
+	// This is wrong, because this mean move (4 * cal_reg) positions, not bytes!
+//	volatile uint32_t *cal_address_ISER = (volatile uint32_t*) (ISER_BASE_ADDR
+//			+ Shift_4_pos * cal_reg);
+//	volatile uint32_t *cal_address_ICER = (volatile uint32_t*) (ICER_BASE_ADDR
+//			+ Shift_4_pos * cal_reg);
+
+// This is true because the pointer is uint32_t (4 bytes), so this is move cal_reg positions (each positions is 4 bytes)
+	volatile uint32_t *cal_address_ISER = (volatile uint32_t*) (ISER_BASE_ADDR
+			+ cal_reg);
+	volatile uint32_t *cal_address_ICER = (volatile uint32_t*) (ICER_BASE_ADDR
+			+ cal_reg);
+// Enable the NVIC
+	if (EN == ENABLE) {
+		*cal_address_ISER |= (HIGH << IRQn % 32);
+	} else if (EN == DISABLE) {
+		*cal_address_ICER |= (HIGH << IRQn % 32);
+	}
+
+}
+void GPIO_IRQ_SetPriority(uint8_t IRQn, uint8_t priority) {
+	uint8_t cal_reg = IRQn / Shift_4_pos;
+	uint8_t cal_bit = IRQn % Shift_4_pos;
+	volatile uint32_t *cal_address_IPR = IPR_BASE_ADDR + cal_reg;
+
+	// Priority just use upper part of 4 bits
+	// (Upper part) 0000 | 0000 (Lower part)
+
+	*cal_address_IPR &= ~(priority
+			<< (cal_bit * Shift_8_pos + Shift_Upper_Part_4_bits));
+	*cal_address_IPR |= (priority
+			<< (cal_bit * Shift_8_pos + Shift_Upper_Part_4_bits));
+
+}
+
+void GPIO_IRQHandling(uint8_t pinNumber) {
+	if ((EXTI->PR >> pinNumber) & HIGH) {
+		EXTI->PR |= (HIGH << pinNumber);
 	}
 }
 

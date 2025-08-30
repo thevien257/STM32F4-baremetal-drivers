@@ -24,6 +24,7 @@ typedef struct {
 	uint8_t output_speed;
 	uint8_t output_type;
 	uint8_t alternate_function_select;
+	uint8_t exti_select;
 } GPIO_Handle_TypeDef;
 
 // This is pointer type GPIO_TypeDef
@@ -64,6 +65,9 @@ typedef struct {
 #define GPIO_MODE_OUTPUT     0x1U  // 01: Output mode
 #define GPIO_MODE_AF         0x2U  // 10: Alternate function mode
 #define GPIO_MODE_ANALOG     0x3U  // 11: Analog mode
+#define GPIO_MODE_INTERRUPT_RISING 0x4U
+#define GPIO_MODE_INTERRUPT_FALLING 0x5U
+#define GPIO_MODE_INTERRUPT_CHANGE 0x6U
 
 // GPIO Pull-Up/Pull-Down configuration
 #define GPIO_PUPD_NONE   0x0U  // 00: No Pull-up, no Pull-down
@@ -98,10 +102,25 @@ typedef struct {
 #define AF14  0xEU
 #define AF15  0xFU
 
+// EXTI Source Input Configuration for SYSCFG_EXTICR
+#define EXTI_PORT_PA    0x0U  // 0000: PA[x] pin
+#define EXTI_PORT_PB    0x1U  // 0001: PB[x] pin
+#define EXTI_PORT_PC    0x2U  // 0010: PC[x] pin
+#define EXTI_PORT_PD    0x3U  // 0011: PD[x] pin
+#define EXTI_PORT_PE    0x4U  // 0100: PE[x] pin
+#define EXTI_PORT_PF    0x5U  // 0101: PF[x] pin
+#define EXTI_PORT_PG    0x6U  // 0110: PG[x] pin
+#define EXTI_PORT_PH    0x7U  // 0111: PH[x] pin
+
 // Function prototypes
 void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle);
 uint8_t GPIO_INPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins);
 void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val);
 void GPIO_TOGGLE(GPIO_TypeDef *gpiox, uint8_t gpio_pins);
+
+// Interrupt Function prototypes
+void GPIO_IRQ_Config(uint8_t IRQn, uint8_t EN);
+void GPIO_IRQ_SetPriority(uint8_t IRQn, uint8_t priority);
+void GPIO_IRQHandling(uint8_t pinNumber);
 
 #endif // STM32F4XX_CUS_GPIO_H

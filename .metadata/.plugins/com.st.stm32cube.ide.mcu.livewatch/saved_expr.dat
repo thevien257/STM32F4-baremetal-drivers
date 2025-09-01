@@ -1,2 +1,5 @@
 read_input
 SYSCFG
+(RCC->PLLCFGR >> 0) & 0x3
+readInput
+i

@@ -53,6 +53,7 @@
 #define Divide_ALT_Function 0x8
 #define GPIO_BIT_1_Mask 0x1
 #define GPIO_BIT_11_Mask 0x3
+#define Five_BIT_1 0x1F
 
 // RCC Def
 typedef struct {
@@ -89,7 +90,13 @@ typedef struct {
 } RCC_TypeDef;
 
 #define RCC     ((RCC_TypeDef *) 0x40023800UL)
+#define Clock_SRC 16000000
+extern uint32_t SystemClockSrc;
+extern uint32_t APB1_Clock_Speed;
 
+void Get_APB1_Clock_Speed(void);
+
+// GPIO Enable Clock
 #define GPIOA_EN() (RCC->AHB1ENR |= HIGH << Shift_0_pos)
 #define GPIOB_EN() (RCC->AHB1ENR |= HIGH << Shift_1_pos)
 #define GPIOC_EN() (RCC->AHB1ENR |= HIGH << Shift_2_pos)
@@ -100,6 +107,7 @@ typedef struct {
 #define GPIOH_EN() (RCC->AHB1ENR |= HIGH << Shift_7_pos)
 #define GPIOI_EN() (RCC->AHB1ENR |= HIGH << Shift_8_pos)
 
+// // GPIO Disable Clock
 #define GPIOA_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_0_pos))
 #define GPIOB_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_1_pos))
 #define GPIOC_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_2_pos))
@@ -109,6 +117,11 @@ typedef struct {
 #define GPIOG_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_6_pos))
 #define GPIOH_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_7_pos))
 #define GPIOI_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_8_pos))
+
+// Enable I2C Clock
+#define I2C1_EN() (RCC->APB1ENR |= (HIGH << Shift_21_pos))
+#define I2C2_EN() (RCC->APB1ENR |= (HIGH << Shift_22_pos))
+#define I2C3_EN() (RCC->APB1ENR |= (HIGH << Shift_23_pos))
 
 // System configuration
 typedef struct {
@@ -151,5 +164,6 @@ typedef struct {
 // Include peripheral headers last so they see all macro/type definitions (e.g., __IO) defined above
 #include "stm32f4xx_cus_clock.h"
 #include "stm32f4xx_cus_gpio.h"
+#include "stm32f4xx_cus_i2c.h"
 
 #endif // STM32F4XX_CUS_H

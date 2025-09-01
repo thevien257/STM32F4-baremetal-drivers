@@ -1,0 +1,34 @@
+#include <stdint.h>
+#include <main.h>
+
+I2C_Handle_TypeDef I2C_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+void I2C_USER_INIT(void);
+void GPIO_USER_INIT(void);
+
+int main(void) {
+	I2C_USER_INIT();
+	while (1) {
+
+	}
+}
+
+void I2C_USER_INIT(void) {
+	I2C_Handle.I2Cx = I2C1;
+	I2C_Handle.MasterOrSlave = I2C_Master_Mode;
+	I2C_Handle.ack_en = I2C_ACK_EN;
+	I2C_Handle.address = 0x61;
+	I2C_Handle.address_select_bit = I2C_7_Bit_Adress;
+	I2C_Handle.mode = I2C_Standard_Mode;
+	I2C_Handle.scl_speed = I2C_SCL_SPEED_100;
+	I2C_INIT(&I2C_Handle);
+}
+
+void GPIO_USER_INIT(void) {
+	// PB6 - I2C1_SCL
+	GPIO_Handle.GPIOX = GPIOB;
+	GPIO_Handle.mode = GPIO_MODE_AF;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_OD;
+	GPIO_Handle.alternate_function_select = GPIO_AF4;
+}

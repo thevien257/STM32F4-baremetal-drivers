@@ -1,0 +1,12 @@
+#include "stm32f4xx_cus.h"
+
+uint32_t Get_APB1_Clock_Speed() {
+	uint8_t get_system_clock = (RCC->PLLCFGR >> 0) & 0x3;
+	if (get_system_clock == 0) {
+		// HSI System Clock
+	} else if (get_system_clock == 1) {
+		// // HSE System Clock
+	} else if (get_system_clock == 2) {
+		// PLL System Clock
+	}
+}

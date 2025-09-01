@@ -1,0 +1,4 @@
+../Drivers/src/stm32f4xx_cus_i2c.c:3:6:I2C_INIT	16	static
+../Drivers/src/stm32f4xx_cus_i2c.c:61:6:I2C_Write	32	static
+../Drivers/src/stm32f4xx_cus_i2c.c:102:6:I2C_Read	24	static
+../Drivers/src/stm32f4xx_cus_i2c.c:107:6:I2C_Address	24	static

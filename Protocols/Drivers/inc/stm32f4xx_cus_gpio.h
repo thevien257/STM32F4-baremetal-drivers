@@ -85,23 +85,22 @@ typedef struct {
 #define GPIO_OUTPUT_SPEED_VERY_HIGH  0x3U  // 11: Very high speed
 
 // Alternate function
-#define AF0   0x0U
-#define AF1   0x1U
-#define AF2   0x2U
-#define AF3   0x3U
-#define AF4   0x4U
-#define AF5   0x5U
-#define AF6   0x6U
-#define AF7   0x7U
-#define AF8   0x8U
-#define AF9   0x9U
-#define AF10  0xAU
-#define AF11  0xBU
-#define AF12  0xCU
-#define AF13  0xDU
-#define AF14  0xEU
-#define AF15  0xFU
-
+#define GPIO_AF0    0x0U
+#define GPIO_AF1    0x1U
+#define GPIO_AF2    0x2U
+#define GPIO_AF3    0x3U
+#define GPIO_AF4    0x4U
+#define GPIO_AF5    0x5U
+#define GPIO_AF6    0x6U
+#define GPIO_AF7    0x7U
+#define GPIO_AF8    0x8U
+#define GPIO_AF9    0x9U
+#define GPIO_AF10   0xAU
+#define GPIO_AF11   0xBU
+#define GPIO_AF12   0xCU
+#define GPIO_AF13   0xDU
+#define GPIO_AF14   0xEU
+#define GPIO_AF15   0xFU
 // EXTI Source Input Configuration for SYSCFG_EXTICR
 #define EXTI_PORT_PA    0x0U  // 0000: PA[x] pin
 #define EXTI_PORT_PB    0x1U  // 0001: PB[x] pin

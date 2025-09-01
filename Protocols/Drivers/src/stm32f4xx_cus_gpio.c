@@ -25,6 +25,7 @@ void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
 	// Reset mode
 	gpioHandle->GPIOX->MODER &= ~(GPIO_BIT_11_Mask
 			<< (Shift_2_pos * gpioHandle->pin_number));
+
 	// Pull-up or Pull-down
 	gpioHandle->GPIOX->PUPDR &= ~(GPIO_BIT_11_Mask
 			<< (Shift_2_pos * gpioHandle->pin_number));
@@ -36,11 +37,10 @@ void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
 //
 //	}
 // Handle output mode
-	if (gpioHandle->mode <= GPIO_MODE_OUTPUT) {
+	if (gpioHandle->mode <= GPIO_MODE_AF) {
 		// Set output mode
 		gpioHandle->GPIOX->MODER |= (gpioHandle->mode
 				<< (Shift_2_pos * gpioHandle->pin_number));
-
 		// Set output type
 		gpioHandle->GPIOX->OTYPER &= ~(GPIO_BIT_11_Mask
 				<< (gpioHandle->pin_number));
@@ -52,14 +52,17 @@ void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
 				<< (Shift_2_pos * gpioHandle->pin_number));
 		gpioHandle->GPIOX->OSPEEDR |= (gpioHandle->output_speed)
 				<< (Shift_2_pos * gpioHandle->pin_number);
-	} else if (gpioHandle->mode == GPIO_MODE_AF) {
-		uint8_t ALT_low_high = (gpioHandle->pin_number / Divide_ALT_Function);
-		uint8_t ALT_bit = (gpioHandle->pin_number % Divide_ALT_Function);
-		gpioHandle->GPIOX->AFR[ALT_low_high] &= ~(GPIO_BIT_11_Mask
-				<< gpioHandle->pin_number);
-		gpioHandle->GPIOX->AFR[ALT_low_high] |=
-				(gpioHandle->alternate_function_select << Shift_4_pos * ALT_bit);
+		if (gpioHandle->mode == GPIO_MODE_AF) {
+			uint8_t ALT_low_high =
+					(gpioHandle->pin_number / Divide_ALT_Function);
+			uint8_t ALT_bit = (gpioHandle->pin_number % Divide_ALT_Function);
+			gpioHandle->GPIOX->AFR[ALT_low_high] &= ~(GPIO_BIT_11_Mask
+					<< gpioHandle->pin_number);
+			gpioHandle->GPIOX->AFR[ALT_low_high] |=
+					(gpioHandle->alternate_function_select
+							<< Shift_4_pos * ALT_bit);
 
+		}
 	} else {
 		// Interrupt mode
 		SYSCFG_EN();

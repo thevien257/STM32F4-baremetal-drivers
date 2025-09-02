@@ -68,11 +68,19 @@ typedef struct {
 // Trise Maximum
 #define I2C_TRISE_MAX_FAST_MODE 300
 
+// Read/Write bit
+#define I2C_WRITE_BIT 0
+#define I2C_READ_BIT 1
+
+// Repeated Start
+#define I2C_SR_DIS 0
+#define I2C_SR_EN 1
+
 void I2C_INIT(I2C_Handle_TypeDef *i2c_handle);
 void I2C_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
-		uint32_t size);
+		uint32_t size, uint8_t sr);
 void I2C_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
-		uint8_t size);
-void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr);
+		uint8_t size, uint8_t sr);
+void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw);
 
 #endif /* INC_STM32F4XX_CUS_I2C_H_ */

@@ -1,0 +1,5 @@
+#include <stdint.h>
+#include <main.h>
+
+void I2C_USER_INIT(void);
+void GPIO_USER_INIT(void);

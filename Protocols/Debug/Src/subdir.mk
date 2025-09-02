@@ -5,18 +5,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/i2cExample.c \
-../Src/syscalls.c \
+../Src/i2cMasterReadExample.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/i2cExample.o \
-./Src/syscalls.o \
+./Src/i2cMasterReadExample.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/i2cExample.d \
-./Src/syscalls.d \
+./Src/i2cMasterReadExample.d \
 ./Src/sysmem.d 
 
 
@@ -27,7 +24,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/i2cExample.cyclo ./Src/i2cExample.d ./Src/i2cExample.o ./Src/i2cExample.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/i2cMasterReadExample.cyclo ./Src/i2cMasterReadExample.d ./Src/i2cMasterReadExample.o ./Src/i2cMasterReadExample.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

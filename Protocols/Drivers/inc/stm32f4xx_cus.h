@@ -157,6 +157,14 @@ typedef struct {
 #define IRQ23_EXTI9_5    23   // EXTI Line[9:5] interrupts
 #define IRQ40_EXTI15_10  40   // EXTI Line[15:10] interrupts
 
+// I2C IRQ Numbers
+#define I2C1_IRQ31_EV   31   // I2C1 event interrupt
+#define I2C1_IRQ32_ER   32   // I2C1 error interrupt
+#define I2C2_IRQ33_EV   33   // I2C2 event interrupt
+#define I2C2_IRQ34_ER   34   // I2C2 error interrupt
+#define I2C3_IRQ72_EV   72   // I2C3 event interrupt
+#define I2C3_IRQ73_ER   73   // I2C3 error interrupt
+
 #define ISER_BASE_ADDR (__IO uint32_t*)(0xE000E100)
 #define ICER_BASE_ADDR (__IO uint32_t*)(0XE000E180)
 #define IPR_BASE_ADDR ((__IO uint32_t*)0xE000E400)

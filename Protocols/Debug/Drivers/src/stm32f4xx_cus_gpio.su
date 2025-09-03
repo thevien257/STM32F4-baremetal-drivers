@@ -2,6 +2,6 @@
 ../Drivers/src/stm32f4xx_cus_gpio.c:93:9:GPIO_INPUT	24	static
 ../Drivers/src/stm32f4xx_cus_gpio.c:98:6:GPIO_TOGGLE	16	static
 ../Drivers/src/stm32f4xx_cus_gpio.c:102:6:GPIO_OUTPUT	16	static
-../Drivers/src/stm32f4xx_cus_gpio.c:110:6:GPIO_IRQ_Config	32	static
-../Drivers/src/stm32f4xx_cus_gpio.c:131:6:GPIO_IRQ_SetPriority	24	static
+../Drivers/src/stm32f4xx_cus_gpio.c:110:6:IRQ_Config	32	static
+../Drivers/src/stm32f4xx_cus_gpio.c:131:6:IRQ_SetPriority	24	static
 ../Drivers/src/stm32f4xx_cus_gpio.c:146:6:GPIO_IRQHandling	16	static

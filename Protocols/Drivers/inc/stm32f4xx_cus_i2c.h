@@ -30,6 +30,17 @@ typedef struct {
 	uint8_t ack_en;
 } I2C_Handle_TypeDef;
 
+typedef struct {
+	uint8_t *ptx;
+	uint8_t *prx;
+	uint8_t state;
+	uint32_t tx_len;
+	uint32_t rx_len;
+	uint8_t addr;
+} I2C_Handle_IT;
+
+extern I2C_Handle_IT I2C_Handle_it;
+
 /**
  * @brief I2C Base Address Definitions
  */
@@ -76,11 +87,24 @@ typedef struct {
 #define I2C_SR_DIS 0
 #define I2C_SR_EN 1
 
+// Interrupt State
+#define I2C_READY 0
+#define I2C_BUSY_TX 1
+#define I2C_BUSY_RX 2
+
+// Function prototypes
 void I2C_INIT(I2C_Handle_TypeDef *i2c_handle);
-void I2C_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
-		uint32_t size, uint8_t sr);
-void I2C_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
-		uint8_t size, uint8_t sr);
+void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr);
+void I2C_Master_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr);
 void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw);
+
+// Interrupt
+uint8_t I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr);
+uint8_t I2C_Master_Read_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr);
+void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle);
 
 #endif /* INC_STM32F4XX_CUS_I2C_H_ */

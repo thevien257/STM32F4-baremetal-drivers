@@ -107,7 +107,7 @@ void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val) {
 	}
 }
 
-void GPIO_IRQ_Config(uint8_t IRQn, uint8_t EN) {
+void IRQ_Config(uint8_t IRQn, uint8_t EN) {
 	uint8_t cal_reg = IRQn / Shift_32_pos;
 	// This is wrong, because this mean move (4 * cal_reg) positions, not bytes!
 //	volatile uint32_t *cal_address_ISER = (volatile uint32_t*) (ISER_BASE_ADDR
@@ -128,7 +128,7 @@ void GPIO_IRQ_Config(uint8_t IRQn, uint8_t EN) {
 	}
 
 }
-void GPIO_IRQ_SetPriority(uint8_t IRQn, uint8_t priority) {
+void IRQ_SetPriority(uint8_t IRQn, uint8_t priority) {
 	uint8_t cal_reg = IRQn / Shift_4_pos;
 	uint8_t cal_bit = IRQn % Shift_4_pos;
 	volatile uint32_t *cal_address_IPR = IPR_BASE_ADDR + cal_reg;

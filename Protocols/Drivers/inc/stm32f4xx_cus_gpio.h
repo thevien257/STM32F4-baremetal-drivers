@@ -118,8 +118,8 @@ void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val);
 void GPIO_TOGGLE(GPIO_TypeDef *gpiox, uint8_t gpio_pins);
 
 // Interrupt Function prototypes
-void GPIO_IRQ_Config(uint8_t IRQn, uint8_t EN);
-void GPIO_IRQ_SetPriority(uint8_t IRQn, uint8_t priority);
+void IRQ_Config(uint8_t IRQn, uint8_t EN);
+void IRQ_SetPriority(uint8_t IRQn, uint8_t priority);
 void GPIO_IRQHandling(uint8_t pinNumber);
 
 #endif // STM32F4XX_CUS_GPIO_H

@@ -1,4 +1,9 @@
-../Drivers/src/stm32f4xx_cus_i2c.c:3:6:I2C_INIT	16	static
-../Drivers/src/stm32f4xx_cus_i2c.c:61:6:I2C_Write	32	static
-../Drivers/src/stm32f4xx_cus_i2c.c:104:6:I2C_Read	32	static
-../Drivers/src/stm32f4xx_cus_i2c.c:173:6:I2C_Address	24	static
+../Drivers/src/stm32f4xx_cus_i2c.c:6:13:I2C_Close_Communicate	16	static
+../Drivers/src/stm32f4xx_cus_i2c.c:24:13:I2C_Send_DataIT	16	static
+../Drivers/src/stm32f4xx_cus_i2c.c:32:6:I2C_INIT	16	static
+../Drivers/src/stm32f4xx_cus_i2c.c:90:6:I2C_Master_Write	32	static
+../Drivers/src/stm32f4xx_cus_i2c.c:133:6:I2C_Master_Read	32	static
+../Drivers/src/stm32f4xx_cus_i2c.c:202:9:I2C_Master_Write_IT	32	static
+../Drivers/src/stm32f4xx_cus_i2c.c:228:9:I2C_Master_Read_IT	24	static
+../Drivers/src/stm32f4xx_cus_i2c.c:233:6:I2C_EV_IRQ_Handling	32	static
+../Drivers/src/stm32f4xx_cus_i2c.c:280:6:I2C_Address	24	static

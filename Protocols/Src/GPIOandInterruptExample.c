@@ -9,8 +9,8 @@ void GPIO_USER_INIT(void);
 int main(void) {
 	GPIO_USER_INIT();
 
-	GPIO_IRQ_SetPriority(IRQ40_EXTI15_10, 15);
-	GPIO_IRQ_Config(IRQ40_EXTI15_10, ENABLE);
+	IRQ_SetPriority(IRQ40_EXTI15_10, 15);
+	IRQ_Config(IRQ40_EXTI15_10, ENABLE);
 	while (1) {
 		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, HIGH);
 		for (uint32_t i = 0; i < 50000; i++)

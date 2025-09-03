@@ -1,5 +1,34 @@
 #include <stm32f4xx_cus_i2c.h>
 
+I2C_Handle_IT I2C_Handle_it = { .ptx = NULL, .prx = NULL, .state = I2C_READY,
+		.tx_len = 0, .rx_len = 0, .addr = 0 };
+
+static void I2C_Close_Communicate(I2C_Handle_TypeDef *i2c_handle) {
+	I2C_Handle_it.ptx = NULL;
+	I2C_Handle_it.prx = NULL;
+	I2C_Handle_it.state = I2C_READY;
+	I2C_Handle_it.tx_len = 0;
+	I2C_Handle_it.rx_len = 0;
+	I2C_Handle_it.addr = 0;
+
+	// Generate Stop condition
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+
+	// Event interrupt disable
+	i2c_handle->I2Cx->CR2 &= ~(HIGH << Shift_9_pos);
+
+	// Buffer interrupt enable
+	i2c_handle->I2Cx->CR2 &= ~(HIGH << Shift_10_pos);
+}
+
+static void I2C_Send_DataIT(I2C_Handle_TypeDef *i2c_handle) {
+	if (I2C_Handle_it.tx_len > 0) {
+		i2c_handle->I2Cx->DR = *(I2C_Handle_it.ptx);
+		I2C_Handle_it.ptx++;
+		I2C_Handle_it.tx_len--;
+	}
+}
+
 void I2C_INIT(I2C_Handle_TypeDef *i2c_handle) {
 	if (i2c_handle->I2Cx == I2C1) {
 		I2C1_EN();
@@ -58,8 +87,8 @@ void I2C_INIT(I2C_Handle_TypeDef *i2c_handle) {
 // Slave mode
 }
 
-void I2C_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
-		uint32_t size, uint8_t sr) {
+void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr) {
 	// Setting start_bit
 	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
 
@@ -101,8 +130,8 @@ void I2C_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
 	}
 }
 
-void I2C_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
-		uint8_t size, uint8_t sr) {
+void I2C_Master_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr) {
 
 	// Setting start_bit
 	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
@@ -167,6 +196,84 @@ void I2C_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t *data,
 
 	// SET ACK again
 	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_10_pos);
+
+}
+
+uint8_t I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr) {
+
+	uint8_t busy_state = I2C_Handle_it.state;
+	if (I2C_Handle_it.state == I2C_READY) {
+
+		// Error interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_8_pos);
+
+		// Event interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_9_pos);
+
+		// Buffer interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_10_pos);
+
+		I2C_Handle_it.addr = addr;
+		I2C_Handle_it.ptx = data;
+		I2C_Handle_it.tx_len = size;
+		I2C_Handle_it.state = I2C_BUSY_TX;
+
+		// Generate Start condition
+		i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+	}
+	return busy_state;
+}
+
+uint8_t I2C_Master_Read_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr) {
+	return 0;
+}
+
+void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
+	uint8_t bit_it = ((i2c_handle->I2Cx->SR1 >> 0) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear Start bit by reading SR1 register
+		uint32_t read;
+		read = i2c_handle->I2Cx->SR1;
+		(void) read;
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			I2C_Address(i2c_handle, I2C_Handle_it.addr, I2C_WRITE_BIT);
+		} else if (I2C_Handle_it.state == I2C_BUSY_RX) {
+			I2C_Address(i2c_handle, I2C_Handle_it.addr, I2C_READ_BIT);
+		}
+	}
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 1) & 0x1);
+	if (bit_it == HIGH) {
+		//Clear ADDR Flag
+		uint32_t read = i2c_handle->I2Cx->SR1;
+		read = i2c_handle->I2Cx->SR2;
+		(void) read;
+	}
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 2) & 0x1);
+	// Check if BTF is HIGH or not
+	// If we handled TXE first:
+	//		+ We might write new data while BTF was signaling the transfer actually ended.
+	//		+ We could miss the STOP condition timing → corrupt I2C protocol sequence.
+	//		-> So we should handle the BTF first
+	if (bit_it == HIGH) {
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			if ((i2c_handle->I2Cx->SR1 >> 7) & 0x1) {
+				// Generate Stop condition
+				I2C_Close_Communicate(i2c_handle);
+			}
+		} else if (I2C_Handle_it.state == I2C_BUSY_RX) {
+			if ((i2c_handle->I2Cx->SR1 >> 6) & 0x1) {
+
+			}
+		}
+	}
+
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 7) & 0x1);
+	if (bit_it == HIGH) {
+		// Send data
+		I2C_Send_DataIT(i2c_handle);
+	}
 
 }
 

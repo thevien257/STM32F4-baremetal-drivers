@@ -57,7 +57,7 @@ Docs/
 README.md
 ```
 
-## Documentation
+## 📄 Documentation
 
 In the Docs/ folder, you will find the Reference Manual and Datasheet for the STM32F407 microcontroller. These documents are essential resources for working with the chip:
 
@@ -65,7 +65,7 @@ In the Docs/ folder, you will find the Reference Manual and Datasheet for the ST
 
 - Datasheet → Provides an overview of the device, including electrical characteristics, package details, pinout, and key features.
 
-## 🗺️ Memory Map And Registers
+## 📝 Memory Map And Registers
 
 The memory map is a map of the memory regions that are available in the microcontroller.
 

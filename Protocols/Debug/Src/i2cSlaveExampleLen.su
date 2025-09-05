@@ -1,0 +1,6 @@
+../Src/i2cSlaveExampleLen.c:21:5:main	8	static
+../Src/i2cSlaveExampleLen.c:36:6:I2C_USER_INIT	8	static
+../Src/i2cSlaveExampleLen.c:47:6:GPIO_USER_INIT	8	static
+../Src/i2cSlaveExampleLen.c:71:6:I2C1_EV_IRQHandler	8	static
+../Src/i2cSlaveExampleLen.c:75:6:I2C1_ER_IRQHandler	8	static
+../Src/i2cSlaveExampleLen.c:79:6:I2C_OnEvent	24	static

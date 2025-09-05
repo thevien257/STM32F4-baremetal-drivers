@@ -75,44 +75,41 @@ void I2C_INIT(I2C_Handle_TypeDef *i2c_handle) {
 	}
 	Get_APB1_Clock_Speed();
 
-// Master mode
-	if (i2c_handle->MasterOrSlave == I2C_Master_Mode) {
-		// Peripheral Clock Frequency (16Mhz)
-		i2c_handle->I2Cx->CR2 &= ~(Five_BIT_1 << 0);
-		i2c_handle->I2Cx->CR2 |= (Shift_16_pos << 0);
+	// Peripheral Clock Frequency (16Mhz)
+	i2c_handle->I2Cx->CR2 &= ~(Five_BIT_1 << 0);
+	i2c_handle->I2Cx->CR2 |= (Shift_16_pos << 0);
 
-		// I2C Standard/Fast Mode
-		i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_15_pos);
-		i2c_handle->I2Cx->CCR |= (i2c_handle->mode << Shift_15_pos);
+	// I2C Standard/Fast Mode
+	i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_15_pos);
+	i2c_handle->I2Cx->CCR |= (i2c_handle->mode << Shift_15_pos);
 
-		// Tscl = Thigh + Tlow
-		if (i2c_handle->mode == I2C_Standard_Mode) {
+	// Tscl = Thigh + Tlow
+	if (i2c_handle->mode == I2C_Standard_Mode) {
+		i2c_handle->I2Cx->CCR |= ((SystemClockSrc / (2 * i2c_handle->scl_speed))
+				<< 0);
+		// Trise
+		i2c_handle->I2Cx->TRISE = 0;
+		i2c_handle->I2Cx->TRISE |= ((SystemClockSrc / 1000000)) + 1;
+	} else if (i2c_handle->mode == I2C_Fast_Mode) {
+		i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_14_pos);
+		i2c_handle->I2Cx->CCR |= (i2c_handle->duty_cycle << Shift_14_pos);
+		if (i2c_handle->duty_cycle == I2C_Duty_Cycle_2) {
 			i2c_handle->I2Cx->CCR |= ((SystemClockSrc
-					/ (2 * i2c_handle->scl_speed)) << 0);
-			// Trise
-			i2c_handle->I2Cx->TRISE = 0;
-			i2c_handle->I2Cx->TRISE |= ((SystemClockSrc / 1000000)) + 1;
-		} else if (i2c_handle->mode == I2C_Fast_Mode) {
-			i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_14_pos);
-			i2c_handle->I2Cx->CCR |= (i2c_handle->duty_cycle << Shift_14_pos);
-			if (i2c_handle->duty_cycle == I2C_Duty_Cycle_2) {
-				i2c_handle->I2Cx->CCR |= ((SystemClockSrc
-						/ (3 * i2c_handle->scl_speed)) << 0);
-			} else if (i2c_handle->duty_cycle == I2C_Duty_Cycle_16_9) {
-				i2c_handle->I2Cx->CCR |= ((SystemClockSrc
-						/ (25 * i2c_handle->scl_speed)) << 0);
-			}
-			// Trise
-			i2c_handle->I2Cx->TRISE |= ((SystemClockSrc
-					* I2C_TRISE_MAX_FAST_MODE / 1000000000)) + 1;
+					/ (3 * i2c_handle->scl_speed)) << 0);
+		} else if (i2c_handle->duty_cycle == I2C_Duty_Cycle_16_9) {
+			i2c_handle->I2Cx->CCR |= ((SystemClockSrc
+					/ (25 * i2c_handle->scl_speed)) << 0);
 		}
+		// Trise
+		i2c_handle->I2Cx->TRISE |= ((SystemClockSrc * I2C_TRISE_MAX_FAST_MODE
+				/ 1000000000)) + 1;
+	}
 
 // Adress mode - 7 bit
-		if (i2c_handle->address_select_bit == I2C_7_Bit_Adress) {
-			i2c_handle->I2Cx->OAR1 |= (i2c_handle->address << HIGH);
-		}
-		i2c_handle->I2Cx->OAR1 |= (HIGH << Shift_14_pos);
+	if (i2c_handle->address_select_bit == I2C_7_Bit_Adress) {
+		i2c_handle->I2Cx->OAR1 |= (i2c_handle->address << HIGH);
 	}
+	i2c_handle->I2Cx->OAR1 |= (HIGH << Shift_14_pos);
 
 // Enable Peripheral
 	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_0_pos);
@@ -121,6 +118,16 @@ void I2C_INIT(I2C_Handle_TypeDef *i2c_handle) {
 	i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
 	i2c_handle->I2Cx->CR1 |= (i2c_handle->ack_en << Shift_10_pos);
 // Slave mode
+	if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+		// Error interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_8_pos);
+
+		// Event interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_9_pos);
+
+		// Buffer interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_10_pos);
+	}
 }
 
 void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
@@ -305,6 +312,12 @@ void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
 	}
 	bit_it = ((i2c_handle->I2Cx->SR1 >> 1) & 0x1);
 	if (bit_it == HIGH) {
+		if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+			//Clear ADDR Flag
+			uint32_t read = i2c_handle->I2Cx->SR1;
+			read = i2c_handle->I2Cx->SR2;
+			(void) read;
+		}
 		if (I2C_Handle_it.state == I2C_BUSY_TX) {
 			//Clear ADDR Flag
 			uint32_t read = i2c_handle->I2Cx->SR1;
@@ -347,16 +360,59 @@ void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
 // Check TXE Flag
 	bit_it = ((i2c_handle->I2Cx->SR1 >> 7) & 0x1);
 	if (bit_it == HIGH) {
-		// Send data
-		I2C_Send_DataIT(i2c_handle);
+		if (i2c_handle->MasterOrSlave == I2C_Master_Mode) {
+			// Send data
+			I2C_Send_DataIT(i2c_handle);
+		} else if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+			I2C_OnEvent(i2c_handle, I2C_Slave_Ev_Transmit);
+		}
 	}
 
 // Check RXE
 	bit_it = ((i2c_handle->I2Cx->SR1 >> 6) & 0x1);
 	if (((i2c_handle->I2Cx->SR1 >> 6) & 0x1) == HIGH) {
-		// Receive data
-		I2C_Read_DataIT(i2c_handle);
+		if (i2c_handle->MasterOrSlave == I2C_Master_Mode) {
+			// Receive data
+			I2C_Read_DataIT(i2c_handle);
+		} else if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+			I2C_OnEvent(i2c_handle, I2C_Slave_Ev_Receive);
+		}
 	}
+
+	// Check AF
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 10) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear AF
+		i2c_handle->I2Cx->SR1 &= ~(HIGH << Shift_10_pos);
+		I2C_OnEvent(i2c_handle, I2C_Slave_AF);
+	}
+
+	// Check STOPF
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 4) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear STOPF bit by reading SR1 register followed by a write in the CR1 register
+		uint32_t read;
+		read = i2c_handle->I2Cx->SR1;
+		(void) read;
+		i2c_handle->I2Cx->CR1 |= (0x0);
+		I2C_OnEvent(i2c_handle, I2C_Slave_STOPF);
+	}
+}
+
+void I2C_ER_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
+	uint8_t bit_it = ((i2c_handle->I2Cx->SR1 >> 10) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear AF
+		i2c_handle->I2Cx->SR1 &= ~(HIGH << Shift_10_pos);
+		I2C_OnEvent(i2c_handle, I2C_Slave_AF);
+	}
+}
+
+void I2C_Slave_Write(I2C_TypeDef *I2Cx, uint8_t *data) {
+	I2Cx->DR = *data;
+}
+void I2C_Slave_Read(I2C_TypeDef *I2Cx, uint8_t *data) {
+	*data = I2Cx->DR;
 }
 
 void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw) {
@@ -370,4 +426,7 @@ void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw) {
 	i2c_handle->I2Cx->DR = slave_addr;
 
 }
+__attribute__((weak)) void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle,
+		uint8_t on_event) {
 
+}

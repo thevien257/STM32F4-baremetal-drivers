@@ -94,12 +94,20 @@ extern uint8_t tx_complete;
 #define I2C_BUSY_TX 1
 #define I2C_BUSY_RX 2
 
+// Slave Event
+#define I2C_Slave_Ev_Transmit 0
+#define I2C_Slave_Ev_Receive 1
+#define I2C_Slave_AF 2
+#define I2C_Slave_STOPF 3
+
 // Function prototypes
 void I2C_INIT(I2C_Handle_TypeDef *i2c_handle);
 void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
 		uint8_t *data, uint32_t size, uint8_t sr);
 void I2C_Master_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
 		uint8_t *data, uint8_t size, uint8_t sr);
+void I2C_Slave_Write(I2C_TypeDef *I2Cx, uint8_t *data);
+void I2C_Slave_Read(I2C_TypeDef *I2Cx, uint8_t *data);
 void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw);
 
 // Interrupt
@@ -108,5 +116,8 @@ uint8_t I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
 uint8_t I2C_Master_Read_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
 		uint8_t *data, uint8_t size, uint8_t sr);
 void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle);
+void I2C_ER_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle);
+// Weak implementation - user can override this in main.c
+void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle, uint8_t on_event);
 
 #endif /* INC_STM32F4XX_CUS_I2C_H_ */

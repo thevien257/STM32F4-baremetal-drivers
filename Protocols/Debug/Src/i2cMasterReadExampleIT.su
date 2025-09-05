@@ -1,5 +1,0 @@
-../Src/i2cMasterReadExampleIT.c:16:5:main	24	static
-../Src/i2cMasterReadExampleIT.c:59:6:I2C_USER_INIT	8	static
-../Src/i2cMasterReadExampleIT.c:70:6:GPIO_USER_INIT	8	static
-../Src/i2cMasterReadExampleIT.c:94:6:I2C1_EV_IRQHandler	8	static
-../Src/i2cMasterReadExampleIT.c:98:6:I2C1_ER_IRQHandler	4	static

@@ -1,0 +1,119 @@
+#include <stdint.h>
+#include <main.h>
+#include <string.h>
+
+extern void initialise_monitor_handles();
+
+#define SLAVE_ADDR 0x68
+void I2C_USER_INIT(void);
+void GPIO_USER_INIT(void);
+I2C_Handle_TypeDef I2C_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+uint8_t buffer[32] = { };
+uint8_t commandCode;
+uint8_t readInput;
+uint8_t len;
+//very large message
+uint8_t Tx_buf[] =
+		"HiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHiHi...123";
+uint8_t CommandCode;
+uint32_t data_len = 0;
+
+int main(void) {
+	GPIO_USER_INIT();
+	IRQ_Config(I2C1_IRQ31_EV, ENABLE);
+	IRQ_Config(I2C1_IRQ32_ER, ENABLE);
+	I2C_USER_INIT();
+
+	initialise_monitor_handles();
+
+	printf("Application is running\n");
+	while (1) {
+
+	}
+}
+
+void I2C_USER_INIT(void) {
+	I2C_Handle.I2Cx = I2C1;
+	I2C_Handle.MasterOrSlave = I2C_Slave_Mode;
+	I2C_Handle.ack_en = I2C_ACK_EN;
+	I2C_Handle.address = 0x69;
+	I2C_Handle.address_select_bit = I2C_7_Bit_Adress;
+	I2C_Handle.mode = I2C_Standard_Mode;
+	I2C_Handle.scl_speed = I2C_SCL_SPEED_100;
+	I2C_INIT(&I2C_Handle);
+}
+
+void GPIO_USER_INIT(void) {
+
+	// PA0 - USER BUTTON
+	GPIO_Handle.GPIOX = GPIOA;
+	GPIO_Handle.mode = GPIO_MODE_INPUT;
+	GPIO_Handle.pin_number = GPIO_PIN_0;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PB6 - I2C1_SCL
+	GPIO_Handle.GPIOX = GPIOB;
+	GPIO_Handle.mode = GPIO_MODE_AF;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_OD;
+	GPIO_Handle.pin_number = GPIO_PIN_6;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_PU;
+	GPIO_Handle.alternate_function_select = GPIO_AF4;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PB9 - I2C1_SDA
+	GPIO_Handle.pin_number = GPIO_PIN_9;
+	GPIO_INIT(&GPIO_Handle);
+}
+
+void I2C1_EV_IRQHandler() {
+	I2C_EV_IRQ_Handling(&I2C_Handle);
+}
+
+void I2C1_ER_IRQHandler() {
+	I2C_ER_IRQ_Handling(&I2C_Handle);
+}
+
+void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle, uint8_t on_event) {
+	static uint32_t cnt = 0;
+	static uint32_t w_ptr = 0;
+	if (on_event == I2C_Slave_Ev_Transmit) {
+		//Master wants some data. slave has to send it
+		if (commandCode == 0x51) {
+			uint8_t data = ((data_len >> ((cnt % 4) * 8)) & 0xFF);
+			I2C_Slave_Write(i2c_handle->I2Cx, &data);
+		} else if (commandCode == 0x52) {
+			//sending Tx_buf contents indexed by w_ptr variable
+			I2C_SlaveSendData(I2C1, &Tx_buf[w_ptr++]);
+
+		}
+	} else if (on_event == I2C_Slave_Ev_Receive) {
+		//Data is waiting for the slave to read . slave has to read it
+		I2C_Slave_Read(i2c_handle->I2Cx, &commandCode);
+
+	} else if (on_event == I2C_Slave_AF) {
+		//This will happen during slave transmitting data to master .
+		// slave should understand master needs no more data
+		//slave concludes end of Tx
+
+		//if the current active code is 0x52 then dont invalidate
+		if (!(CommandCode == 0x52))
+			CommandCode = 0XFF;
+
+		//reset the cnt variable because its end of transmission
+		cnt = 0;
+
+		//Slave concludes it sent all the bytes when w_ptr reaches data_len
+		if (w_ptr >= (data_len)) {
+			w_ptr = 0;
+			CommandCode = 0xff;
+		}
+	} else if (on_event == I2C_Slave_STOPF) {
+		//This will happen during end slave reception
+		//slave concludes end of Rx
+
+		cnt = 0;
+	}
+}

@@ -3,6 +3,7 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="CommandCode"/>
 		<item value="busy_state"/>
 		<item value="close"/>
 		<item value="i2c1"/>

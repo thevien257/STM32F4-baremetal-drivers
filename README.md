@@ -16,8 +16,8 @@
         - [User configurable structure:](#user-configurable-structure)
         - [Structure GPIO_typeDef:](#structure-gpio_typedef)
         - [GPIO Initialization Function:](#gpio-initialization-function)
-        - [GPIO_INIT](#gpio_init)
-        - [Handling External Interrupts (EXTI)](#handling-external-interrupts-exti)
+            - [GPIO_INIT](#gpio_init)
+            - [Handling External Interrupts (EXTI)](#handling-external-interrupts-exti)
 
 ## 🎯 Overview
 

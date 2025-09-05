@@ -6,6 +6,7 @@
 
 - [Overview](#-overview)
 - [Project Structure](#-project-structure)
+- [Documentation](#-documentation)
 - [Memory Map And Registers](#-memory-map-and-registers)
 - [Implemented Peripherals](#-implemented-peripherals)
     - [How to access peripheral registers?](#how-to-access-peripheral-registers)
@@ -55,6 +56,14 @@ Docs/
 
 README.md
 ```
+
+## Documentation
+
+In the Docs/ folder, you will find the Reference Manual and Datasheet for the STM32F407 microcontroller. These documents are essential resources for working with the chip:
+
+- Reference Manual → Describes the microcontroller’s internal architecture, memory map, and detailed registers. It is primarily used when configuring and controlling peripherals.
+
+- Datasheet → Provides an overview of the device, including electrical characteristics, package details, pinout, and key features.
 
 ## 🗺️ Memory Map And Registers
 

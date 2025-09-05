@@ -24,22 +24,21 @@ int main(void) {
 		readInput = GPIO_INPUT(GPIOA, GPIO_PIN_0);
 		if (readInput == HIGH) {
 			commandCode = 0x51;
-			I2C_Master_Write(&I2C_Handle, SLAVE_ADDR, &commandCode, 1, I2C_SR_EN);
+			I2C_Master_Write(&I2C_Handle, SLAVE_ADDR, &commandCode, 1,
+			I2C_SR_EN);
 
 			I2C_Master_Read(&I2C_Handle, SLAVE_ADDR, &len, 1, I2C_SR_EN);
 
 			commandCode = 0x52;
 
-			I2C_Master_Write(&I2C_Handle, SLAVE_ADDR, &commandCode, 1, I2C_SR_EN);
+			I2C_Master_Write(&I2C_Handle, SLAVE_ADDR, &commandCode, 1,
+			I2C_SR_EN);
 
 			I2C_Master_Read(&I2C_Handle, SLAVE_ADDR, buffer, len, I2C_SR_DIS);
 
 			buffer[len + 1] = '\0';
 
 			printf("Data : %s", buffer);
-
-			while (1)
-				;
 		}
 	}
 }

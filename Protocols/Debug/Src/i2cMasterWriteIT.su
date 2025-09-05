@@ -1,4 +1,0 @@
-../Src/i2cMasterWriteIT.c:12:5:main	16	static
-../Src/i2cMasterWriteIT.c:27:6:I2C_USER_INIT	8	static
-../Src/i2cMasterWriteIT.c:38:6:GPIO_USER_INIT	8	static
-../Src/i2cMasterWriteIT.c:62:6:I2C1_EV_IRQHandler	8	static

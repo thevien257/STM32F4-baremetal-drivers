@@ -1,6 +1,7 @@
-22:16:49 **** Incremental Build of configuration Debug for project Protocols ****
+14:01:44 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
-arm-none-eabi-gcc "../Src/i2cMasterWriteIT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/i2cMasterWriteIT.d" -MT"Src/i2cMasterWriteIT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/i2cMasterWriteIT.o"
+arm-none-eabi-gcc "../Src/i2cMasterReadExampleIT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/i2cMasterReadExampleIT.d" -MT"Src/i2cMasterReadExampleIT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/i2cMasterReadExampleIT.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
 arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static -specs=rdimon.specs -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
 Finished building target: Protocols.elf
@@ -8,11 +9,11 @@ Finished building target: Protocols.elf
 arm-none-eabi-size  Protocols.elf 
 arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-   3472	     36	   1628	   5136	   1410	Protocols.elf
+   9628	    108	   2172	  11908	   2e84	Protocols.elf
 Finished building: default.size.stdout
  
 Finished building: Protocols.list
  
 
-22:16:50 Build Finished. 0 errors, 1 warnings. (took 455ms)
+14:01:44 Build Finished. 0 errors, 1 warnings. (took 547ms)
 

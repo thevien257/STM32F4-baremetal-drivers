@@ -10,6 +10,7 @@ void I2C_USER_INIT(void);
 void GPIO_USER_INIT(void);
 
 int main(void) {
+
 	GPIO_USER_INIT();
 	IRQ_Config(I2C1_IRQ31_EV, ENABLE);
 	IRQ_Config(I2C1_IRQ32_ER, ENABLE);

@@ -3,6 +3,8 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="busy_state"/>
+		<item value="close"/>
 		<item value="i2c1"/>
 		<item value="void I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,"/>
 		<item value="-specs=rdimon.specs -lrdimon"/>

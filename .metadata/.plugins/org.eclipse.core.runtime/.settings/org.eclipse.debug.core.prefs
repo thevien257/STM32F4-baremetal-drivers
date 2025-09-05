@@ -5,4 +5,4 @@
 //org.eclipse.debug.core.PREFERRED_DELEGATES/org.eclipse.cdt.launch.remoteApplicationLaunchType=org.eclipse.rse.remotecdt.dsf.debug,debug,;
 eclipse.preferences.version=1
 org.eclipse.debug.core.PREF_BREAKPOINT_MANAGER_ENABLED_STATE=false
-prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<watchExpressions>\r\n    <expression enabled\="true" text\="(RCC-&gt;PLLCFGR &gt;&gt; 0) &amp; 0x3"/>\r\n    <expression enabled\="true" text\="SystemClockSrc \= (Clock_SRC / ahb_prescaler_table[get_ahb_pres])"/>\r\n    <expression enabled\="true" text\="SystemClockSrc / 1000000"/>\r\n    <expression enabled\="true" text\="i"/>\r\n    <expression enabled\="true" text\="slave_addr"/>\r\n    <expression enabled\="true" text\="addr"/>\r\n    <expression enabled\="true" text\="I2C_Handle_it.state"/>\r\n</watchExpressions>\r\n
+prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\r\n<watchExpressions>\r\n    <expression enabled\="true" text\="((i2c_handle-&gt;I2Cx-&gt;SR1 &gt;&gt; 6) &amp; 0x1)"/>\r\n</watchExpressions>\r\n

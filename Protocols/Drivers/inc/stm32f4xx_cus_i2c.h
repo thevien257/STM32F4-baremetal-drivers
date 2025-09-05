@@ -40,6 +40,8 @@ typedef struct {
 } I2C_Handle_IT;
 
 extern I2C_Handle_IT I2C_Handle_it;
+extern uint8_t rx_complete;
+extern uint8_t tx_complete;
 
 /**
  * @brief I2C Base Address Definitions

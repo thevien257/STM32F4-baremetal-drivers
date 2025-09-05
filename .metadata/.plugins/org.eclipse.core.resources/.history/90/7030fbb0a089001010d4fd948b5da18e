@@ -1,0 +1,372 @@
+#include <stm32f4xx_cus_i2c.h>
+
+I2C_Handle_IT I2C_Handle_it = { .ptx = NULL, .prx = NULL, .state = I2C_READY,
+		.tx_len = 0, .rx_len = 0, .addr = 0 };
+
+uint8_t rx_complete = 0;
+uint8_t tx_complete = 0;
+
+static void I2C_Close_Communicate(I2C_Handle_TypeDef *i2c_handle) {
+	// Generate Stop condition
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+
+	I2C_Handle_it.ptx = NULL;
+	I2C_Handle_it.prx = NULL;
+	I2C_Handle_it.state = I2C_READY;
+	I2C_Handle_it.tx_len = 0;
+	I2C_Handle_it.rx_len = 0;
+	I2C_Handle_it.addr = 0;
+
+	// Error interrupt disable
+//	i2c_handle->I2Cx->CR2 &= ~(HIGH << Shift_8_pos);
+
+// Event interrupt disable
+	i2c_handle->I2Cx->CR2 &= ~(HIGH << Shift_9_pos);
+
+	// Buffer interrupt disable
+	i2c_handle->I2Cx->CR2 &= ~(HIGH << Shift_10_pos);
+
+	// RX Complete
+	rx_complete = 1;
+	tx_complete = 1;
+}
+
+static void I2C_Send_DataIT(I2C_Handle_TypeDef *i2c_handle) {
+	if (I2C_Handle_it.tx_len > 0) {
+		i2c_handle->I2Cx->DR = *(I2C_Handle_it.ptx);
+		I2C_Handle_it.ptx++;
+		I2C_Handle_it.tx_len--;
+	}
+}
+
+static void I2C_Read_DataIT(I2C_Handle_TypeDef *i2c_handle) {
+	if (I2C_Handle_it.rx_len == 1) {
+		// Set ACK LOW
+		i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+		//Read data
+		*(I2C_Handle_it.prx) = i2c_handle->I2Cx->DR;
+		I2C_Handle_it.rx_len--;
+
+	}
+	if (I2C_Handle_it.rx_len > 1) {
+		*(I2C_Handle_it.prx) = i2c_handle->I2Cx->DR;
+		I2C_Handle_it.rx_len--;
+		I2C_Handle_it.prx++;
+
+	}
+
+	if (I2C_Handle_it.rx_len == 0) {
+		// Stop request
+		I2C_Close_Communicate(i2c_handle);
+		// SET ACK again
+		i2c_handle->I2Cx->CR1 |= (HIGH << Shift_10_pos);
+	}
+
+}
+
+void I2C_INIT(I2C_Handle_TypeDef *i2c_handle) {
+	if (i2c_handle->I2Cx == I2C1) {
+		I2C1_EN();
+	} else if (i2c_handle->I2Cx == I2C2) {
+		I2C2_EN();
+	} else if (i2c_handle->I2Cx == I2C3) {
+		I2C3_EN();
+	}
+	Get_APB1_Clock_Speed();
+
+// Master mode
+	if (i2c_handle->MasterOrSlave == I2C_Master_Mode) {
+		// Peripheral Clock Frequency (16Mhz)
+		i2c_handle->I2Cx->CR2 &= ~(Five_BIT_1 << 0);
+		i2c_handle->I2Cx->CR2 |= (Shift_16_pos << 0);
+
+		// I2C Standard/Fast Mode
+		i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_15_pos);
+		i2c_handle->I2Cx->CCR |= (i2c_handle->mode << Shift_15_pos);
+
+		// Tscl = Thigh + Tlow
+		if (i2c_handle->mode == I2C_Standard_Mode) {
+			i2c_handle->I2Cx->CCR |= ((SystemClockSrc
+					/ (2 * i2c_handle->scl_speed)) << 0);
+			// Trise
+			i2c_handle->I2Cx->TRISE = 0;
+			i2c_handle->I2Cx->TRISE |= ((SystemClockSrc / 1000000)) + 1;
+		} else if (i2c_handle->mode == I2C_Fast_Mode) {
+			i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_14_pos);
+			i2c_handle->I2Cx->CCR |= (i2c_handle->duty_cycle << Shift_14_pos);
+			if (i2c_handle->duty_cycle == I2C_Duty_Cycle_2) {
+				i2c_handle->I2Cx->CCR |= ((SystemClockSrc
+						/ (3 * i2c_handle->scl_speed)) << 0);
+			} else if (i2c_handle->duty_cycle == I2C_Duty_Cycle_16_9) {
+				i2c_handle->I2Cx->CCR |= ((SystemClockSrc
+						/ (25 * i2c_handle->scl_speed)) << 0);
+			}
+			// Trise
+			i2c_handle->I2Cx->TRISE |= ((SystemClockSrc
+					* I2C_TRISE_MAX_FAST_MODE / 1000000000)) + 1;
+		}
+
+// Adress mode - 7 bit
+		if (i2c_handle->address_select_bit == I2C_7_Bit_Adress) {
+			i2c_handle->I2Cx->OAR1 |= (i2c_handle->address << HIGH);
+		}
+		i2c_handle->I2Cx->OAR1 |= (HIGH << Shift_14_pos);
+	}
+
+// Enable Peripheral
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_0_pos);
+
+// ACK bit En
+	i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+	i2c_handle->I2Cx->CR1 |= (i2c_handle->ack_en << Shift_10_pos);
+// Slave mode
+}
+
+void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr) {
+// Setting start_bit
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_0_pos) & HIGH))
+		;
+
+// Clear Start bit by reading SR1 register
+	uint32_t read;
+	read = i2c_handle->I2Cx->SR1;
+	(void) read;
+	I2C_Address(i2c_handle, addr, I2C_WRITE_BIT);
+
+// Check Address matched or not
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_1_pos) & HIGH))
+		;
+
+	read = i2c_handle->I2Cx->SR1;
+	read = i2c_handle->I2Cx->SR2;
+	(void) read;
+
+// LSB first for example uint8_t *data = {H, E, L, L, O}
+	for (uint32_t i = 0; i < size; i++) {
+		// Wait for data register is empty
+		while (!((i2c_handle->I2Cx->SR1 >> Shift_7_pos) & HIGH))
+			;
+		i2c_handle->I2Cx->DR = data[i];
+	}
+
+// Wait for TXE = 1: Data register is empty
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_7_pos) & HIGH))
+		;
+// Wait for BTF = 1: Data byTe transfer succeeded
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_2_pos) & HIGH))
+		;
+
+// Stop request
+	if (sr == I2C_SR_DIS) {
+		i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+	}
+}
+
+void I2C_Master_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr) {
+
+// Setting start_bit
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_0_pos) & HIGH))
+		;
+
+// Clear Start bit by reading SR1 register
+	uint32_t read;
+	read = i2c_handle->I2Cx->SR1;
+	(void) read;
+	I2C_Address(i2c_handle, addr, I2C_READ_BIT);
+
+// Check Address matched or not
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_1_pos) & HIGH))
+		;
+
+	if (size == 1) {
+
+		// Set ACK LOW
+		i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+
+		//Clear ADDR Flag
+		read = i2c_handle->I2Cx->SR1;
+		read = i2c_handle->I2Cx->SR2;
+		(void) read;
+
+		// Wait for data register is not empty (Receiver)
+		while (!((i2c_handle->I2Cx->SR1 >> Shift_6_pos) & HIGH))
+			;
+
+		if (sr == I2C_SR_DIS) {
+			// Stop request
+			i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+		}
+
+		//Read data
+		data[0] = i2c_handle->I2Cx->DR;
+
+	} else if (size > 1) {
+		//Clear ADDR Flag
+		read = i2c_handle->I2Cx->SR1;
+		read = i2c_handle->I2Cx->SR2;
+		(void) read;
+		for (uint32_t i = 0; i < size; i++) {
+			// Wait for data register is not empty (Receiver)
+			while (!((i2c_handle->I2Cx->SR1 >> Shift_6_pos) & HIGH))
+				;
+			if ((size - i) == 1) {
+
+				// Set ACK LOW
+				i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+
+				if (sr == I2C_SR_DIS) {
+					// Stop request
+					i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+				}
+			}
+			data[i] = i2c_handle->I2Cx->DR;
+		}
+	}
+
+// SET ACK again
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_10_pos);
+
+}
+
+uint8_t I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr) {
+
+	uint8_t busy_state = I2C_Handle_it.state;
+	if (busy_state == I2C_READY) {
+
+		// Error interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_8_pos);
+
+		// Event interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_9_pos);
+
+		// Buffer interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_10_pos);
+
+		I2C_Handle_it.addr = addr;
+		I2C_Handle_it.ptx = data;
+		I2C_Handle_it.tx_len = size;
+		I2C_Handle_it.state = I2C_BUSY_TX;
+
+		// Generate Start condition
+		i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+
+		tx_complete = 0;
+	}
+	return busy_state;
+}
+
+uint8_t I2C_Master_Read_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr) {
+	uint8_t busy_state = I2C_Handle_it.state;
+	if (busy_state == I2C_READY) {
+
+		// Error interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_8_pos);
+
+		// Event interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_9_pos);
+
+		// Buffer interrupt enable
+		i2c_handle->I2Cx->CR2 |= (HIGH << Shift_10_pos);
+
+		I2C_Handle_it.addr = addr;
+		I2C_Handle_it.prx = data;
+		I2C_Handle_it.rx_len = size;
+		I2C_Handle_it.state = I2C_BUSY_RX;
+
+		// Generate Start condition
+		i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+
+		rx_complete = 0;
+	}
+	return busy_state;
+}
+
+void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
+	uint8_t bit_it = ((i2c_handle->I2Cx->SR1 >> 0) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear Start bit by reading SR1 register
+		uint32_t read;
+		read = i2c_handle->I2Cx->SR1;
+		(void) read;
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			I2C_Address(i2c_handle, I2C_Handle_it.addr, I2C_WRITE_BIT);
+		} else if (I2C_Handle_it.state == I2C_BUSY_RX) {
+			I2C_Address(i2c_handle, I2C_Handle_it.addr, I2C_READ_BIT);
+		}
+	}
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 1) & 0x1);
+	if (bit_it == HIGH) {
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			//Clear ADDR Flag
+			uint32_t read = i2c_handle->I2Cx->SR1;
+			read = i2c_handle->I2Cx->SR2;
+			(void) read;
+		} else if (I2C_Handle_it.state == I2C_BUSY_RX) {
+			if (I2C_Handle_it.rx_len == 1) {
+				// Set ACK LOW
+				i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+
+				//Clear ADDR Flag
+				uint8_t read = i2c_handle->I2Cx->SR1;
+				read = i2c_handle->I2Cx->SR2;
+				(void) read;
+
+			} else if (I2C_Handle_it.rx_len > 1) {
+				//Clear ADDR Flag
+				uint8_t read = i2c_handle->I2Cx->SR1;
+				read = i2c_handle->I2Cx->SR2;
+				(void) read;
+			}
+		}
+	}
+
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 2) & 0x1);
+// Check if BTF is HIGH or not
+// If we handled TXE first:
+//		+ We might write new data while BTF was signaling the transfer actually ended.
+//		+ We could miss the STOP condition timing → corrupt I2C protocol sequence.
+//		-> So we should handle the BTF first
+	if (bit_it == HIGH) {
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			if ((i2c_handle->I2Cx->SR1 >> 7) & 0x1) {
+				// Generate Stop condition
+				I2C_Close_Communicate(i2c_handle);
+			}
+		}
+	}
+
+// Check TXE Flag
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 7) & 0x1);
+	if (bit_it == HIGH) {
+		// Send data
+		I2C_Send_DataIT(i2c_handle);
+	}
+
+// Check RXE
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 6) & 0x1);
+	if (bit_it == HIGH) {
+		// Send data
+		I2C_Read_DataIT(i2c_handle);
+	}
+}
+
+void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw) {
+	uint8_t slave_addr = addr << 1;
+	if (rnw == I2C_WRITE_BIT) {
+		slave_addr &= ~(HIGH);
+	} else if (rnw == I2C_READ_BIT) {
+		slave_addr |= (HIGH);
+	}
+
+	i2c_handle->I2Cx->DR = slave_addr;
+
+}
+

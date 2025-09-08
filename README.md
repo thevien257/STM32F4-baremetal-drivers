@@ -8,16 +8,23 @@
 - [Project Structure](#-project-structure)
 - [Documentation](#-documentation)
 - [Memory Map And Registers](#-memory-map-and-registers)
-- [Implemented Peripherals](#-implemented-peripherals)
+- [Accessing Peripheral Registers](#-accessing-peripheral-registers)
     - [How to access peripheral registers?](#how-to-access-peripheral-registers)
     - [Clock control](#clock-control)
     - [Structure Definitions](#structure-definitions)
-    - [GPIO (General Purpose Input/Output)](#gpio-general-purpose-inputoutput)
-        - [User configurable structure:](#user-configurable-structure)
-        - [Structure GPIO_typeDef:](#structure-gpio_typedef)
-        - [GPIO Initialization Function:](#gpio-initialization-function)
-            - [GPIO_INIT](#gpio_init)
-            - [Handling External Interrupts (EXTI)](#handling-external-interrupts-exti)
+- [GPIO (General Purpose Input/Output)](#gpio-general-purpose-inputoutput)
+    - [User configurable structure](#user-configurable-structure)
+    - [Structure GPIO_typeDef](#structure-gpio_typedef)
+    - [GPIO Initialization Function](#gpio-initialization-function)
+        - [GPIO_INIT](#gpio_init)
+        - [Handling External Interrupts (EXTI)](#handling-external-interrupts-exti)
+    - [What I Learned](#what-i-learned)
+- [I2C (Inter-Integrated Circuit)](#i2c-inter-integrated-circuit)
+	- [User configurable structure](#user-configurable-structure-1)
+	- [Structure I2C_typeDef](#structure-i2c_typedef)
+	- [I2C Initialization Function](#i2c-initialization-function)
+	- [I2C Master Write Function](#i2c-master-write-function)
+	- [I2C Master Read Function](#i2c-master-read-function)
 
 ## 🎯 Overview
 
@@ -89,7 +96,7 @@ The following image shows the MODER register of the GPIO peripheral. for example
 
 <img src="img/gpio_moder.png" alt="MODER Register"/>
 
-## 🔧 Implemented Peripherals
+## 🔧 Accessing Peripheral Registers
 
 ### How to access peripheral registers?
 
@@ -209,7 +216,7 @@ void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val);
 void GPIO_TOGGLE(GPIO_TypeDef *gpiox, uint8_t gpio_pins);
 ```
 
-#### User configurable structure:
+#### User configurable structure
 
 To make the GPIO driver flexible and user-friendly, a configuration structure is defined. This structure allows users to specify the desired settings for each GPIO pin.
 
@@ -228,7 +235,7 @@ typedef struct {
 } GPIO_Handle_TypeDef;
 ```
 
-#### Structure GPIO_typeDef:
+#### Structure GPIO_typeDef
 
 The `GPIO_TypeDef` structure represents the GPIO peripheral registers. It is defined in the `stm32f4xx_cus.h` file as follows:
 
@@ -267,7 +274,7 @@ We also define macros for GPIO base addresses:
 
 Other macros for pin numbers, modes, output types, speeds, pull-up/pull-down configurations, and alternate functions are defined in `stm32f4xx_cus_gpio.h`.
 
-#### GPIO Initialization Function:
+#### GPIO Initialization Function
 
 ##### GPIO_INIT
 
@@ -325,6 +332,8 @@ uint8_t ALT_pos = (gpioHandle->pin_number % 8);
 
 For example: if pin_number is 5, then 5 % 8 = 5, so we use position 5 in AFR[0]. If pin_number is 10, then 10 % 8 = 2, so we use position 2 in AFR[1].
 
+> Trick: We can divide the pin number by the number of pins in the register to get the register index (low/high). And we can use the modulus operator to get the position of the pin in the register.
+
 Finally, we can configure the alternate function as follows:
 
 ```c
@@ -378,8 +387,474 @@ SYSCFG_EN();
     EXTI->IMR |= (HIGH << gpioHandle->pin_number);
 ```
 
-**What I Learned:**
-- Understanding GPIO register structure (MODER, OTYPER, OSPEEDR, PUPDR, etc.)
-- Bit manipulation techniques for register configuration
-- Clock enabling for peripheral operation
-- Alternate function selection and mapping
+After enableing the EXTI line, we need to know the IRQ number for the EXTI line to enable it in the NVIC.
+
+The IRQ numbers for EXTI is defined in the `stm32f4xx_cus.h` file as follows:
+
+```c
+// EXTI IRQ Numbers
+#define IRQ6_EXTI0        6   // EXTI Line0 interrupt
+#define IRQ7_EXTI1        7   // EXTI Line1 interrupt
+#define IRQ8_EXTI2        8   // EXTI Line2 interrupt
+#define IRQ9_EXTI3        9   // EXTI Line3 interrupt
+#define IRQ10_EXTI4      10   // EXTI Line4 interrupt
+#define IRQ23_EXTI9_5    23   // EXTI Line[9:5] interrupts
+#define IRQ40_EXTI15_10  40   // EXTI Line[15:10] interrupts
+```
+
+We also need to enable the corresponding IRQ in the NVIC (Nested Vectored Interrupt Controller) to allow the interrupt to be handled.
+
+```c
+void IRQ_Config(uint8_t IRQn, uint8_t EN) {
+	uint8_t cal_reg = IRQn / Shift_32_pos;
+	// This is wrong, because this mean move (4 * cal_reg) positions, not bytes!
+//	volatile uint32_t *cal_address_ISER = (volatile uint32_t*) (ISER_BASE_ADDR
+//			+ Shift_4_pos * cal_reg);
+//	volatile uint32_t *cal_address_ICER = (volatile uint32_t*) (ICER_BASE_ADDR
+//			+ Shift_4_pos * cal_reg);
+
+// This is true because the pointer is uint32_t (4 bytes), so this is move cal_reg positions (each positions is 4 bytes)
+	volatile uint32_t *cal_address_ISER = (volatile uint32_t*) (ISER_BASE_ADDR
+			+ cal_reg);
+	volatile uint32_t *cal_address_ICER = (volatile uint32_t*) (ICER_BASE_ADDR
+			+ cal_reg);
+// Enable the NVIC
+	if (EN == ENABLE) {
+		*cal_address_ISER |= (HIGH << IRQn % 32);
+	} else if (EN == DISABLE) {
+		*cal_address_ICER |= (HIGH << IRQn % 32);
+	}
+
+}
+```
+
+Then we can configure the priority of the IRQ in the NVIC.
+
+```c
+void IRQ_SetPriority(uint8_t IRQn, uint8_t priority) {
+	uint8_t cal_reg = IRQn / Shift_4_pos;
+	uint8_t cal_bit = IRQn % Shift_4_pos;
+	volatile uint32_t *cal_address_IPR = IPR_BASE_ADDR + cal_reg;
+
+	// Priority just use upper part of 4 bits
+	// (Upper part) 0000 | 0000 (Lower part)
+
+	*cal_address_IPR &= ~(priority
+			<< (cal_bit * Shift_8_pos + Shift_Upper_Part_4_bits));
+	*cal_address_IPR |= (priority
+			<< (cal_bit * Shift_8_pos + Shift_Upper_Part_4_bits));
+
+}
+```
+
+When the interrupt occurs, the corresponding IRQ handler will be called. In the IRQ handler, we need to check if the interrupt is for the specific pin and clear the pending bit in the EXTI_PR register.
+
+```c
+void GPIO_IRQHandling(uint8_t pinNumber) {
+	if ((EXTI->PR >> pinNumber) & HIGH) {
+		EXTI->PR |= (HIGH << pinNumber);
+	}
+}
+```
+
+<img src="img/gpio_irq_pending_register.png" alt="EXTI PR Register"/>
+
+#### GPIO Output Function
+
+The `GPIO_OUTPUT` function allows setting the output state of a GPIO pin. It performs the following steps:
+1. Check the desired output value (HIGH or LOW).
+2. Set or clear the corresponding bit in the BSRR register to change the pin state.
+
+```c
+void GPIO_OUTPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins, uint8_t val) {
+	if (val == HIGH) {
+		gpiox->BSRR |= (HIGH << gpio_pins);
+	} else {
+		gpiox->BSRR |= (HIGH << (Shift_16_pos + gpio_pins));
+	}
+}
+```
+
+<img src="img/gpio_bsrr.png" alt="GPIO BSRR Register"/>
+
+#### GPIO Input Function
+
+The `GPIO_INPUT` function reads the input state of a GPIO pin. It performs the following steps:
+1. Read the IDR register.
+2. Mask the desired pin and return its state (HIGH or LOW).
+
+```c
+uint8_t GPIO_INPUT(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
+	uint8_t val = ((gpiox->IDR >> gpio_pins) & GPIO_BIT_1_Mask);
+	return val;
+}
+```
+
+#### GPIO Toggle Function
+
+The `GPIO_TOGGLE` function toggles the output state of a GPIO pin. It performs the following steps:
+1. Read the current state of the pin from the ODR register.
+2. Invert the state and write it back to the ODR register.
+
+```c
+void GPIO_TOGGLE(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
+	gpiox->ODR ^= (HIGH << gpio_pins);
+}
+```
+
+## What I Learned
+- Understanding microcontroller architecture and memory mapping.
+- Using C structures to represent hardware registers.
+- Understanding GPIO register structure (MODER, OTYPER, OSPEEDR, PUPDR, etc.).
+- Applying bit manipulation techniques for register configuration: setting, clearing, and toggling bits. (Including using division/modulus to calculate register indices and bit positions.)
+- Enabling peripheral clocks for operation.
+- Configuring alternate function selection and mapping.
+- - Implementing GPIO initialization, input, output, and toggle functions.
+- Understanding how interrupts work and configuring external interrupts (EXTI), including NVIC configuration: GPIO → EXTI (Use SYSCFG to map GPIO to EXTI) → NVIC (Enable IRQ and set priority).
+
+## I2C (Inter-Integrated Circuit)
+
+The I2C driver provides a complete implementation of the I2C protocol with support for both Master and Slave modes, as well as interrupt-driven communication.
+
+**Features Implemented:**
+- Full I2C Master and Slave mode support
+- Standard mode (100 kHz) and Fast mode (400 kHz)
+- 7-bit addressing mode
+- Master transmitter and receiver modes
+- Slave transmitter and receiver modes
+- Interrupt-driven communication
+- User application callback for event handling
+
+**Key Functions:**
+```c
+// Function prototypes
+void I2C_INIT(I2C_Handle_TypeDef *i2c_handle);
+void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr);
+void I2C_Master_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr);
+void I2C_Slave_Write(I2C_TypeDef *I2Cx, uint8_t *data);
+void I2C_Slave_Read(I2C_TypeDef *I2Cx, uint8_t *data);
+void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw);
+
+// Interrupt
+uint8_t I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr);
+uint8_t I2C_Master_Read_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr);
+void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle);
+void I2C_ER_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle);
+
+// Weak implementation - user can override this in main.c
+void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle, uint8_t on_event);
+```
+
+#### User configurable structure
+
+To make the I2C driver flexible and user-friendly, a configuration structure is defined. This structure allows users to specify the desired settings for the I2C peripheral.
+
+This structure is defined in the `stm32f4xx_cus_i2c.h` file as follows:
+
+```c
+typedef struct {
+	I2C_TypeDef *I2Cx;
+	uint8_t mode;
+	uint8_t MasterOrSlave;
+	uint8_t address_select_bit;
+	uint8_t address;
+	uint32_t scl_speed;
+	uint8_t duty_cycle;
+	uint8_t ack_en;
+} I2C_Handle_TypeDef;
+```
+
+#### Structure I2C_typeDef
+
+The `I2C_TypeDef` structure represents the I2C peripheral registers. It is defined in the `stm32f4xx_cus.h` file as follows:
+
+```c
+typedef struct {
+    volatile uint32_t CR1;      // I2C control register 1
+    volatile uint32_t CR2;      // I2C control register 2
+    volatile uint32_t OAR1;     // I2C own address register 1
+    volatile uint32_t OAR2;     // I2C own address register 2
+    volatile uint32_t DR;       // I2C data register
+    volatile uint32_t SR1;      // I2C status register 1
+    volatile uint32_t SR2;      // I2C status register 2
+    volatile uint32_t CCR;      // I2C clock control register
+    volatile uint32_t TRISE;    // I2C TRISE register
+} I2C_TypeDef;
+```
+
+We also define macros for I2C base addresses:
+
+```c
+#define I2C1_BASE           0x40005400UL
+#define I2C2_BASE           0x40005800UL
+#define I2C3_BASE           0x40005C00UL
+#define I2C1                ((I2C_TypeDef*)I2C1_BASE)
+#define I2C2                ((I2C_TypeDef*)I2C2_BASE)
+#define I2C3                ((I2C_TypeDef*)I2C3_BASE)
+```
+
+#### I2C Initialization Function
+
+The `I2C_INIT` function initializes the I2C peripheral based on the configuration provided in the `I2C_Handle_TypeDef` structure. It performs the following steps:
+
+1. Enables the clock for the specified I2C peripheral.
+2. Configures the I2C mode (Standard or Fast).
+3. Configures the addressing mode (7-bit or 10-bit).
+4. Configures the own address if in Slave mode.
+5. Enables the I2C peripheral.
+6. Enables ACK if specified.
+
+First we enable the clock for the I2C peripheral from the I2C_Handle_TypeDef structure.
+
+```c
+	if (i2c_handle->I2Cx == I2C1) {
+		I2C1_EN();
+	} else if (i2c_handle->I2Cx == I2C2) {
+		I2C2_EN();
+	} else if (i2c_handle->I2Cx == I2C3) {
+		I2C3_EN();
+	}
+```
+
+After that, we call the function to get the APB1 clock speed because I2C is connected to the APB1 bus and we can use it to configure the I2C clock speed.
+
+```c
+Get_APB1_Clock_Speed();
+
+i2c_handle->I2Cx->CR2 &= ~(Five_BIT_1 << 0);
+i2c_handle->I2Cx->CR2 |= (SystemClockSrc / 1000000U);
+
+// I2C Standard/Fast Mode
+i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_15_pos);
+i2c_handle->I2Cx->CCR |= (i2c_handle->mode << Shift_15_pos);
+
+// Tscl = Thigh + Tlow
+// If i2c is standard mode (100kHz)
+if (i2c_handle->mode == I2C_Standard_Mode) {
+    i2c_handle->I2Cx->CCR |= ((SystemClockSrc / (2 * i2c_handle->scl_speed))
+            << 0);
+    // Trise
+    i2c_handle->I2Cx->TRISE = 0;
+    i2c_handle->I2Cx->TRISE |= ((SystemClockSrc / 1000000)) + 1;
+}
+// If i2c is fast mode (400kHz)
+else if (i2c_handle->mode == I2C_Fast_Mode) {
+    i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_14_pos);
+    i2c_handle->I2Cx->CCR |= (i2c_handle->duty_cycle << Shift_14_pos);
+    if (i2c_handle->duty_cycle == I2C_Duty_Cycle_2) {
+        i2c_handle->I2Cx->CCR |= ((SystemClockSrc
+                / (3 * i2c_handle->scl_speed)) << 0);
+    } else if (i2c_handle->duty_cycle == I2C_Duty_Cycle_16_9) {
+        i2c_handle->I2Cx->CCR |= ((SystemClockSrc
+                / (25 * i2c_handle->scl_speed)) << 0);
+    }
+    // Trise
+    i2c_handle->I2Cx->TRISE |= ((SystemClockSrc * I2C_TRISE_MAX_FAST_MODE
+            / 1000000000)) + 1;
+}
+
+```
+
+Then we configure Addressing mode, own address.
+
+```c
+// Adress mode - 7 bit
+if (i2c_handle->address_select_bit == I2C_7_Bit_Adress) {
+    i2c_handle->I2Cx->OAR1 |= (i2c_handle->address << HIGH);
+}
+
+// Set own address if slave mode
+if (i2c_handle->MasterOrSlave == I2C_Slave) {
+    i2c_handle->I2Cx->OAR1 |= (HIGH << Shift_14_pos);
+}
+
+```
+
+Finally, we enable the I2C peripheral and ACK if specified.
+
+```c
+// Enable I2C peripheral
+i2c_handle->I2Cx->CR1 |= (HIGH << Shift_0_pos);
+
+// Enable ACK
+i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+i2c_handle->I2Cx->CR1 |= (i2c_handle->ack_en << Shift_10_pos);
+```
+
+We need to enable the interrupts if the user configure slave mode
+
+```c
+// Slave mode
+if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+    // Error interrupt enable
+    i2c_handle->I2Cx->CR2 |= (HIGH << Shift_8_pos);
+
+    // Event interrupt enable
+    i2c_handle->I2Cx->CR2 |= (HIGH << Shift_9_pos);
+
+    // Buffer interrupt enable
+    i2c_handle->I2Cx->CR2 |= (HIGH << Shift_10_pos);
+}
+```
+
+#### I2C Master Write Function
+
+Before sending data over I²C, we first need to implement an I2C_Address function that transmits the slave device address along with the read/write control bit.
+
+```c
+void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw) {
+	uint8_t slave_addr = addr << 1;
+	if (rnw == I2C_WRITE_BIT) {
+		slave_addr &= ~(HIGH);
+	} else if (rnw == I2C_READ_BIT) {
+		slave_addr |= (HIGH);
+	}
+	i2c_handle->I2Cx->DR = slave_addr;
+}
+```
+
+The `I2C_Master_Write` function allows the I2C master to send data to a slave device. It performs the following steps:
+1. Generate a START condition.
+2. Check for the SB (Start Bit) flag in the SR1 register.
+3. Clear the SB flag by reading the SR1 register.
+4. Send the slave address with the write bit (0).
+5. Check for the ADDR (Address) flag in the SR1 register.
+6. Clear the ADDR flag by reading the SR1 and SR2 registers.
+7. Send the data bytes one by one.
+8. Wait for the TXE (Transmit Data Register Empty) flag before sending the next byte.
+9. After sending all data, wait for TXE and BTF (Byte Transfer Finished) flags is set.
+10. Generate a STOP condition or a repeated START condition based on the `sr` parameter.
+
+```c
+void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint32_t size, uint8_t sr) {
+// Setting start_bit
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_0_pos) & HIGH))
+		;
+
+// Clear Start bit by reading SR1 register
+	uint32_t read;
+	read = i2c_handle->I2Cx->SR1;
+	(void) read;
+	I2C_Address(i2c_handle, addr, I2C_WRITE_BIT);
+
+// Check Address matched or not
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_1_pos) & HIGH))
+		;
+
+	read = i2c_handle->I2Cx->SR1;
+	read = i2c_handle->I2Cx->SR2;
+	(void) read;
+
+// LSB first for example uint8_t *data = {H, E, L, L, O}
+	for (uint32_t i = 0; i < size; i++) {
+		// Wait for data register is empty
+		while (!((i2c_handle->I2Cx->SR1 >> Shift_7_pos) & HIGH))
+			;
+		i2c_handle->I2Cx->DR = data[i];
+	}
+
+// Wait for TXE = 1: Data register is empty
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_7_pos) & HIGH))
+		;
+// Wait for BTF = 1: Data byTe transfer succeeded
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_2_pos) & HIGH))
+		;
+
+// Stop request
+	if (sr == I2C_SR_DIS) {
+		i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+	}
+}
+```
+
+#### I2C Master Read Function
+
+Master Read function is similar to Master Write function, but with some differences:
+1. After sending the slave address with the read bit (1), we need to handle the with the case of reading 1 byte and more than 1 byte differently.
+2. If reading 1 byte, we need to disable the ACK bit first, then clear the ADDR flag.
+    - Wait for the RXNE (Receive Data Register Not Empty) flag, and before reading the data, we need to generate a STOP condition or a repeated START condition based on the `sr` parameter.
+    - We can then read the data from the DR register.
+3. If reading more than 1 byte, we need to clear the ADDR flag first.
+    - We wait for the RXNE flag is set before reading the data from the DR register.
+    - Then we can read the data in a loop until only 1 byte is left.
+    - Before reading the last byte, we need to disable the ACK bit and generate a STOP condition or a repeated START condition based on the `sr` parameter.
+    - We can then read the last byte from the DR register.
+    - Out of the loop, we need to re-enable the ACK bit if it was enabled before.
+
+```c
+void I2C_Master_Read(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
+		uint8_t *data, uint8_t size, uint8_t sr) {
+
+// Setting start_bit
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_8_pos);
+
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_0_pos) & HIGH))
+		;
+
+// Clear Start bit by reading SR1 register
+	uint32_t read;
+	read = i2c_handle->I2Cx->SR1;
+	(void) read;
+	I2C_Address(i2c_handle, addr, I2C_READ_BIT);
+
+// Check Address matched or not
+	while (!((i2c_handle->I2Cx->SR1 >> Shift_1_pos) & HIGH))
+		;
+
+	if (size == 1) {
+
+		// Set ACK LOW
+		i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+
+		//Clear ADDR Flag
+		read = i2c_handle->I2Cx->SR1;
+		read = i2c_handle->I2Cx->SR2;
+		(void) read;
+
+		// Wait for data register is not empty (Receiver)
+		while (!((i2c_handle->I2Cx->SR1 >> Shift_6_pos) & HIGH))
+			;
+
+		if (sr == I2C_SR_DIS) {
+			// Stop request
+			i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+		}
+
+		//Read data
+		data[0] = i2c_handle->I2Cx->DR;
+
+	} else if (size > 1) {
+		//Clear ADDR Flag
+		read = i2c_handle->I2Cx->SR1;
+		read = i2c_handle->I2Cx->SR2;
+		(void) read;
+		for (uint32_t i = 0; i < size; i++) {
+			// Wait for data register is not empty (Receiver)
+			while (!((i2c_handle->I2Cx->SR1 >> Shift_6_pos) & HIGH))
+				;
+			if ((size - i) == 1) {
+
+				// Set ACK LOW
+				i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+
+				if (sr == I2C_SR_DIS) {
+					// Stop request
+					i2c_handle->I2Cx->CR1 |= (HIGH << Shift_9_pos);
+				}
+			}
+			data[i] = i2c_handle->I2Cx->DR;
+		}
+	}
+
+// SET ACK again
+	i2c_handle->I2Cx->CR1 |= (HIGH << Shift_10_pos);
+
+}
+```

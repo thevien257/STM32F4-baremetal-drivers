@@ -509,7 +509,7 @@ void GPIO_TOGGLE(GPIO_TypeDef *gpiox, uint8_t gpio_pins) {
 - Applying bit manipulation techniques for register configuration: setting, clearing, and toggling bits. (Including using division/modulus to calculate register indices and bit positions.)
 - Enabling peripheral clocks for operation.
 - Configuring alternate function selection and mapping.
-- - Implementing GPIO initialization, input, output, and toggle functions.
+- Implementing GPIO initialization, input, output, and toggle functions.
 - Understanding how interrupts work and configuring external interrupts (EXTI), including NVIC configuration: GPIO → EXTI (Use SYSCFG to map GPIO to EXTI) → NVIC (Enable IRQ and set priority).
 
 ## I2C (Inter-Integrated Circuit)

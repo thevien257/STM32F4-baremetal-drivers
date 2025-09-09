@@ -1,10 +1,10 @@
-16:14:43 **** Incremental Build of configuration Debug for project Protocols ****
+20:31:26 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
 arm-none-eabi-size  Protocols.elf 
    text	   data	    bss	    dec	    hex	filename
-   7984	    516	   2148	  10648	   2998	Protocols.elf
+   8004	    516	   2148	  10668	   29ac	Protocols.elf
 Finished building: default.size.stdout
  
 
-16:14:43 Build Finished. 0 errors, 0 warnings. (took 228ms)
+20:31:27 Build Finished. 0 errors, 0 warnings. (took 212ms)
 

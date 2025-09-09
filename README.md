@@ -599,6 +599,10 @@ We also define macros for I2C base addresses:
 
 #### I2C Initialization Function
 
+By default, I2C operates in Slave mode. The interface automatically switches from slave to master, after it generates a START condition.
+
+<img src="img/i2c_default_slave.png" alt="I2C Start Condition"/>
+
 The `I2C_INIT` function initializes the I2C peripheral based on the configuration provided in the `I2C_Handle_TypeDef` structure. It performs the following steps:
 
 1. Enables the clock for the specified I2C peripheral.
@@ -717,7 +721,9 @@ void I2C_Address(I2C_Handle_TypeDef *i2c_handle, uint8_t addr, uint8_t rnw) {
 }
 ```
 
-The `I2C_Master_Write` function allows the I2C master to send data to a slave device. It performs the following steps:
+<img src="img/i2c_master_write.png" alt="I2C Master Write"/>
+
+The `I2C_Master_Write` function allows the I2C master to send data (7-bit) to a slave device. Based on the image above (Reference Manual RM0090), it performs the following steps:
 1. Generate a START condition.
 2. Check for the SB (Start Bit) flag in the SR1 register.
 3. Clear the SB flag by reading the SR1 register.
@@ -778,12 +784,15 @@ void I2C_Master_Write(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,
 
 Master Read function is similar to Master Write function, but with some differences:
 1. After sending the slave address with the read bit (1), we need to handle the with the case of reading 1 byte and more than 1 byte differently.
+
 2. If reading 1 byte, we need to disable the ACK bit first, then clear the ADDR flag.
     - Wait for the RXNE (Receive Data Register Not Empty) flag, and before reading the data, we need to generate a STOP condition or a repeated START condition based on the `sr` parameter.
+<img src="img/i2c_read_1_byte.png" alt="I2C Master Read 1 Byte"/>
     - We can then read the data from the DR register.
 3. If reading more than 1 byte, we need to clear the ADDR flag first.
     - We wait for the RXNE flag is set before reading the data from the DR register.
-    - Then we can read the data in a loop until only 1 byte is left.
+    - Then we can read the data in a loop **until only 1 byte is left**.
+<img src="img/i2c_read_more_than_1_bytes.png" alt="I2C Master Read Multiple Bytes"/>
     - Before reading the last byte, we need to disable the ACK bit and generate a STOP condition or a repeated START condition based on the `sr` parameter.
     - We can then read the last byte from the DR register.
     - Out of the loop, we need to re-enable the ACK bit if it was enabled before.

@@ -50,6 +50,8 @@
 #define Shift_32_pos  0x20
 #define Shift_Upper_Part_4_bits 0x4
 
+#define Mhz 1000000U
+
 #define Divide_ALT_Function 0x8
 #define GPIO_BIT_1_Mask 0x1
 #define GPIO_BIT_11_Mask 0x3

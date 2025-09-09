@@ -77,7 +77,7 @@ void I2C_INIT(I2C_Handle_TypeDef *i2c_handle) {
 
 	// Peripheral Clock Frequency (16Mhz)
 	i2c_handle->I2Cx->CR2 &= ~(Five_BIT_1 << 0);
-	i2c_handle->I2Cx->CR2 |= (Shift_16_pos << 0);
+	i2c_handle->I2Cx->CR2 |= ((SystemClockSrc / Mhz) << 0);
 
 	// I2C Standard/Fast Mode
 	i2c_handle->I2Cx->CCR &= ~(HIGH << Shift_15_pos);

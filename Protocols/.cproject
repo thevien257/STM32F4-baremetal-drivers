@@ -75,13 +75,13 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.940997686" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1367363674.503250059" name="i2cSlaveExample.c" rcbsApplicability="disable" resourcePath="Src/i2cSlaveExample.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.1909583409">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.1909583409" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772"/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1367363674.1902319067" name="spiTXTest.c" rcbsApplicability="disable" resourcePath="Src/spiTXTest.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.629041092">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.629041092" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
-						<entry excluding="i2cSlaveExample.c|i2cMasterReadExampleIT.c|i2cMasterReadExample.c|i2cMasterWriteExample.c|syscalls.c|i2cMasterWriteIT.c|GPIOandInterruptExample.c|i2cWriteExample.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry excluding="spiTXTest.c|i2cSlaveExampleLen.c|i2cSlaveExample.c|i2cMasterReadExampleIT.c|i2cMasterReadExample.c|i2cMasterWriteExample.c|syscalls.c|i2cMasterWriteIT.c|GPIOandInterruptExample.c|i2cWriteExample.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Startup"/>
 					</sourceEntries>
 				</configuration>

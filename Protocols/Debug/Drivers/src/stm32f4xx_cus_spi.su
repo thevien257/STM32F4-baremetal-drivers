@@ -1,0 +1,4 @@
+../Drivers/src/stm32f4xx_cus_spi.c:3:6:SPI_PERIPHERAL_ENABLE	16	static
+../Drivers/src/stm32f4xx_cus_spi.c:11:6:SPI_SSI_CONFIG	16	static
+../Drivers/src/stm32f4xx_cus_spi.c:19:6:SPI_INIT	16	static
+../Drivers/src/stm32f4xx_cus_spi.c:96:6:SPI_SEND	24	static

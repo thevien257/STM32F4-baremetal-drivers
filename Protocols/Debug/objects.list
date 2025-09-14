@@ -1,6 +1,7 @@
 "./Drivers/src/stm32f4xx_cus.o"
 "./Drivers/src/stm32f4xx_cus_gpio.o"
 "./Drivers/src/stm32f4xx_cus_i2c.o"
-"./Src/i2cSlaveExampleLen.o"
+"./Drivers/src/stm32f4xx_cus_spi.o"
+"./Src/spiTXOnlyArduino.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f407vgtx.o"

@@ -1,19 +1,19 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (11.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/i2cSlaveExampleLen.c \
+../Src/spiTXOnlyArduino.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/i2cSlaveExampleLen.o \
+./Src/spiTXOnlyArduino.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/i2cSlaveExampleLen.d \
+./Src/spiTXOnlyArduino.d \
 ./Src/sysmem.d 
 
 
@@ -24,7 +24,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/i2cSlaveExampleLen.cyclo ./Src/i2cSlaveExampleLen.d ./Src/i2cSlaveExampleLen.o ./Src/i2cSlaveExampleLen.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/spiTXOnlyArduino.cyclo ./Src/spiTXOnlyArduino.d ./Src/spiTXOnlyArduino.o ./Src/spiTXOnlyArduino.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

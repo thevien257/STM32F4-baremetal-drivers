@@ -55,6 +55,7 @@
 #define Divide_ALT_Function 0x8
 #define GPIO_BIT_1_Mask 0x1
 #define GPIO_BIT_11_Mask 0x3
+#define BIT_111_MASK 0x7
 #define Five_BIT_1 0x1F
 
 // RCC Def
@@ -125,6 +126,14 @@ void Get_APB1_Clock_Speed(void);
 #define I2C2_EN() (RCC->APB1ENR |= (HIGH << Shift_22_pos))
 #define I2C3_EN() (RCC->APB1ENR |= (HIGH << Shift_23_pos))
 
+// Eneable SPI Clock
+#define SPI1_EN() (RCC->APB2ENR |= (HIGH << Shift_12_pos))
+#define SPI2_EN() (RCC->APB1ENR |= (HIGH << Shift_14_pos))
+#define SPI3_EN() (RCC->APB1ENR |= (HIGH << Shift_15_pos))
+#define SPI4_EN() (RCC->APB2ENR |= (HIGH << Shift_13_pos))
+#define SPI5_EN() (RCC->APB2ENR |= (HIGH << Shift_20_pos))
+#define SPI6_EN() (RCC->APB2ENR |= (HIGH << Shift_21_pos))
+
 // System configuration
 typedef struct {
 	__IO uint32_t MEMRMP; /*!< SYSCFG memory remap register,                    Address offset: 0x00 */
@@ -175,5 +184,6 @@ typedef struct {
 #include "stm32f4xx_cus_clock.h"
 #include "stm32f4xx_cus_gpio.h"
 #include "stm32f4xx_cus_i2c.h"
+#include "stm32f4xx_cus_spi.h"
 
 #endif // STM32F4XX_CUS_H

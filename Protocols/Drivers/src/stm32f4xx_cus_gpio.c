@@ -57,7 +57,7 @@ void GPIO_INIT(GPIO_Handle_TypeDef *gpioHandle) {
 					(gpioHandle->pin_number / Divide_ALT_Function);
 			uint8_t ALT_bit = (gpioHandle->pin_number % Divide_ALT_Function);
 			gpioHandle->GPIOX->AFR[ALT_low_high] &= ~(GPIO_BIT_11_Mask
-					<< gpioHandle->pin_number);
+					<< Shift_4_pos * gpioHandle->pin_number);
 			gpioHandle->GPIOX->AFR[ALT_low_high] |=
 					(gpioHandle->alternate_function_select
 							<< Shift_4_pos * ALT_bit);

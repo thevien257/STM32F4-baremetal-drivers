@@ -5,15 +5,18 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/spiTXOnlyArduino.c \
+../Src/spiRxIT.c \
+../Src/syscalls.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/spiTXOnlyArduino.o \
+./Src/spiRxIT.o \
+./Src/syscalls.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/spiTXOnlyArduino.d \
+./Src/spiRxIT.d \
+./Src/syscalls.d \
 ./Src/sysmem.d 
 
 
@@ -24,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/spiTXOnlyArduino.cyclo ./Src/spiTXOnlyArduino.d ./Src/spiTXOnlyArduino.o ./Src/spiTXOnlyArduino.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/spiRxIT.cyclo ./Src/spiRxIT.d ./Src/spiRxIT.o ./Src/spiRxIT.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

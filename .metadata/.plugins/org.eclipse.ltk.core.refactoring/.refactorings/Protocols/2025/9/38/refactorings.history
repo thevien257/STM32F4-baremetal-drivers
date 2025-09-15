@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Protocols/Src/spiTxRxArduino2.c&apos; to &apos;spiTxRxArduino.c&apos;" description="Rename resource &apos;spiTxRxArduino2.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Src/spiTxRxArduino2.c" name="spiTxRxArduino.c" stamp="1757897820660" updateReferences="true"/>
+</session>

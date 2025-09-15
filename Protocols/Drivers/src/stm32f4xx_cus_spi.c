@@ -1,5 +1,75 @@
 #include "stm32f4xx_cus_spi.h"
 
+SPI_HandleIT spi_handleIT = { .txBuffer = NULL, .txLen = 0, .TxRxState =
+SPI_READY_IT, .rxBuffer = NULL, .rxLen = 0 };
+
+volatile uint8_t txCompl = HIGH;
+volatile uint8_t rxCompl = HIGH;
+
+static void closeSPISend(SPI_HandleTypedef *spi_handle) {
+	// Disable interrupt TX flag
+	spi_handle->SPIx->CR2 &= ~(HIGH << Shift_7_pos);
+	spi_handle->SPIx->CR2 &= ~(HIGH << Shift_5_pos);
+	spi_handleIT.TxRxState = SPI_READY_IT;
+	spi_handleIT.txLen = 0;
+	spi_handleIT.txBuffer = NULL;
+	txCompl = HIGH;
+}
+
+static void closeSPIRecev(SPI_HandleTypedef *spi_handle) {
+	// Disable interrupt RX flag
+	spi_handle->SPIx->CR2 &= ~(HIGH << Shift_6_pos);
+	spi_handle->SPIx->CR2 &= ~(HIGH << Shift_5_pos);
+	spi_handleIT.TxRxState = SPI_READY_IT;
+	spi_handleIT.rxLen = 0;
+	spi_handleIT.rxBuffer = NULL;
+	rxCompl = HIGH;
+}
+
+static void sendDataIT(SPI_HandleTypedef *spi_handle) {
+	if (spi_handleIT.txLen > 0) {
+		if (spi_handle->spi_frame_format == SPI_8_BIT_FRAME_FORMAT) {
+			spi_handle->SPIx->DR = *spi_handleIT.txBuffer;
+			spi_handleIT.txBuffer++;
+			spi_handleIT.txLen--;
+		} else if (spi_handle->spi_frame_format == SPI_16_BIT_FRAME_FORMAT) {
+			spi_handle->SPIx->DR = *(uint16_t*) spi_handleIT.txBuffer;
+			spi_handleIT.txLen--;
+			spi_handleIT.txLen--;
+			(uint16_t*) spi_handleIT.txBuffer++;
+		}
+	}
+	if (spi_handleIT.txLen == 0) {
+		closeSPISend(spi_handle);
+	}
+}
+
+static void receivDataIT(SPI_HandleTypedef *spi_handle) {
+	if (spi_handleIT.rxLen > 0) {
+		if (spi_handle->spi_frame_format == SPI_8_BIT_FRAME_FORMAT) {
+			*spi_handleIT.rxBuffer = spi_handle->SPIx->DR;
+			spi_handleIT.rxBuffer++;
+			spi_handleIT.rxLen--;
+		} else if (spi_handle->spi_frame_format == SPI_16_BIT_FRAME_FORMAT) {
+			*(uint16_t*) spi_handleIT.rxBuffer = spi_handle->SPIx->DR;
+			spi_handleIT.rxLen--;
+			spi_handleIT.rxLen--;
+			(uint16_t*) spi_handleIT.rxBuffer++;
+		}
+	}
+	if (spi_handleIT.rxLen == 0) {
+		closeSPIRecev(spi_handle);
+	}
+}
+
+uint8_t SPI_GetFlagStatus(SPI_HandleTypedef *spi_handle, uint8_t flag) {
+	// Wait until BSY=0
+	if ((spi_handle->SPIx->SR >> flag) & 0x1) {
+		return HIGH;
+	}
+	return LOW;
+}
+
 void SPI_PERIPHERAL_ENABLE(SPI_HandleTypedef *spi_handle, uint8_t EN) {
 	if (EN == HIGH) {
 		spi_handle->SPIx->CR1 |= (HIGH << Shift_6_pos);
@@ -34,7 +104,7 @@ void SPI_INIT(SPI_HandleTypedef *spi_handle) {
 	// Master/Slave
 	spi_handle->SPIx->CR1 &= ~(HIGH << Shift_2_pos);
 	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
-			spi_handle->SPIx->CR1 |= (HIGH << Shift_2_pos);  // Set MSTR bit for master
+		spi_handle->SPIx->CR1 |= (HIGH << Shift_2_pos); // Set MSTR bit for master
 	}
 
 	// Simplex mode RX: we need to configure this because the communication happens only when master produces the clock, the clock happens when MOSI line has the data
@@ -130,3 +200,97 @@ void SPI_SEND(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer, uint32_t len) {
 	// Disable SPI
 	SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
 }
+
+void SPI_RECEIVE(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer, uint32_t len) {
+	if (spi_handle->spi_data_direction == SPI_HALF_DUPLEX_MODE) {
+		// If this is half duplex mode then want to sending data, then this is send only
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_14_pos);
+	}
+
+	// Enable SPI
+	SPI_PERIPHERAL_ENABLE(spi_handle, HIGH);
+
+	while (len > 0) {
+
+		// Wait for RXE is not empty
+		while (!((spi_handle->SPIx->SR >> Shift_0_pos) & 0x1))
+			;
+		if (spi_handle->spi_frame_format == SPI_8_BIT_FRAME_FORMAT) {
+			*rxBuffer = spi_handle->SPIx->DR;
+			len--;
+			rxBuffer++;
+		} else if (spi_handle->spi_frame_format == SPI_16_BIT_FRAME_FORMAT) {
+			*(uint16_t*) rxBuffer = spi_handle->SPIx->DR;
+			len--;
+			len--;
+			(uint16_t*) rxBuffer++;
+		}
+
+	}
+
+	// Wait until BSY=0
+	while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
+		;
+
+	// Disable SPI
+	SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+}
+
+uint8_t SPI_SendIT(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer,
+		uint32_t len) {
+	uint8_t state = spi_handleIT.TxRxState;
+
+	if (state == SPI_READY_IT) {
+		spi_handleIT.txBuffer = txBuffer;
+		spi_handleIT.txLen = len;
+		spi_handleIT.TxRxState = SPI_BUSY_TX_IT;
+		txCompl = LOW;
+
+		// Enable Error interrupt and Tx buffer interrupt
+		spi_handle->SPIx->CR2 |= (Shift_5_pos << Shift_5_pos);
+	}
+
+	return state;
+}
+
+uint8_t SPI_ReceiveIT(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer,
+		uint32_t len) {
+	uint8_t state = spi_handleIT.TxRxState;
+
+	if (state == SPI_READY_IT) {
+		spi_handleIT.rxBuffer = rxBuffer;
+		spi_handleIT.rxLen = len;
+		spi_handleIT.TxRxState = SPI_BUSY_RX_IT;
+		rxCompl = LOW;
+
+		// Enable Error interrupt and Rx buffer interrupt
+		spi_handle->SPIx->CR2 |= (Shift_3_pos << Shift_5_pos);
+	}
+
+	return state;
+}
+
+void SPI_TxRx_HandlingIT(SPI_HandleTypedef *spi_handle) {
+
+	// Tx buffer empty is triggered
+	if ((spi_handle->SPIx->SR >> Shift_1_pos) & 0x1) {
+		// We send data
+		sendDataIT(spi_handle);
+	}
+
+	// Rx buffer empty is triggered
+	if ((spi_handle->SPIx->SR >> Shift_0_pos) & 0x1) {
+		// We send data
+		receivDataIT(spi_handle);
+	}
+
+	// Overrun handle
+	if ((spi_handle->SPIx->SR >> Shift_6_pos) & 0x1) {
+		// We send data
+		uint8_t temp;
+		temp = spi_handle->SPIx->DR;
+		temp = spi_handle->SPIx->SR;
+		(void) temp;
+	}
+}
+

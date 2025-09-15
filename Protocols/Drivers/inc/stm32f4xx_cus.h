@@ -176,6 +176,14 @@ typedef struct {
 #define I2C3_IRQ72_EV   72   // I2C3 event interrupt
 #define I2C3_IRQ73_ER   73   // I2C3 error interrupt
 
+// SPI IRQ Numbers
+#define SPI1_IRQ35       35   // SPI1 global interrupt
+#define SPI2_IRQ36       36   // SPI2 global interrupt
+#define SPI3_IRQ58       51   // SPI3 global interrupt
+#define SPI4_IRQ91       84   // SPI4 global interrupt
+#define SPI5_IRQ85       85   // SPI5 global interrupt
+#define SPI6_IRQ86       86   // SPI6 global interrupt
+
 #define ISER_BASE_ADDR (__IO uint32_t*)(0xE000E100)
 #define ICER_BASE_ADDR (__IO uint32_t*)(0XE000E180)
 #define IPR_BASE_ADDR ((__IO uint32_t*)0xE000E400)

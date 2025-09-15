@@ -1,4 +1,13 @@
-../Drivers/src/stm32f4xx_cus_spi.c:3:6:SPI_PERIPHERAL_ENABLE	2
-../Drivers/src/stm32f4xx_cus_spi.c:11:6:SPI_SSI_CONFIG	2
-../Drivers/src/stm32f4xx_cus_spi.c:19:6:SPI_INIT	14
-../Drivers/src/stm32f4xx_cus_spi.c:96:6:SPI_SEND	8
+../Drivers/src/stm32f4xx_cus_spi.c:9:13:closeSPISend	1
+../Drivers/src/stm32f4xx_cus_spi.c:19:13:closeSPIRecev	1
+../Drivers/src/stm32f4xx_cus_spi.c:29:13:sendDataIT	5
+../Drivers/src/stm32f4xx_cus_spi.c:47:13:receivDataIT	5
+../Drivers/src/stm32f4xx_cus_spi.c:65:9:SPI_GetFlagStatus	2
+../Drivers/src/stm32f4xx_cus_spi.c:73:6:SPI_PERIPHERAL_ENABLE	2
+../Drivers/src/stm32f4xx_cus_spi.c:81:6:SPI_SSI_CONFIG	2
+../Drivers/src/stm32f4xx_cus_spi.c:89:6:SPI_INIT	14
+../Drivers/src/stm32f4xx_cus_spi.c:166:6:SPI_SEND	8
+../Drivers/src/stm32f4xx_cus_spi.c:204:6:SPI_RECEIVE	7
+../Drivers/src/stm32f4xx_cus_spi.c:239:9:SPI_SendIT	2
+../Drivers/src/stm32f4xx_cus_spi.c:256:9:SPI_ReceiveIT	2
+../Drivers/src/stm32f4xx_cus_spi.c:273:6:SPI_TxRx_HandlingIT	4

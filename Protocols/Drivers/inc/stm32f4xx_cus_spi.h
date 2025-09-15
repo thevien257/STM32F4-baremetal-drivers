@@ -31,6 +31,16 @@ typedef struct {
 	uint8_t spi_nss_output_en;
 } SPI_HandleTypedef;
 
+typedef struct {
+	uint8_t *txBuffer;
+	uint8_t *rxBuffer;
+	uint32_t txLen;
+	uint32_t rxLen;
+	uint8_t TxRxState;
+} SPI_HandleIT;
+
+extern SPI_HandleIT spi_handleIT;
+
 /* SPI Base Addresses */
 #define SPI1_BASE    0x40013000U  /* APB2 - 0x40013000 to 0x400133FF */
 #define SPI2_BASE    0x40003800U  /* APB1 - 0x40003800 to 0x40003BFF (SPI2/I2S2) */
@@ -85,12 +95,29 @@ typedef struct {
 #define SPI_PRES_128 6
 #define SPI_PRES_256 7
 
+// Interrupt macros
+#define SPI_READY_IT 0
+#define SPI_BUSY_TX_IT 1
+#define SPI_BUSY_RX_IT 2
+
+extern volatile uint8_t txCompl;
+extern volatile uint8_t rxCompl;
+
+// Function prototypes
 void SPI_PERIPHERAL_ENABLE(SPI_HandleTypedef *spi_handle, uint8_t EN);
 void SPI_SSI_CONFIG(SPI_HandleTypedef *spi_handle, uint8_t EN);
 void SPI_SSOE_CONFIG(SPI_HandleTypedef *spi_handle, uint8_t EN);
 void SPI_INIT(SPI_HandleTypedef *spi_handle);
 void SPI_SEND(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer, uint32_t len);
+void SPI_RECEIVE(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer, uint32_t len);
 uint8_t SPI_GetFlagStatus(SPI_HandleTypedef *spi_handle, uint8_t flag);
-uint8_t SPI_GetFlagStatus(SPI_HandleTypedef *spi_handle, uint8_t flag);
+
+// Interrupt
+uint8_t SPI_SendIT(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer,
+		uint32_t len);
+uint8_t SPI_ReceiveIT(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer,
+		uint32_t len);
+void SPI_TxRx_HandlingIT(SPI_HandleTypedef *spi_handle);
+void SPI_Err_HandlingIT(SPI_HandleTypedef *spi_handle);
 
 #endif /* INC_STM32F4XX_CUS_SPI_H_ */

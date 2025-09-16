@@ -110,6 +110,8 @@ void SPI_SSOE_CONFIG(SPI_HandleTypedef *spi_handle, uint8_t EN);
 void SPI_INIT(SPI_HandleTypedef *spi_handle);
 void SPI_SEND(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer, uint32_t len);
 void SPI_RECEIVE(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer, uint32_t len);
+void SPI_SendReceive_FullDuplex(SPI_HandleTypedef *spi_handle,
+		uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
 uint8_t SPI_GetFlagStatus(SPI_HandleTypedef *spi_handle, uint8_t flag);
 
 // Interrupt

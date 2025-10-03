@@ -1,4 +1,4 @@
-Src/spiTxRxArduinoFD.o: ../Src/spiTxRxArduinoFD.c \
+Src/spiRx_Tx_IT.o: ../Src/spiRx_Tx_IT.c \
  C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h \
  C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_clock.h \
  C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_gpio.h \

@@ -11,4 +11,5 @@
 ../Drivers/src/stm32f4xx_cus_spi.c:239:6:SPI_SendReceive_FullDuplex	10
 ../Drivers/src/stm32f4xx_cus_spi.c:286:9:SPI_SendIT	2
 ../Drivers/src/stm32f4xx_cus_spi.c:303:9:SPI_ReceiveIT	2
-../Drivers/src/stm32f4xx_cus_spi.c:320:6:SPI_TxRx_HandlingIT	4
+../Drivers/src/stm32f4xx_cus_spi.c:320:9:SPI_SendReceive_FullDuplex_IT	2
+../Drivers/src/stm32f4xx_cus_spi.c:342:6:SPI_TxRx_HandlingIT	4

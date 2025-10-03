@@ -1217,3 +1217,7 @@ void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
 	}
 }
 ```
+
+!!! IMPROTANT AT SPI:
+WHAT I HAVE LEARNT: SPI is Shift register, so for master to read from slave, we need to send dummy data to slave to read data.
+--> then Slave must read that dummy data to consume that data so that avoiding slave send that dummy data again to master.

@@ -99,6 +99,7 @@ extern SPI_HandleIT spi_handleIT;
 #define SPI_READY_IT 0
 #define SPI_BUSY_TX_IT 1
 #define SPI_BUSY_RX_IT 2
+#define SPI_BUSY_TX_RX_IT 3
 
 extern volatile uint8_t txCompl;
 extern volatile uint8_t rxCompl;
@@ -119,6 +120,8 @@ uint8_t SPI_SendIT(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer,
 		uint32_t len);
 uint8_t SPI_ReceiveIT(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer,
 		uint32_t len);
+uint8_t SPI_SendReceive_FullDuplex_IT(SPI_HandleTypedef *spi_handle,
+		uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
 void SPI_TxRx_HandlingIT(SPI_HandleTypedef *spi_handle);
 void SPI_Err_HandlingIT(SPI_HandleTypedef *spi_handle);
 

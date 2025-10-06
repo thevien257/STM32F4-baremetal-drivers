@@ -1221,3 +1221,22 @@ void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
 !!! IMPROTANT AT SPI:
 WHAT I HAVE LEARNT: SPI is Shift register, so for master to read from slave, we need to send dummy data to slave to read data.
 --> then Slave must read that dummy data to consume that data so that avoiding slave send that dummy data again to master.
+
+!!! IMPORTANT AT UART: 
+				/*
+				 * 'A' (0x41)
+				 * 'B' (0x42)
+				 * 'C' (0x43)
+				 * */
+
+				// uint16_t msg9bit[] = { 0x041, 0x042, 0x043 };
+				/*
+				 * | Address    | Value | Description         |
+				 | ---------- | ----- | ------------------- |
+				 | 0x20000000 | 0x41  | lower byte of 0x041 |
+				 | 0x20000001 | 0x00  | upper byte of 0x041 |
+				 | 0x20000002 | 0x42  | lower byte of 0x042 |
+				 | 0x20000003 | 0x00  | upper byte of 0x042 |
+				 | 0x20000004 | 0x43  | lower byte of 0x043 |
+				 | 0x20000005 | 0x00  | upper byte of 0x043 |
+				 * */

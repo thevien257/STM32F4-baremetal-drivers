@@ -1,0 +1,20 @@
+#include "stm32f4xx_cus.h"
+#include <string.h>
+
+void USART_USER_INIT();
+void GPIO_USER_INIT();
+
+USART_HandleTypedef USART_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+
+int main() {
+
+	return 0;
+}
+
+void USART_USER_INIT() {
+
+}
+void GPIO_USER_INIT() {
+
+}

@@ -1,29 +1,6 @@
-17:44:39 **** Clean-only build of configuration Debug for project Protocols ****
-make -j12 clean 
-rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
-rm -rf ./Src/spiRx_Tx_IT.cyclo ./Src/spiRx_Tx_IT.d ./Src/spiRx_Tx_IT.o ./Src/spiRx_Tx_IT.su ./Src/spiTx_Rx_IT.cyclo ./Src/spiTx_Rx_IT.d ./Src/spiTx_Rx_IT.o ./Src/spiTx_Rx_IT.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
-rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su
-rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
- 
-17:44:40 **** Incremental Build of configuration Debug for project Protocols ****
+16:57:41 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
-arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
-arm-none-eabi-gcc "../Src/spiRx_Tx_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiRx_Tx_IT.d" -MT"Src/spiRx_Tx_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiRx_Tx_IT.o"
-arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
-arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
-arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
-arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
-arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
-arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
-../Src/spiRx_Tx_IT.c: In function 'main':
-../Src/spiRx_Tx_IT.c:51:83: warning: passing argument 3 of 'SPI_SendReceive_FullDuplex_IT' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   51 |                         while (SPI_SendReceive_FullDuplex_IT(&SPI_Handle, &dummy, &ReadByte,
-      |                                                                                   ^~~~~~~~~
-In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:195,
-                 from ../Src/spiRx_Tx_IT.c:1:
-C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:124:45: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile char *'
-  124 |                 uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
-      |                                    ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
 arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
 Finished building target: Protocols.elf
@@ -31,30 +8,15 @@ Finished building target: Protocols.elf
 arm-none-eabi-size  Protocols.elf 
 arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-   8248	    104	   2464	  10816	   2a40	Protocols.elf
+   3396	   1032	   1608	   6036	   1794	Protocols.elf
 Finished building: default.size.stdout
  
 Finished building: Protocols.list
  
-17:57:16 **** Incremental Build of configuration Debug for project Protocols ****
+17:00:06 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
-arm-none-eabi-size  Protocols.elf 
-   text	   data	    bss	    dec	    hex	filename
-   8248	    104	   2464	  10816	   2a40	Protocols.elf
-Finished building: default.size.stdout
- 
-18:06:42 **** Incremental Build of configuration Debug for project Protocols ****
-make -j12 all 
-arm-none-eabi-gcc "../Src/spiRx_Tx_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiRx_Tx_IT.d" -MT"Src/spiRx_Tx_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiRx_Tx_IT.o"
-../Src/spiRx_Tx_IT.c: In function 'main':
-../Src/spiRx_Tx_IT.c:51:83: warning: passing argument 3 of 'SPI_SendReceive_FullDuplex_IT' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   51 |                         while (SPI_SendReceive_FullDuplex_IT(&SPI_Handle, &dummy, &ReadByte,
-      |                                                                                   ^~~~~~~~~
-In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:195,
-                 from ../Src/spiRx_Tx_IT.c:1:
-C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:124:45: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile char *'
-  124 |                 uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
-      |                                    ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc "../Src/UART_Send.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/UART_Send.d" -MT"Src/UART_Send.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/UART_Send.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
 arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
 Finished building target: Protocols.elf
@@ -62,23 +24,14 @@ Finished building target: Protocols.elf
 arm-none-eabi-size  Protocols.elf 
 arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-   8248	    104	   2464	  10816	   2a40	Protocols.elf
+   3428	   1032	   1608	   6068	   17b4	Protocols.elf
 Finished building: default.size.stdout
  
 Finished building: Protocols.list
  
-18:08:54 **** Incremental Build of configuration Debug for project Protocols ****
+17:00:53 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
-arm-none-eabi-gcc "../Src/spiRx_Tx_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiRx_Tx_IT.d" -MT"Src/spiRx_Tx_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiRx_Tx_IT.o"
-../Src/spiRx_Tx_IT.c: In function 'main':
-../Src/spiRx_Tx_IT.c:51:83: warning: passing argument 3 of 'SPI_SendReceive_FullDuplex_IT' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
-   51 |                         while (SPI_SendReceive_FullDuplex_IT(&SPI_Handle, &dummy, &ReadByte,
-      |                                                                                   ^~~~~~~~~
-In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:195,
-                 from ../Src/spiRx_Tx_IT.c:1:
-C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:124:45: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'volatile char *'
-  124 |                 uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
-      |                                    ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc "../Src/UART_Send.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/UART_Send.d" -MT"Src/UART_Send.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/UART_Send.o"
 arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
 Finished building target: Protocols.elf
@@ -86,7 +39,7 @@ Finished building target: Protocols.elf
 arm-none-eabi-size  Protocols.elf 
 arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-   8248	    104	   2464	  10816	   2a40	Protocols.elf
+   3424	   1032	   1608	   6064	   17b0	Protocols.elf
 Finished building: default.size.stdout
  
 Finished building: Protocols.list

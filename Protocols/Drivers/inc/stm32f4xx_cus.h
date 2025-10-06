@@ -126,13 +126,23 @@ void Get_APB1_Clock_Speed(void);
 #define I2C2_EN() (RCC->APB1ENR |= (HIGH << Shift_22_pos))
 #define I2C3_EN() (RCC->APB1ENR |= (HIGH << Shift_23_pos))
 
-// Eneable SPI Clock
+// Enable SPI Clock
 #define SPI1_EN() (RCC->APB2ENR |= (HIGH << Shift_12_pos))
 #define SPI2_EN() (RCC->APB1ENR |= (HIGH << Shift_14_pos))
 #define SPI3_EN() (RCC->APB1ENR |= (HIGH << Shift_15_pos))
 #define SPI4_EN() (RCC->APB2ENR |= (HIGH << Shift_13_pos))
 #define SPI5_EN() (RCC->APB2ENR |= (HIGH << Shift_20_pos))
 #define SPI6_EN() (RCC->APB2ENR |= (HIGH << Shift_21_pos))
+
+// Enable UART Clock
+#define USART1_EN() (RCC->APB2ENR |= (HIGH << Shift_4_pos))
+#define USART2_EN() (RCC->APB1ENR |= (HIGH << Shift_17_pos))
+#define USART3_EN() (RCC->APB1ENR |= (HIGH << Shift_18_pos))
+#define UART4_EN() (RCC->APB1ENR |= (HIGH << Shift_19_pos))
+#define UART5_EN() (RCC->APB1ENR |= (HIGH << Shift_20_pos))
+#define USART6_EN() (RCC->APB2ENR |= (HIGH << Shift_5_pos))
+#define UART7_EN() (RCC->APB1ENR |= (HIGH << Shift_30_pos))
+#define UART8_EN() (RCC->APB1ENR |= (HIGH << Shift_31_pos))
 
 // System configuration
 typedef struct {
@@ -184,6 +194,14 @@ typedef struct {
 #define SPI5_IRQ85       85   // SPI5 global interrupt
 #define SPI6_IRQ86       86   // SPI6 global interrupt
 
+// UART IRQ Numbers
+#define USART1_IRQ37       37   // USART1 global interrupt
+#define USART2_IRQ38       38   // USART2 global interrupt
+#define USART3_IRQ39       39   // USART3 global interrupt
+#define USART4_IRQ52       52   // USART4 global interrupt
+#define USART5_IRQ53       53   // USART5 global interrupt
+#define USART6_IRQ71       71   // USART6 global interrupt
+
 #define ISER_BASE_ADDR (__IO uint32_t*)(0xE000E100)
 #define ICER_BASE_ADDR (__IO uint32_t*)(0XE000E180)
 #define IPR_BASE_ADDR ((__IO uint32_t*)0xE000E400)
@@ -193,5 +211,7 @@ typedef struct {
 #include "stm32f4xx_cus_gpio.h"
 #include "stm32f4xx_cus_i2c.h"
 #include "stm32f4xx_cus_spi.h"
+#include "stm32f4xx_cus_uart.h"
+#include "stm32f4xx_cus_scb.h"
 
 #endif // STM32F4XX_CUS_H

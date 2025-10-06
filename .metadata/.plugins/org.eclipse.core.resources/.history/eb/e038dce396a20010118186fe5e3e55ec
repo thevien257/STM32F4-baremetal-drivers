@@ -1,0 +1,217 @@
+#ifndef STM32F4XX_CUS_H
+#define STM32F4XX_CUS_H
+
+#include <stdio.h>
+#include <stdint.h>
+
+#define __IO volatile
+
+// Input/Output Result
+#define LOW 0
+#define HIGH 1
+
+// Enable/Disable
+#define DISABLE 0
+#define ENABLE 1
+
+// Mask
+#define Shift_0_pos  0x0
+#define Shift_1_pos  0x1
+#define Shift_2_pos  0x2
+#define Shift_3_pos  0x3
+#define Shift_4_pos  0x4
+#define Shift_5_pos  0x5
+#define Shift_6_pos  0x6
+#define Shift_7_pos  0x7
+#define Shift_8_pos  0x8
+#define Shift_9_pos   0x9
+#define Shift_10_pos  0xA
+#define Shift_11_pos  0xB
+#define Shift_12_pos  0xC
+#define Shift_13_pos  0xD
+#define Shift_14_pos  0xE
+#define Shift_15_pos  0xF
+#define Shift_16_pos  0x10
+#define Shift_17_pos  0x11
+#define Shift_18_pos  0x12
+#define Shift_19_pos  0x13
+#define Shift_20_pos  0x14
+#define Shift_21_pos  0x15
+#define Shift_22_pos  0x16
+#define Shift_23_pos  0x17
+#define Shift_24_pos  0x18
+#define Shift_25_pos  0x19
+#define Shift_26_pos  0x1A
+#define Shift_27_pos  0x1B
+#define Shift_28_pos  0x1C
+#define Shift_29_pos  0x1D
+#define Shift_30_pos  0x1E
+#define Shift_31_pos  0x1F
+#define Shift_32_pos  0x20
+#define Shift_Upper_Part_4_bits 0x4
+
+#define Mhz 1000000U
+
+#define Divide_ALT_Function 0x8
+#define GPIO_BIT_1_Mask 0x1
+#define GPIO_BIT_11_Mask 0x3
+#define BIT_111_MASK 0x7
+#define Five_BIT_1 0x1F
+
+// RCC Def
+typedef struct {
+	__IO uint32_t CR; /*!< RCC clock control register,                Address offset: 0x00 */
+	__IO uint32_t PLLCFGR; /*!< RCC PLL configuration register,            Address offset: 0x04 */
+	__IO uint32_t CFGR; /*!< RCC clock configuration register,          Address offset: 0x08 */
+	__IO uint32_t CIR; /*!< RCC clock interrupt register,              Address offset: 0x0C */
+	__IO uint32_t AHB1RSTR; /*!< RCC AHB1 peripheral reset register,        Address offset: 0x10 */
+	__IO uint32_t AHB2RSTR; /*!< RCC AHB2 peripheral reset register,        Address offset: 0x14 */
+	__IO uint32_t AHB3RSTR; /*!< RCC AHB3 peripheral reset register,        Address offset: 0x18 */
+	uint32_t RESERVED0; /*!< Reserved,                                   Address offset: 0x1C */
+	__IO uint32_t APB1RSTR; /*!< RCC APB1 peripheral reset register,        Address offset: 0x20 */
+	__IO uint32_t APB2RSTR; /*!< RCC APB2 peripheral reset register,        Address offset: 0x24 */
+	uint32_t RESERVED1[2];/*!< Reserved,                                   Address offset: 0x28-0x2C */
+	__IO uint32_t AHB1ENR; /*!< RCC AHB1 peripheral clock register,        Address offset: 0x30 */
+	__IO uint32_t AHB2ENR; /*!< RCC AHB2 peripheral clock register,        Address offset: 0x34 */
+	__IO uint32_t AHB3ENR; /*!< RCC AHB3 peripheral clock register,        Address offset: 0x38 */
+	uint32_t RESERVED2; /*!< Reserved,                                   Address offset: 0x3C */
+	__IO uint32_t APB1ENR; /*!< RCC APB1 peripheral clock enable register, Address offset: 0x40 */
+	__IO uint32_t APB2ENR; /*!< RCC APB2 peripheral clock enable register, Address offset: 0x44 */
+	uint32_t RESERVED3[2];/*!< Reserved,                                   Address offset: 0x48-0x4C */
+	__IO uint32_t AHB1LPENR; /*!< RCC AHB1 peripheral clock enable in low power mode register, Address offset: 0x50 */
+	__IO uint32_t AHB2LPENR; /*!< RCC AHB2 peripheral clock enable in low power mode register, Address offset: 0x54 */
+	__IO uint32_t AHB3LPENR; /*!< RCC AHB3 peripheral clock enable in low power mode register, Address offset: 0x58 */
+	uint32_t RESERVED4; /*!< Reserved,                                   Address offset: 0x5C */
+	__IO uint32_t APB1LPENR; /*!< RCC APB1 peripheral clock enable in low power mode register, Address offset: 0x60 */
+	__IO uint32_t APB2LPENR; /*!< RCC APB2 peripheral clock enable in low power mode register, Address offset: 0x64 */
+	uint32_t RESERVED5[2];/*!< Reserved,                                   Address offset: 0x68-0x6C */
+	__IO uint32_t BDCR; /*!< RCC Backup domain control register,        Address offset: 0x70 */
+	__IO uint32_t CSR; /*!< RCC clock control & status register,       Address offset: 0x74 */
+	uint32_t RESERVED6[2];/*!< Reserved,                                   Address offset: 0x78-0x7C */
+	__IO uint32_t SSCGR; /*!< RCC spread spectrum clock generation register, Address offset: 0x80 */
+	__IO uint32_t PLLI2SCFGR; /*!< RCC PLLI2S configuration register,         Address offset: 0x84 */
+} RCC_TypeDef;
+
+#define RCC     ((RCC_TypeDef *) 0x40023800UL)
+#define Clock_SRC 16000000
+extern uint32_t SystemClockSrc;
+extern uint32_t APB1_Clock_Speed;
+
+void Get_APB1_Clock_Speed(void);
+
+// GPIO Enable Clock
+#define GPIOA_EN() (RCC->AHB1ENR |= HIGH << Shift_0_pos)
+#define GPIOB_EN() (RCC->AHB1ENR |= HIGH << Shift_1_pos)
+#define GPIOC_EN() (RCC->AHB1ENR |= HIGH << Shift_2_pos)
+#define GPIOD_EN() (RCC->AHB1ENR |= HIGH << Shift_3_pos)
+#define GPIOE_EN() (RCC->AHB1ENR |= HIGH << Shift_4_pos)
+#define GPIOF_EN() (RCC->AHB1ENR |= HIGH << Shift_5_pos)
+#define GPIOG_EN() (RCC->AHB1ENR |= HIGH << Shift_6_pos)
+#define GPIOH_EN() (RCC->AHB1ENR |= HIGH << Shift_7_pos)
+#define GPIOI_EN() (RCC->AHB1ENR |= HIGH << Shift_8_pos)
+
+// // GPIO Disable Clock
+#define GPIOA_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_0_pos))
+#define GPIOB_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_1_pos))
+#define GPIOC_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_2_pos))
+#define GPIOD_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_3_pos))
+#define GPIOE_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_4_pos))
+#define GPIOF_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_5_pos))
+#define GPIOG_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_6_pos))
+#define GPIOH_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_7_pos))
+#define GPIOI_DIS() (RCC->AHB1ENR &= ~(HIGH << Shift_8_pos))
+
+// Enable I2C Clock
+#define I2C1_EN() (RCC->APB1ENR |= (HIGH << Shift_21_pos))
+#define I2C2_EN() (RCC->APB1ENR |= (HIGH << Shift_22_pos))
+#define I2C3_EN() (RCC->APB1ENR |= (HIGH << Shift_23_pos))
+
+// Enable SPI Clock
+#define SPI1_EN() (RCC->APB2ENR |= (HIGH << Shift_12_pos))
+#define SPI2_EN() (RCC->APB1ENR |= (HIGH << Shift_14_pos))
+#define SPI3_EN() (RCC->APB1ENR |= (HIGH << Shift_15_pos))
+#define SPI4_EN() (RCC->APB2ENR |= (HIGH << Shift_13_pos))
+#define SPI5_EN() (RCC->APB2ENR |= (HIGH << Shift_20_pos))
+#define SPI6_EN() (RCC->APB2ENR |= (HIGH << Shift_21_pos))
+
+// Enable UART Clock
+#define USART1_EN() (RCC->APB2ENR |= (HIGH << Shift_4_pos))
+#define USART2_EN() (RCC->APB2ENR |= (HIGH << Shift_17_pos))
+#define USART3_EN() (RCC->APB2ENR |= (HIGH << Shift_18_pos))
+#define UART4_EN() (RCC->APB2ENR |= (HIGH << Shift_19_pos))
+#define UART5_EN() (RCC->APB2ENR |= (HIGH << Shift_20_pos))
+#define USART6_EN() (RCC->APB2ENR |= (HIGH << Shift_5_pos))
+#define UART7_EN() (RCC->APB2ENR |= (HIGH << Shift_30_pos))
+#define UART8_EN() (RCC->APB2ENR |= (HIGH << Shift_31_pos))
+
+// System configuration
+typedef struct {
+	__IO uint32_t MEMRMP; /*!< SYSCFG memory remap register,                    Address offset: 0x00 */
+	__IO uint32_t PMC; /*!< SYSCFG peripheral mode configuration register,   Address offset: 0x04 */
+	__IO uint32_t EXTICR[4]; /*!< SYSCFG external interrupt configuration registers, Address offset: 0x08-0x14 */
+	uint32_t RESERVED[2]; /*!< Reserved,                                         Address offset: 0x18-0x1C */
+	__IO uint32_t CMPCR; /*!< SYSCFG Compensation cell control register,       Address offset: 0x20 */
+} SYSCFG_TypeDef;
+
+#define SYSCFG ((SYSCFG_TypeDef*) 0x40013800)
+
+#define SYSCFG_EN() (RCC->APB2ENR |= HIGH << Shift_14_pos)
+
+// EXTI
+typedef struct {
+	__IO uint32_t IMR; /*!< EXTI Interrupt mask register,            Address offset: 0x00 */
+	__IO uint32_t EMR; /*!< EXTI Event mask register,                Address offset: 0x04 */
+	__IO uint32_t RTSR; /*!< EXTI Rising trigger selection register,  Address offset: 0x08 */
+	__IO uint32_t FTSR; /*!< EXTI Falling trigger selection register, Address offset: 0x0C */
+	__IO uint32_t SWIER; /*!< EXTI Software interrupt event register,  Address offset: 0x10 */
+	__IO uint32_t PR; /*!< EXTI Pending register,                   Address offset: 0x14 */
+} EXTI_TypeDef;
+
+#define EXTI ((EXTI_TypeDef*) 0x40013C00)
+
+// EXTI IRQ Numbers
+#define IRQ6_EXTI0        6   // EXTI Line0 interrupt
+#define IRQ7_EXTI1        7   // EXTI Line1 interrupt
+#define IRQ8_EXTI2        8   // EXTI Line2 interrupt
+#define IRQ9_EXTI3        9   // EXTI Line3 interrupt
+#define IRQ10_EXTI4      10   // EXTI Line4 interrupt
+#define IRQ23_EXTI9_5    23   // EXTI Line[9:5] interrupts
+#define IRQ40_EXTI15_10  40   // EXTI Line[15:10] interrupts
+
+// I2C IRQ Numbers
+#define I2C1_IRQ31_EV   31   // I2C1 event interrupt
+#define I2C1_IRQ32_ER   32   // I2C1 error interrupt
+#define I2C2_IRQ33_EV   33   // I2C2 event interrupt
+#define I2C2_IRQ34_ER   34   // I2C2 error interrupt
+#define I2C3_IRQ72_EV   72   // I2C3 event interrupt
+#define I2C3_IRQ73_ER   73   // I2C3 error interrupt
+
+// SPI IRQ Numbers
+#define SPI1_IRQ35       35   // SPI1 global interrupt
+#define SPI2_IRQ36       36   // SPI2 global interrupt
+#define SPI3_IRQ58       51   // SPI3 global interrupt
+#define SPI4_IRQ91       84   // SPI4 global interrupt
+#define SPI5_IRQ85       85   // SPI5 global interrupt
+#define SPI6_IRQ86       86   // SPI6 global interrupt
+
+// UART IRQ Numbers
+#define USART1_IRQ37       37   // USART1 global interrupt
+#define USART2_IRQ38       38   // USART2 global interrupt
+#define USART3_IRQ39       39   // USART3 global interrupt
+#define USART4_IRQ52       52   // USART4 global interrupt
+#define USART5_IRQ53       53   // USART5 global interrupt
+#define USART6_IRQ71       71   // USART6 global interrupt
+
+#define ISER_BASE_ADDR (__IO uint32_t*)(0xE000E100)
+#define ICER_BASE_ADDR (__IO uint32_t*)(0XE000E180)
+#define IPR_BASE_ADDR ((__IO uint32_t*)0xE000E400)
+
+// Include peripheral headers last so they see all macro/type definitions (e.g., __IO) defined above
+#include "stm32f4xx_cus_clock.h"
+#include "stm32f4xx_cus_gpio.h"
+#include "stm32f4xx_cus_i2c.h"
+#include "stm32f4xx_cus_spi.h"
+#include "stm32f4xx_cus_uart.h"
+#include "stm32f4xx_cus_scb.h"
+
+#endif // STM32F4XX_CUS_H

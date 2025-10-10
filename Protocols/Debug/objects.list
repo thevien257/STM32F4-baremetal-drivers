@@ -3,7 +3,7 @@
 "./Drivers/src/stm32f4xx_cus_i2c.o"
 "./Drivers/src/stm32f4xx_cus_spi.o"
 "./Drivers/src/stm32f4xx_cus_uart.o"
-"./Src/UART_Send_Receive.o"
+"./Src/USART_synchronous_mode.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f407vgtx.o"

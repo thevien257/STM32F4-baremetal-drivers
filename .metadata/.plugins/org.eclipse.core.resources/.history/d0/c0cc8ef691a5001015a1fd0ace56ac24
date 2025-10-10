@@ -1,0 +1,260 @@
+/* Application: USART1 with Hardware Flow Control (RTS/CTS)
+ * STM32F411CEU6 Black Pill
+ * PA9  = TX
+ * PA10 = RX
+ * PA11 = CTS (input from other device)
+ * PA12 = RTS (output to other device)
+ */
+
+#include "stm32f4xx_cus.h"
+#include <string.h>
+
+void USART1_USER_INIT(void);
+void GPIO_USER_INIT(void);
+
+USART_HandleTypedef USART_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+
+// Message to send
+char *msg = "Hello this is from stm32f411ceu6\r\n";
+
+// Buffer for received data
+char rx_buf[100];
+
+uint8_t g_data = 0;
+
+void delay(void) {
+	for (uint32_t i = 0; i < 500000 / 2; i++)
+		;
+}
+
+int main(void) {
+	GPIO_USER_INIT();
+	Get_APB1_Clock_Speed();  // or Get_APB2_Clock_Speed() if needed
+	USART1_USER_INIT();
+	IRQ_Config(USART1_IRQ37, HIGH);  // USART1 IRQ number is 37
+
+	// Send initial message once
+	USART_txCompl = 0;
+	while (USART_write_IT(&USART_Handle, (uint8_t*) msg, strlen(msg))
+			!= USART_READY_IT)
+		;
+	while (USART_txCompl == 0)
+		;  // Wait for transmission complete
+
+	// Start receiving continuously
+	USART_rxCompl = 0;
+	memset(rx_buf, 0, sizeof(rx_buf));
+	while (USART_read_IT(&USART_Handle, (uint8_t*) rx_buf, 1) != USART_READY_IT)
+		;
+
+	uint8_t rx_index = 0;
+
+	while (1) {
+		// Check if data received
+		if (USART_rxCompl == 1) {
+			USART_rxCompl = 0;
+
+			// Echo back the received byte
+			USART_txCompl = 0;
+			while (USART_write_IT(&USART_Handle, (uint8_t*) &rx_buf[rx_index],
+					1) != USART_READY_IT)
+				;
+			while (USART_txCompl == 0)
+				;
+
+			// Move to next buffer position (circular)
+			rx_index++;
+			if (rx_index >= sizeof(rx_buf)) {
+				rx_index = 0;
+			}
+
+			// Continue receiving next byte
+			while (USART_read_IT(&USART_Handle, (uint8_t*) &rx_buf[rx_index], 1)
+					!= USART_READY_IT)
+				;
+		}
+	}
+
+	return 0;
+}
+
+void USART1_USER_INIT(void) {
+	USART_Handle.USARTx = USART1;
+	USART_Handle.baud_rate = USART_BAUD_115200;
+	USART_Handle.data_bits = USART_8_DATA_BITS;
+	USART_Handle.stop_bits = USART_1_STOP_BIT;
+	USART_Handle.oversampling_mode = USART_OVERSAMPLING_16;
+	USART_Handle.parity_control = USART_PARITY_DISABLE;
+	USART_Handle.usart_mode = USART_MODE_ASYNC;
+	USART_Handle.usart_hardware_flow_control = USART_HW_FLOW_CTRL_RTS_CTS; // Enable RTS/CTS
+	USART_INIT(&USART_Handle);
+}
+
+void GPIO_USER_INIT(void) {
+	// USART1 pins: PA9=TX, PA10=RX, PA11=CTS, PA12=RTS
+	GPIO_Handle.GPIOX = GPIOA;
+	GPIO_Handle.alternate_function_select = GPIO_AF7;
+	GPIO_Handle.mode = GPIO_MODE_AF;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_NONE; // No pull-up/down for UART with flow control
+
+	// PA9 - TX
+	GPIO_Handle.pin_number = GPIO_PIN_9;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PA10 - RX
+	GPIO_Handle.pin_number = GPIO_PIN_10;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PA11 - CTS (input)
+	GPIO_Handle.pin_number = GPIO_PIN_11;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PA12 - RTS (output)
+	GPIO_Handle.pin_number = GPIO_PIN_12;
+	GPIO_INIT(&GPIO_Handle);
+}
+
+void USART1_IRQHandler(void) {
+	USART_Handle_IT(&USART_Handle);
+}
+
+/* ============================================================================
+ * ALTERNATIVE VERSION: Send message on button press + continuous receive
+ * ============================================================================ */
+#if 0
+
+int main_alternative(void) {
+    GPIO_USER_INIT();
+    Get_APB1_Clock_Speed();
+    USART1_USER_INIT();
+    IRQ_Config(USART1_IRQ37, HIGH);
+
+    // Setup button on PC13 (built-in button on Black Pill)
+    GPIO_Handle.GPIOX = GPIOC;
+    GPIO_Handle.pin_number = GPIO_PIN_13;
+    GPIO_Handle.mode = GPIO_MODE_INPUT;
+    GPIO_Handle.pull_up_pull_down = GPIO_PUPD_PU;
+    GPIO_INIT(&GPIO_Handle);
+
+    // Start receiving
+    USART_rxCompl = 0;
+    memset(rx_buf, 0, sizeof(rx_buf));
+    while (USART_read_IT(&USART_Handle, (uint8_t*)rx_buf, 1) != USART_READY_IT);
+
+    uint8_t rx_index = 0;
+
+    while (1) {
+        // Check for button press (PC13 is active LOW on Black Pill)
+        if (!GPIO_INPUT(GPIOC, GPIO_PIN_13)) {
+            delay();  // Debounce
+
+            // Send message
+            USART_txCompl = 0;
+            while (USART_write_IT(&USART_Handle, (uint8_t*)msg, strlen(msg)) != USART_READY_IT);
+            while (USART_txCompl == 0);
+
+            // Wait for button release
+            while (!GPIO_INPUT(GPIOC, GPIO_PIN_13));
+            delay();
+        }
+
+        // Echo received data
+        if (USART_rxCompl == 1) {
+            USART_rxCompl = 0;
+
+            USART_txCompl = 0;
+            while (USART_write_IT(&USART_Handle, (uint8_t*)&rx_buf[rx_index], 1) != USART_READY_IT);
+            while (USART_txCompl == 0);
+
+            rx_index++;
+            if (rx_index >= sizeof(rx_buf)) {
+                rx_index = 0;
+            }
+
+            while (USART_read_IT(&USART_Handle, (uint8_t*)&rx_buf[rx_index], 1) != USART_READY_IT);
+        }
+    }
+
+    return 0;
+}
+
+#endif
+
+/* ============================================================================
+ * ALTERNATIVE VERSION: Receive complete line and echo back
+ * ============================================================================ */
+#if 0
+
+int main_line_echo(void) {
+    GPIO_USER_INIT();
+    Get_APB1_Clock_Speed();
+    USART1_USER_INIT();
+    IRQ_Config(USART1_IRQ37, HIGH);
+
+    // Send welcome message
+    USART_txCompl = 0;
+    while (USART_write_IT(&USART_Handle, (uint8_t*)msg, strlen(msg)) != USART_READY_IT);
+    while (USART_txCompl == 0);
+
+    char prompt[] = "Type something (press Enter):\r\n";
+    USART_txCompl = 0;
+    while (USART_write_IT(&USART_Handle, (uint8_t*)prompt, strlen(prompt)) != USART_READY_IT);
+    while (USART_txCompl == 0);
+
+    uint8_t rx_index = 0;
+    memset(rx_buf, 0, sizeof(rx_buf));
+
+    // Start receiving first byte
+    USART_rxCompl = 0;
+    while (USART_read_IT(&USART_Handle, (uint8_t*)&rx_buf[0], 1) != USART_READY_IT);
+
+    while (1) {
+        if (USART_rxCompl == 1) {
+            USART_rxCompl = 0;
+
+            // Check for Enter key
+            if (rx_buf[rx_index] == '\r' || rx_buf[rx_index] == '\n') {
+                if (rx_index > 0) {
+                    rx_buf[rx_index] = '\0';
+
+                    // Echo back the line
+                    char echo_msg[120];
+                    snprintf(echo_msg, sizeof(echo_msg), "You sent: %s\r\n", rx_buf);
+
+                    USART_txCompl = 0;
+                    while (USART_write_IT(&USART_Handle, (uint8_t*)echo_msg, strlen(echo_msg)) != USART_READY_IT);
+                    while (USART_txCompl == 0);
+
+                    // Show prompt again
+                    USART_txCompl = 0;
+                    while (USART_write_IT(&USART_Handle, (uint8_t*)prompt, strlen(prompt)) != USART_READY_IT);
+                    while (USART_txCompl == 0);
+
+                    // Reset buffer
+                    memset(rx_buf, 0, sizeof(rx_buf));
+                    rx_index = 0;
+                }
+            } else {
+                // Echo character
+                USART_txCompl = 0;
+                while (USART_write_IT(&USART_Handle, (uint8_t*)&rx_buf[rx_index], 1) != USART_READY_IT);
+                while (USART_txCompl == 0);
+
+                rx_index++;
+                if (rx_index >= sizeof(rx_buf) - 1) {
+                    rx_index = 0;
+                }
+            }
+
+            // Continue receiving next byte
+            while (USART_read_IT(&USART_Handle, (uint8_t*)&rx_buf[rx_index], 1) != USART_READY_IT);
+        }
+    }
+
+    return 0;
+}
+
+#endif

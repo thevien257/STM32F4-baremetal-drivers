@@ -3,6 +3,10 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="APB1_Clock_Speed"/>
+		<item value="USART1"/>
+		<item value="usart_handle-&gt;usart_mode"/>
+		<item value="async"/>
 		<item value="SystemInit"/>
 		<item value="CommandCode"/>
 		<item value="busy_state"/>

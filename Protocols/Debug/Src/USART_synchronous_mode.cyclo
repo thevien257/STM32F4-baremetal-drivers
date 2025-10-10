@@ -1,0 +1,5 @@
+../Src/USART_synchronous_mode.c:20:6:delay	2
+../Src/USART_synchronous_mode.c:25:5:main	5
+../Src/USART_synchronous_mode.c:71:6:USART_USER_INIT	1
+../Src/USART_synchronous_mode.c:87:6:GPIO_USER_INIT	1
+../Src/USART_synchronous_mode.c:115:6:USART1_IRQHandler	1

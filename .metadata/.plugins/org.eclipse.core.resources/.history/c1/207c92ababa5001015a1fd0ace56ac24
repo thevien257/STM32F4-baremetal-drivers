@@ -1,0 +1,102 @@
+/* USART1 Synchronous Master Example - Communicates with SPI Slave */
+#include "stm32f4xx_cus.h"
+#include <string.h>
+
+void USART_USER_INIT();
+void GPIO_USER_INIT();
+
+USART_HandleTypedef USART_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+
+// Messages to send to SPI slave
+char *msg[3] = { "Hello Slave! ",      // 16 bytes
+		"Data from USART", "Sync Mode Test!" };
+
+// Reply from SPI slave stored here
+char rx_buf[16];
+
+uint32_t cnt = 0;
+
+void delay(void) {
+	for (uint32_t i = 0; i < 500000 / 2; i++)
+		;
+}
+
+int main(void) {
+	GPIO_USER_INIT();
+	USART_USER_INIT();
+	IRQ_Config(USART1_IRQ37, HIGH);  // USART1 IRQ
+
+	printf("USART1 Synchronous Master Started\n");
+
+	while (1) {
+		delay();
+
+		USART_rxCompl = 0;
+		USART_txCompl = 0;
+
+		cnt = cnt % 3;
+
+		memset(rx_buf, 0, sizeof(rx_buf));
+
+		// In synchronous mode, we must transmit to receive
+		// Setup simultaneous TX and RX (like SPI full-duplex)
+		while (USART_read_IT(&USART_Handle, (uint8_t*) rx_buf, strlen(msg[cnt]))
+				!= USART_READY_IT)
+			;
+
+		while (USART_write_IT(&USART_Handle, (uint8_t*) msg[cnt],
+				strlen(msg[cnt])) != USART_READY_IT)
+			;
+
+		// Wait for transmission complete
+		while (USART_txCompl == 0)
+			;
+
+		printf("Sent: %s\n", msg[cnt]);
+
+		// Wait for reception complete
+		while (USART_rxCompl == 0)
+			;
+
+		rx_buf[15] = '\0';  // Null terminate
+		printf("Received: %s\n\n", rx_buf);
+
+		cnt++;
+	}
+
+	return 0;
+}
+
+// Debug: Print clock speeds
+printf("APB2_Clock_Speed: %lu Hz\n", APB2_Clock_Speed);
+printf("BRR Register: 0x%lX\n", USART_Handle.USARTx->BRR);
+printf("CR1 Register: 0x%lX\n", USART_Handle.USARTx->CR1);
+printf("CR2 Register: 0x%lX\n", USART_Handle.USARTx->CR2);
+
+void GPIO_USER_INIT() {
+	// USART1 pins (PA9 = TX, PA10 = RX, PA8 = CK)
+	GPIO_Handle.GPIOX = GPIOA;
+	GPIO_Handle.alternate_function_select = GPIO_AF7;
+	GPIO_Handle.mode = GPIO_MODE_AF;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_PU;
+
+	GPIO_Handle.pin_number = GPIO_PIN_9;   // TX
+	GPIO_INIT(&GPIO_Handle);
+	GPIO_Handle.pin_number = GPIO_PIN_10;  // RX
+	GPIO_INIT(&GPIO_Handle);
+	GPIO_Handle.pin_number = GPIO_PIN_8;   // CK (Clock)
+	GPIO_INIT(&GPIO_Handle);
+
+	// User button (PA0)
+	GPIO_Handle.pin_number = GPIO_PIN_0;
+	GPIO_Handle.mode = GPIO_MODE_INPUT;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&GPIO_Handle);
+}
+
+void USART1_IRQHandler(void) {                           // Changed handler name
+	USART_Handle_IT(&USART_Handle);
+}

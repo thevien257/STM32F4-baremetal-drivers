@@ -96,8 +96,10 @@ typedef struct {
 #define Clock_SRC 16000000
 extern uint32_t SystemClockSrc;
 extern uint32_t APB1_Clock_Speed;
+extern uint32_t APB2_Clock_Speed;
 
 void Get_APB1_Clock_Speed(void);
+void Get_APB2_Clock_Speed(void);
 
 // GPIO Enable Clock
 #define GPIOA_EN() (RCC->AHB1ENR |= HIGH << Shift_0_pos)

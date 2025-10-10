@@ -1,5 +1,11 @@
 #include <stm32f4xx_cus_uart.h>
 
+USART_HandleIT USART_handleIT = { .txBuffer = NULL, .txLen = 0, .TxState =
+USART_READY_IT, .rxBuffer = NULL, .rxLen = 0, .RxState = USART_READY_IT };
+
+volatile uint8_t USART_txCompl = LOW;
+volatile uint8_t USART_rxCompl = LOW;
+
 void USART_INIT(USART_HandleTypedef *usart_handle) {
 	if (usart_handle->USARTx == USART1) {
 		USART1_EN();
@@ -115,7 +121,6 @@ void UART_TRANSMIT_ENABLE(USART_HandleTypedef *usart_handle, uint8_t EnOrDis) {
 
 void USART_write(USART_HandleTypedef *usart_handle, uint8_t *data,
 		uint32_t size) {
-	uint16_t *pData;
 	UART_TRANSMIT_ENABLE(usart_handle, HIGH);
 	for (uint32_t i = 0; i < size; i++) {
 		// Wait for TXE is empty
@@ -125,8 +130,6 @@ void USART_write(USART_HandleTypedef *usart_handle, uint8_t *data,
 		// the value written in the MSB (bit 7 or bit 8 depending on the data length)
 		// has no effect because it is replaced by the parity.
 		if (usart_handle->data_bits == USART_9_DATA_BITS) {
-			pData = (uint16_t*) data;
-			usart_handle->USARTx->DR = (*pData & 0x1FF); // Write 9-bit data
 			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
 
 				// uint16_t msg9bit[] = { 0x1FF, 0x155, 0x0AA }; // three 9-bit characters
@@ -141,21 +144,270 @@ void USART_write(USART_HandleTypedef *usart_handle, uint8_t *data,
 				 | 0x20000005 | 0x00  | MSB of third character  |
 
 				 */
+				usart_handle->USARTx->DR = (*((uint16_t*) data)
+						& (uint16_t) 0x1FF); // Write 9-bit data
 				data++;
 				data++;
 			} else {
+				usart_handle->USARTx->DR = (*data & (uint8_t) 0xFF); // Write 9-bit data
 				data++;
 			}
 		} else {
-			usart_handle->USARTx->DR = (*data & 0xFF); // Write 8-bit data
-			data++;
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+				usart_handle->USARTx->DR = (uint8_t) (*data & 0xFF); // Write 8-bit data
+				data++;
+			} else {
+				usart_handle->USARTx->DR = (uint8_t) (*data & (uint8_t) 0x7F); // Write 8-bit data
+				data++;
+			}
+
 		}
 	}
 
 	// Wait for Transmission complete
 	while (!((usart_handle->USARTx->SR >> Shift_6_pos) & 0x1))
 		;
-
 	UART_TRANSMIT_ENABLE(usart_handle, LOW);
+}
+
+void UART_RECEIVER_ENABLE(USART_HandleTypedef *usart_handle, uint8_t EnOrDis) {
+	if (EnOrDis == HIGH) {
+		usart_handle->USARTx->CR1 |= (EnOrDis << Shift_2_pos);
+	} else {
+		usart_handle->USARTx->CR1 &= ~(HIGH << Shift_2_pos);
+	}
+}
+
+void USART_read(USART_HandleTypedef *usart_handle, uint8_t *data, uint32_t size) {
+	UART_RECEIVER_ENABLE(usart_handle, HIGH);
+	for (uint32_t i = 0; i < size; i++) {
+		// Wait for RXNe is ready to read
+		while (!((usart_handle->USARTx->SR >> Shift_5_pos) & 0x1))
+			;
+
+		if (usart_handle->data_bits == USART_9_DATA_BITS) {
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+
+				// uint16_t msg9bit[] = { 0x1FF, 0x155, 0x0AA }; // three 9-bit characters
+				/*
+				 | Addr       | Value | Description             |
+				 | ---------- | ----- | ----------------------- |
+				 | 0x20000000 | 0xFF  | LSB of first character  |
+				 | 0x20000001 | 0x01  | MSB of first character  |
+				 | 0x20000002 | 0x55  | LSB of second character |
+				 | 0x20000003 | 0x01  | MSB of second character |
+				 | 0x20000004 | 0xAA  | LSB of third character  |
+				 | 0x20000005 | 0x00  | MSB of third character  |
+
+				 */
+				*((uint16_t*) data) = (usart_handle->USARTx->DR
+						& (uint16_t) 0x1FF);
+				data++;
+				data++;
+			} else {
+				*data = (usart_handle->USARTx->DR & (uint8_t) 0xFF);
+				data++;
+			}
+		} else {
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+				*data = (uint8_t) (usart_handle->USARTx->DR & (uint8_t) 0xFF); // Write 8-bit data
+				data++;
+			} else {
+				*data = (uint8_t) (usart_handle->USARTx->DR & (uint8_t) 0x7F); // Write 8-bit data
+				data++;
+			}
+		}
+	}
+
+	// Wait for Transmission complete
+	while (!((usart_handle->USARTx->SR >> Shift_5_pos) & 0x1))
+		;
+	UART_RECEIVER_ENABLE(usart_handle, LOW);
+}
+
+uint8_t USART_write_IT(USART_HandleTypedef *usart_handle, uint8_t *data,
+		uint32_t size) {
+	uint8_t state = USART_handleIT.TxState;
+
+	if (state == USART_READY_IT) {
+		USART_handleIT.TxState = USART_BUSY_TX_IT;
+		USART_handleIT.txBuffer = data;
+		USART_handleIT.txLen = size;
+		UART_TRANSMIT_ENABLE(usart_handle, HIGH);
+
+		// TXEIE: TXE interrupt enable
+		usart_handle->USARTx->CR1 |= (HIGH << Shift_7_pos);
+
+		// TCIE: Transmission complete interrupt enable
+		usart_handle->USARTx->CR1 |= (HIGH << Shift_6_pos);
+	}
+
+	return state;
+}
+uint8_t USART_read_IT(USART_HandleTypedef *usart_handle, uint8_t *data,
+		uint32_t size) {
+	uint8_t state = USART_handleIT.RxState;
+
+	if (state == USART_READY_IT) {
+		USART_handleIT.RxState = USART_BUSY_RX_IT;
+		USART_handleIT.rxBuffer = data;
+		USART_handleIT.rxLen = size;
+		UART_RECEIVER_ENABLE(usart_handle, HIGH);
+
+		// RXNEIE: RXNE interrupt enable
+		usart_handle->USARTx->CR1 |= (HIGH << Shift_5_pos);
+	}
+
+	return state;
+}
+
+static void USART_close_transmit(USART_HandleTypedef *usart_handle) {
+	USART_handleIT.TxState = USART_READY_IT;
+	USART_handleIT.txBuffer = NULL;
+	USART_handleIT.txLen = 0;
+	UART_TRANSMIT_ENABLE(usart_handle, LOW);
+
+	// Clear TC Flag
+	usart_handle->USARTx->SR &= ~(HIGH << Shift_6_pos);
+
+	// TXEIE: TXE interrupt enable
+	usart_handle->USARTx->CR1 &= ~(HIGH << Shift_7_pos);
+
+	// TCIE: Transmission complete interrupt enable
+	usart_handle->USARTx->CR1 &= ~(HIGH << Shift_6_pos);
+
+	USART_txCompl = 1;
+}
+
+static void USART_close_receiver(USART_HandleTypedef *usart_handle) {
+	USART_handleIT.RxState = USART_READY_IT;
+	USART_handleIT.rxBuffer = NULL;
+	USART_handleIT.rxLen = 0;
+	UART_RECEIVER_ENABLE(usart_handle, LOW);
+
+	// Bit 5  RXNEIE: RXNE interrupt enable
+	usart_handle->USARTx->CR1 &= ~(HIGH << Shift_5_pos);
+
+	USART_rxCompl = 1;
+}
+
+static void USART_send_data_IT(USART_HandleTypedef *usart_handle) {
+	if (USART_handleIT.txLen > 0) {
+		// When transmitting with the parity enabled (PCE bit set to 1 in the USART_CR1 register),
+		// the value written in the MSB (bit 7 or bit 8 depending on the data length)
+		// has no effect because it is replaced by the parity.
+		if (usart_handle->data_bits == USART_9_DATA_BITS) {
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+
+				// uint16_t msg9bit[] = { 0x1FF, 0x155, 0x0AA }; // three 9-bit characters
+				/*
+				 | Addr       | Value | Description             |
+				 | ---------- | ----- | ----------------------- |
+				 | 0x20000000 | 0xFF  | LSB of first character  |
+				 | 0x20000001 | 0x01  | MSB of first character  |
+				 | 0x20000002 | 0x55  | LSB of second character |
+				 | 0x20000003 | 0x01  | MSB of second character |
+				 | 0x20000004 | 0xAA  | LSB of third character  |
+				 | 0x20000005 | 0x00  | MSB of third character  |
+
+				 */
+				usart_handle->USARTx->DR =
+						(*((uint16_t*) USART_handleIT.txBuffer)
+								& (uint16_t) 0x1FF); // Write 9-bit data
+				USART_handleIT.txBuffer++;
+				USART_handleIT.txBuffer++;
+				USART_handleIT.txLen -= 2;
+			} else {
+				usart_handle->USARTx->DR = (*(USART_handleIT.txBuffer)
+						& (uint8_t) 0xFF); // Write 9-bit data
+				USART_handleIT.txBuffer++;
+				USART_handleIT.txLen -= 1;
+			}
+		} else {
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+				usart_handle->USARTx->DR = (uint8_t) (*(USART_handleIT.txBuffer)
+						& 0xFF); // Write 8-bit data
+				USART_handleIT.txBuffer++;
+				USART_handleIT.txLen -= 1;
+			} else {
+				usart_handle->USARTx->DR = (uint8_t) (*(USART_handleIT.txBuffer)
+						& (uint8_t) 0x7F); // Write 8-bit data
+				USART_handleIT.txBuffer++;
+				USART_handleIT.txLen -= 1;
+			}
+		}
+	}
+}
+
+static void USART_receive_data_IT(USART_HandleTypedef *usart_handle) {
+	if (USART_handleIT.rxLen > 0) {
+		if (usart_handle->data_bits == USART_9_DATA_BITS) {
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+				// uint16_t msg9bit[] = { 0x1FF, 0x155, 0x0AA }; // three 9-bit characters
+				/*
+				 | Addr       | Value | Description             |
+				 | ---------- | ----- | ----------------------- |
+				 | 0x20000000 | 0xFF  | LSB of first character  |
+				 | 0x20000001 | 0x01  | MSB of first character  |
+				 | 0x20000002 | 0x55  | LSB of second character |
+				 | 0x20000003 | 0x01  | MSB of second character |
+				 | 0x20000004 | 0xAA  | LSB of third character  |
+				 | 0x20000005 | 0x00  | MSB of third character  |
+
+				 */
+				*((uint16_t*) (USART_handleIT.rxBuffer)) =
+						(usart_handle->USARTx->DR & (uint16_t) 0x1FF);
+				USART_handleIT.rxBuffer++;
+				USART_handleIT.rxBuffer++;
+				USART_handleIT.rxLen -= 2;
+			} else {
+				*(USART_handleIT.rxBuffer) = (usart_handle->USARTx->DR
+						& (uint8_t) 0xFF);
+				USART_handleIT.rxBuffer++;
+				USART_handleIT.rxLen -= 1;
+			}
+		} else {
+			if (usart_handle->parity_control == USART_PARITY_DISABLE) {
+				*(USART_handleIT.rxBuffer) = (uint8_t) (usart_handle->USARTx->DR
+						& (uint8_t) 0xFF); // Write 8-bit data
+				USART_handleIT.rxBuffer++;
+				USART_handleIT.rxLen -= 1;
+			} else {
+				*(USART_handleIT.rxBuffer) = (uint8_t) (usart_handle->USARTx->DR
+						& (uint8_t) 0x7F); // Write 8-bit data
+				USART_handleIT.rxBuffer++;
+				USART_handleIT.rxLen -= 1;
+			}
+		}
+	}
+	if (USART_handleIT.rxLen == 0) {
+		USART_close_receiver(usart_handle);
+	}
+}
+
+void USART_Handle_IT(USART_HandleTypedef *usart_handle) {
+
+// TC: Transmission complete
+	if ((usart_handle->USARTx->SR >> Shift_6_pos) & 0x1) {
+		if (USART_handleIT.TxState == USART_BUSY_TX_IT) {
+			if (USART_handleIT.txLen == 0) {
+				USART_close_transmit(usart_handle);
+			}
+		}
+	}
+
+// TXE: Transmit data register empty
+	if ((usart_handle->USARTx->SR >> Shift_7_pos) & 0x1) {
+		if (USART_handleIT.TxState == USART_BUSY_TX_IT) {
+			USART_send_data_IT(usart_handle);
+		}
+	}
+
+// RXNE: Read data register not empty
+	if ((usart_handle->USARTx->SR >> Shift_5_pos) & 0x1) {
+		if (USART_handleIT.RxState == USART_BUSY_RX_IT) {
+			USART_receive_data_IT(usart_handle);
+		}
+	}
 }
 

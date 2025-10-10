@@ -27,6 +27,24 @@ typedef struct {
 	uint8_t usart_hardware_flow_control;
 } USART_HandleTypedef;
 
+typedef struct {
+	uint8_t *txBuffer;
+	uint8_t *rxBuffer;
+	uint32_t txLen;
+	uint32_t rxLen;
+	uint8_t TxState;
+	uint8_t RxState;
+} USART_HandleIT;
+
+extern USART_HandleIT USART_handleIT;
+extern volatile uint8_t USART_txCompl;
+extern volatile uint8_t USART_rxCompl;
+
+// Interrupt macros
+#define USART_READY_IT 0
+#define USART_BUSY_TX_IT 1
+#define USART_BUSY_RX_IT 2
+
 /* USART/UART Base Addresses */
 /* APB2 Bus */
 #define USART1_BASE 0x40011000U /* APB2 - 0x40011000 to 0x400113FF */
@@ -111,5 +129,12 @@ void USART_ENABLE(USART_HandleTypedef *usart_handle, uint8_t EnOrDis);
 void UART_TRANSMIT_ENABLE(USART_HandleTypedef *usart_handle, uint8_t EnOrDis);
 void USART_write(USART_HandleTypedef *usart_handle, uint8_t *data,
 		uint32_t size);
+void UART_RECEIVER_ENABLE(USART_HandleTypedef *usart_handle, uint8_t EnOrDis);
+void USART_read(USART_HandleTypedef *usart_handle, uint8_t *data, uint32_t size);
+uint8_t USART_write_IT(USART_HandleTypedef *usart_handle, uint8_t *data,
+		uint32_t size);
+uint8_t USART_read_IT(USART_HandleTypedef *usart_handle, uint8_t *data,
+		uint32_t size);
+void USART_Handle_IT(USART_HandleTypedef *usart_handle);
 
 #endif /* INC_STM32F4XX_CUS_UART_H_ */

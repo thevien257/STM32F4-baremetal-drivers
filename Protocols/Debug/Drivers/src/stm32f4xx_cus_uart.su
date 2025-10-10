@@ -1,4 +1,13 @@
-../Drivers/src/stm32f4xx_cus_uart.c:3:6:USART_INIT	24	static,ignoring_inline_asm
-../Drivers/src/stm32f4xx_cus_uart.c:100:6:USART_ENABLE	16	static
-../Drivers/src/stm32f4xx_cus_uart.c:108:6:UART_TRANSMIT_ENABLE	16	static
-../Drivers/src/stm32f4xx_cus_uart.c:116:6:USART_write	32	static
+../Drivers/src/stm32f4xx_cus_uart.c:9:6:USART_INIT	24	static,ignoring_inline_asm
+../Drivers/src/stm32f4xx_cus_uart.c:106:6:USART_ENABLE	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:114:6:UART_TRANSMIT_ENABLE	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:122:6:USART_write	32	static
+../Drivers/src/stm32f4xx_cus_uart.c:173:6:UART_RECEIVER_ENABLE	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:181:6:USART_read	32	static
+../Drivers/src/stm32f4xx_cus_uart.c:228:9:USART_write_IT	32	static
+../Drivers/src/stm32f4xx_cus_uart.c:247:9:USART_read_IT	32	static
+../Drivers/src/stm32f4xx_cus_uart.c:264:13:USART_close_transmit	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:282:13:USART_close_receiver	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:294:13:USART_send_data_IT	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:342:13:USART_receive_data_IT	16	static
+../Drivers/src/stm32f4xx_cus_uart.c:388:6:USART_Handle_IT	16	static

@@ -1,0 +1,99 @@
+#include "stm32f4xx_cus.h"
+#include <string.h>
+
+void USART_USER_INIT();
+void GPIO_USER_INIT();
+
+USART_HandleTypedef USART_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+
+char rx_buf[1024];
+
+void delay(void) {
+	for (uint32_t i = 0; i < 500000 / 2; i++)
+		;
+}
+
+int main(void) {
+	GPIO_USER_INIT();
+	Get_APB1_Clock_Speed();
+	USART_USER_INIT();
+
+	UART_RECEIVER_ENABLE(&USART_Handle, HIGH);
+	UART_TRANSMIT_ENABLE(&USART_Handle, HIGH); // needed for printf()
+
+	printf("USART Receiver (PC1 Notify) Started\n");
+
+	while (1) {
+		// Wait for button press (PA0)
+		while (!GPIO_INPUT(GPIOA, GPIO_PIN_0))
+			;
+
+		delay();  // debounce
+
+		printf("Button pressed! Notifying Arduino...\n");
+
+		// === Notify Arduino to send ===
+		GPIO_OUTPUT(GPIOC, GPIO_PIN_1, HIGH);
+		delay(); // small delay for signal stability
+
+		// Clear buffer
+		memset(rx_buf, 0, sizeof(rx_buf));
+
+		// === Read incoming data from Arduino ===
+		USART_read(&USART_Handle, rx_buf, sizeof(rx_buf) - 1);
+		rx_buf[sizeof(rx_buf) - 1] = '\0';
+
+		// Done reading, pull notify low
+		GPIO_OUTPUT(GPIOC, GPIO_PIN_1, LOW);
+
+		printf("Received: %s\n", rx_buf);
+	}
+
+	return 0;
+}
+
+void USART_USER_INIT() {
+	USART_Handle.USARTx = USART2;
+	USART_Handle.baud_rate = USART_BAUD_115200;
+	USART_Handle.data_bits = USART_8_DATA_BITS;
+	USART_Handle.stop_bits = USART_1_STOP_BIT;
+	USART_Handle.oversampling_mode = USART_OVERSAMPLING_16;
+	USART_Handle.parity_control = USART_PARITY_DISABLE;
+	USART_Handle.usart_mode = USART_MODE_ASYNC;
+	USART_Handle.usart_hardware_flow_control = USART_HW_FLOW_CTRL_NONE;
+	USART_INIT(&USART_Handle);
+}
+
+void GPIO_USER_INIT() {
+	// USART2 pins (PA2 = TX, PA3 = RX)
+	GPIO_Handle.GPIOX = GPIOA;
+	GPIO_Handle.alternate_function_select = GPIO_AF7;
+	GPIO_Handle.mode = GPIO_MODE_AF;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_PU;
+
+	GPIO_Handle.pin_number = GPIO_PIN_2;
+	GPIO_INIT(&GPIO_Handle);
+	GPIO_Handle.pin_number = GPIO_PIN_3;
+	GPIO_INIT(&GPIO_Handle);
+
+	// User button (PA0)
+	GPIO_Handle.pin_number = GPIO_PIN_0;
+	GPIO_Handle.mode = GPIO_MODE_INPUT;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&GPIO_Handle);
+
+	// Notify pin (PC1) -> Output to Arduino
+	GPIO_Handle.GPIOX = GPIOC;
+	GPIO_Handle.pin_number = GPIO_PIN_1;
+	GPIO_Handle.mode = GPIO_MODE_OUTPUT;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&GPIO_Handle);
+
+	// Start LOW
+	GPIO_OUTPUT(GPIOC, GPIO_PIN_1, LOW);
+}

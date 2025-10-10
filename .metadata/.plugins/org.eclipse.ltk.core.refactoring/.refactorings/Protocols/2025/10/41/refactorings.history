@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Protocols/Src/UART_Send_Receive.c&apos; to &apos;UART_Receive.c&apos;" description="Rename resource &apos;UART_Send_Receive.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Src/UART_Send_Receive.c" name="UART_Receive.c" stamp="1759757046814" updateReferences="true"/>
+</session>

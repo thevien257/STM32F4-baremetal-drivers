@@ -73,13 +73,13 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.940997686" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1367363674.1437021572" name="spiRx_Tx_IT.c" rcbsApplicability="disable" resourcePath="Src/spiRx_Tx_IT.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.803710086">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.803710086" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772"/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1367363674.18843351" name="UART_Receive.c" rcbsApplicability="disable" resourcePath="Src/UART_Receive.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.1068111714">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772.1068111714" name="MCU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.864351772"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
-						<entry excluding="spiRx_Tx_IT.c|spiTx_Rx_IT.c|spiTxRxArduinoFD.c|spiRxIT.c|spiTxIT.c|spiTxRxArduino.c|spiTXOnlyArduino.c|spiTXTest.c|i2cSlaveExampleLen.c|i2cSlaveExample.c|i2cMasterReadExampleIT.c|i2cMasterReadExample.c|i2cMasterWriteExample.c|i2cMasterWriteIT.c|GPIOandInterruptExample.c|i2cWriteExample.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry excluding="UART_Receive.c|UART_Send.c|spiRx_Tx_IT.c|spiTx_Rx_IT.c|spiTxRxArduinoFD.c|spiRxIT.c|spiTxIT.c|spiTxRxArduino.c|spiTXOnlyArduino.c|spiTXTest.c|i2cSlaveExampleLen.c|i2cSlaveExample.c|i2cMasterReadExampleIT.c|i2cMasterReadExample.c|i2cMasterWriteExample.c|i2cMasterWriteIT.c|GPIOandInterruptExample.c|i2cWriteExample.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Startup"/>
 					</sourceEntries>
 				</configuration>

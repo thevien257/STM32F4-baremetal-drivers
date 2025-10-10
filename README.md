@@ -1221,6 +1221,7 @@ void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
 !!! IMPROTANT AT SPI:
 WHAT I HAVE LEARNT: SPI is Shift register, so for master to read from slave, we need to send dummy data to slave to read data.
 --> then Slave must read that dummy data to consume that data so that avoiding slave send that dummy data again to master.
+SPI is full-duplex communication but if we want to read only, we need to send dummy data --> So it is like half-duplex communication. --> so we just need 1 txRxState for interrupt communication.
 
 !!! IMPORTANT AT UART: 
 				/*
@@ -1240,3 +1241,12 @@ WHAT I HAVE LEARNT: SPI is Shift register, so for master to read from slave, we 
 				 | 0x20000004 | 0x43  | lower byte of 0x043 |
 				 | 0x20000005 | 0x00  | upper byte of 0x043 |
 				 * */
+
+				 Pointer casting to (uint16_t*) to access 9-bit data correctly.
+
+				 UART is full-duplex communication, but unlike SPI, tx and rx are separate lines,  so we can send and receive data independently and at different times.
+				 So we need to have 2 states: txState and rxState for interrupt communication.
+
+For synchronous mode, the clock signal is generated when master is sending data to slave. So when master wants to receive data from slave, it needs to send dummy data to generate clock signal for slave to send data back to master. So it is like SPI communication but without shift register.
+
+For hardware flow control, we can use RTS/CTS pins to control the flow of data. RTS (Request to Send) is an output from the transmitter (master) to the receiver (slave) to indicate that it is ready to send data. CTS (Clear to Send) is an input to the transmitter (master) from the receiver (slave) to indicate that it is ready to receive data.

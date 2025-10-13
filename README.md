@@ -27,10 +27,11 @@
   - [I2C Master Read Function](#i2c-master-read-function)
   - [I2C Master Write Interrupt Function](#i2c-master-write-interrupt-function)
   - [I2C Master Read Interrupt Function](#i2c-master-read-interrupt-function)
-	- [I2C_OnEvent Callback Function](#i2c_onevent-callback-function)
-	- [I2C Slave Write Function](#i2c-slave-write-function)
-	- [I2C Slave Read Function](#i2c-slave-read-function)
-	- [What I Learned from I2C](#what-i-learned-from-i2c)
+  - [I2C_OnEvent Callback Function](#i2c_onevent-callback-function)
+  - [I2C Slave Write Function](#i2c-slave-write-function)
+  - [I2C Slave Read Function](#i2c-slave-read-function)
+  - [What I Learned from I2C](#what-i-learned-from-i2c)
+
 
 ## 🎯 Overview
 

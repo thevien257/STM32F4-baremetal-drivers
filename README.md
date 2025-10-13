@@ -27,6 +27,10 @@
   - [I2C Master Read Function](#i2c-master-read-function)
   - [I2C Master Write Interrupt Function](#i2c-master-write-interrupt-function)
   - [I2C Master Read Interrupt Function](#i2c-master-read-interrupt-function)
+	- [I2C_OnEvent Callback Function](#i2c_onevent-callback-function)
+	- [I2C Slave Write Function](#i2c-slave-write-function)
+	- [I2C Slave Read Function](#i2c-slave-read-function)
+	- [What I Learned from I2C](#what-i-learned-from-i2c)
 
 ## 🎯 Overview
 
@@ -1217,6 +1221,261 @@ void I2C_EV_IRQ_Handling(I2C_Handle_TypeDef *i2c_handle) {
 	}
 }
 ```
+
+#### I2C_OnEvent Callback Function
+
+The `I2C_OnEvent` function is a weakly defined callback function that can be overridden by the user application to handle specific I2C slave events. This function is called from the interrupt handler when certain events occur, such as data transmission or reception.
+
+We use interrupt-driven communication for the slave mode because the slave doesn't know when the master will send data. So it needs to be always ready to receive data.
+
+At stm32f4xx_cus_i2c.h, we define the event macros:
+```c
+// Weak implementation - user can override this in main.c
+void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle, uint8_t on_event);
+```
+
+The parameters on_event can be one of the following:
+```c
+// Slave Event
+#define I2C_Slave_Ev_Transmit 0
+#define I2C_Slave_Ev_Receive 1
+#define I2C_Slave_AF 2
+#define I2C_Slave_STOPF 3
+```
+
+At stm32f4xx_cus_i2c.c, we provide a weak implementation of the `I2C_OnEvent` function. The user can override this function in their main application to handle specific events.
+```c
+__attribute__((weak)) void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle,
+		uint8_t on_event) {
+
+}
+```
+
+#### I2C Slave Write Function
+
+As a slave, we don't need to generate START and STOP conditions. The master will take care of that. The slave just needs to respond to the master's requests.
+
+<img src="img/7_bit_slave_transmitter.png" alt="I2C Slave Write"/>
+
+According to the reference manual (7-bit slave transmitter), the slave write operation can be summarized in the following steps:
+1. After the slave address is matched, the ADDR flag is set. The slave should clear the ADDR flag by reading the SR1 and SR2 registers.
+2. The slave waits for the TXE (Transmit Data Register Empty) flag to be set, indicating that the data register is empty and ready to accept new data.
+3. The slave writes the data to the DR register.
+4. The slave waits for the BTF (Byte Transfer Finished) flag to be set, indicating that the data has been transmitted.
+5. The slave can repeat steps 2-4 to send more data.
+6. At EV3-2: When the master doesn't need more data, it send NACK and generates a STOP condition. The AF flag is set in the slave. The slave should clear the AF flag by writing 0 to it.
+
+```c
+bit_it = ((i2c_handle->I2Cx->SR1 >> 1) & 0x1);
+	if (bit_it == HIGH) {
+		if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+			//Clear ADDR Flag
+			uint32_t read = i2c_handle->I2Cx->SR1;
+			read = i2c_handle->I2Cx->SR2;
+			(void) read;
+		}
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			//Clear ADDR Flag
+			uint32_t read = i2c_handle->I2Cx->SR1;
+			read = i2c_handle->I2Cx->SR2;
+			(void) read;
+		} else if (I2C_Handle_it.state == I2C_BUSY_RX) {
+			if (I2C_Handle_it.rx_len == 1) {
+				// Set ACK LOW
+				i2c_handle->I2Cx->CR1 &= ~(HIGH << Shift_10_pos);
+
+				//Clear ADDR Flag
+				uint8_t read = i2c_handle->I2Cx->SR1;
+				read = i2c_handle->I2Cx->SR2;
+				(void) read;
+
+			} else if (I2C_Handle_it.rx_len > 1) {
+				//Clear ADDR Flag
+				uint8_t read = i2c_handle->I2Cx->SR1;
+				read = i2c_handle->I2Cx->SR2;
+				(void) read;
+			}
+		}
+	}	
+```
+
+In the above code snippet, we check if the device is in slave mode. If it is, we clear the ADDR flag by reading the SR1 and SR2 registers.
+
+Then we can handle the TXE and BTF flags to send data to the master.
+
+```c
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 2) & 0x1);
+// Check if BTF is HIGH or not
+// If we handled TXE first:
+//		+ We might write new data while BTF was signaling the transfer actually ended.
+//		+ We could miss the STOP condition timing → corrupt I2C protocol sequence.
+//		-> So we should handle the BTF first
+	if (bit_it == HIGH) {
+		if (I2C_Handle_it.state == I2C_BUSY_TX) {
+			if ((i2c_handle->I2Cx->SR1 >> 7) & 0x1) {
+				// Generate Stop condition
+				I2C_Close_Communicate(i2c_handle);
+			}
+		}
+	}
+
+	// Check TXE Flag
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 7) & 0x1);
+	if (bit_it == HIGH) {
+		if (i2c_handle->MasterOrSlave == I2C_Master_Mode) {
+			// Send data
+			I2C_Send_DataIT(i2c_handle);
+		} else if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+			I2C_OnEvent(i2c_handle, I2C_Slave_Ev_Transmit);
+		}
+	}
+```
+
+If TXE flag is set and the device is in slave mode, we call the `I2C_OnEvent` function with the `I2C_Slave_Ev_Transmit` event. The user can override this function in their main application to provide the data to be transmitted to the master.
+
+Then we handle the AF flag to detect when the master doesn't need more data.
+
+```c
+	// Check AF Flag
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 10) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear AF
+		i2c_handle->I2Cx->SR1 &= ~(HIGH << Shift_10_pos);
+		I2C_OnEvent(i2c_handle, I2C_Slave_AF);
+	}
+```
+
+Finally we implement the Write function for the slave to send data to the master.
+
+```c
+void I2C_Slave_Write(I2C_TypeDef *I2Cx, uint8_t *data) {
+	I2Cx->DR = *data;
+}
+```
+
+> Big note: Why AF (Acknowledge Failure) Only During Slave TX
+
+When the slave is transmitting:
+
+After each byte, the slave waits for the master's acknowledgment:
+- The master sends ACK if it wants more data.
+- The master sends NACK when it's done receiving.
+- This NACK triggers the AF flag in the slave.
+
+Why no AF during slave RX?
+
+- When the slave is receiving, the slave sends the ACK/NACK, not the master.
+- The slave typically always sends ACK when receiving.
+- So there's no "acknowledge failure" from the master's side to detect.
+
+#### I2C Slave Read Function
+
+<img src="img/7_bit_slave_receiver.png" alt="I2C Slave Read"/>
+
+The I2C slave read operation can be summarized in the following steps:
+1. After the slave address is matched, the ADDR flag is set. The slave should clear the ADDR flag by reading the SR1 and SR2 registers.
+2. The slave waits for the RXNE (Receive Data Register Not Empty) flag to be set, indicating that there is data to be read.
+3. The slave reads the data from the DR register.
+4. The slave can repeat steps 2-3 to read more data.
+5. At EV2-2: When the master has sent all data, it generates a STOP condition. The STOPF flag is set in the slave. The slave should clear the STOPF flag by reading the SR1 register and then writing to the CR1 register.
+
+```c
+// Check RXE
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 6) & 0x1);
+	if (((i2c_handle->I2Cx->SR1 >> 6) & 0x1) == HIGH) {
+		if (i2c_handle->MasterOrSlave == I2C_Master_Mode) {
+			// Receive data
+			I2C_Read_DataIT(i2c_handle);
+		} else if (i2c_handle->MasterOrSlave == I2C_Slave_Mode) {
+			I2C_OnEvent(i2c_handle, I2C_Slave_Ev_Receive);
+		}
+	}
+```
+
+Then we handle the STOPF flag to detect when the master has sent all data.
+
+```c
+	// Check STOPF
+	bit_it = ((i2c_handle->I2Cx->SR1 >> 4) & 0x1);
+	if (bit_it == HIGH) {
+		// Clear STOPF bit by reading SR1 register followed by a write in the CR1 register
+		uint32_t read;
+		read = i2c_handle->I2Cx->SR1;
+		(void) read;
+		i2c_handle->I2Cx->CR1 |= (0x0);
+		I2C_OnEvent(i2c_handle, I2C_Slave_STOPF);
+	}
+```
+
+Finally we implement the Read function for the slave to read data from the master.
+
+```c
+void I2C_Slave_Read(I2C_TypeDef *I2Cx, uint8_t *data) {
+	*data = I2Cx->DR;
+}
+```
+
+The user can override the `I2C_OnEvent` function in their main application, for example:
+
+```c
+void I2C_OnEvent(I2C_Handle_TypeDef *i2c_handle, uint8_t on_event) {
+	static uint8_t commandCode = 0;
+	static uint8_t Cnt = 0;
+	if (on_event == I2C_Slave_Ev_Transmit) {
+		//Master wants some data. slave has to send it
+		if (commandCode == 0x51) {
+			uint8_t data = strlen((char*) Tx_buf);
+			//send the length information to the master
+			I2C_Slave_Write(i2c_handle->I2Cx, &data);
+		} else if (commandCode == 0x52) {
+			//Send the contents of Tx_buf
+			I2C_Slave_Write(i2c_handle->I2Cx, &Tx_buf[Cnt++]);
+
+		}
+	} else if (on_event == I2C_Slave_Ev_Receive) {
+		//Data is waiting for the slave to read . slave has to read it
+		I2C_Slave_Read(i2c_handle->I2Cx, &commandCode);
+
+	} else if (on_event == I2C_Slave_AF) {
+		//This happens only during slave txing .
+		//Master has sent the NACK. so slave should understand that master doesnt need
+		//more data.
+		commandCode = 0xff;
+		Cnt = 0;
+	} else if (on_event == I2C_Slave_STOPF) {
+		//This happens only during slave reception .
+		//Master has ended the I2C communication with the slave.
+	}
+}
+```
+
+> Big note: Why Why STOP Only During Slave RX
+
+When the slave is receiving:
+
+After each byte, the slave sends the ACK to the master:
+- The slave sends ACK if it wants more data.
+- The slave sends NACK when it's done receiving.
+- When done, the master generates a STOP condition.
+- This STOP condition triggers the STOPF flag in the slave.
+
+Why no STOPF during slave TX?
+
+- During slave transmission, the master typically sends NACK + STOP together.
+- The AF flag fires first when NACK is detected.
+- By the time STOP is sent, the slave has already been notified via AF.
+- The hardware prioritizes the AF event since it's the more critical signal.
+
+## What I Learned from I2c
+
+1. I2C is a multi-master, multi-slave, single-ended, serial communication bus.
+2. Slave can't initiate communication. Only master can initiate communication. For slave to send data to master, the master must first send a read request to slave and then release the bus for slave to send data back to master.
+3. For slave to read data from master, the master must first send a write request to slave and then send data to slave.
+4. The slave must always be ready to receive data from master. So we use interrupt-driven communication for slave mode.
+5. Implementing I2C in interrupt mode is more complex than in polling mode because we need to handle various events and states.
+6. Implementing I2C_OnEvent callback function allows the user to handle specific events in slave mode.
+7. In I2C master mode interrupt communication, we must generate START condition first to initiate communication then we enable interrupts because if we enable interrupts first, the interrupt handler will be called before we generate START condition, which will cause the communication to fail.
+8. Knowing why AF flag only during slave TX and STOPF flag only during slave RX is crucial for correctly handling I2C slave events.
 
 !!! IMPROTANT AT SPI:
 WHAT I HAVE LEARNT: SPI is Shift register, so for master to read from slave, we need to send dummy data to slave to read data.

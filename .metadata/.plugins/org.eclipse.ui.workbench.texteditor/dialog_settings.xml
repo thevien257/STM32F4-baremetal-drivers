@@ -3,6 +3,11 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="CAN_LOOP_BACK_MODE"/>
+		<item value="mode"/>
+		<item value="dataLengthCode;"/>
+		<item value="&#x09;uint8_t dataLengthCode;"/>
+		<item value="extd"/>
 		<item value="I2C_Slave_Mode"/>
 		<item value="exti"/>
 		<item value="APB1_Clock_Speed"/>
@@ -13,9 +18,6 @@
 		<item value="CommandCode"/>
 		<item value="busy_state"/>
 		<item value="close"/>
-		<item value="i2c1"/>
-		<item value="void I2C_Master_Write_IT(I2C_Handle_TypeDef *i2c_handle, uint8_t addr,"/>
-		<item value="-specs=rdimon.specs -lrdimon"/>
 	</list>
 	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="646"/>

@@ -1,0 +1,121 @@
+#ifndef INC_STM32F4XX_CUS_CAN_H_
+#define INC_STM32F4XX_CUS_CAN_H_
+
+#include "stm32f4xx_cus.h"
+
+typedef struct {
+	volatile uint32_t MCR;          // 0x000 - Master Control Register
+	volatile uint32_t MSR;          // 0x004 - Master Status Register
+	volatile uint32_t TSR;          // 0x008 - Transmit Status Register
+	volatile uint32_t RF0R;         // 0x00C - Receive FIFO 0 Register
+	volatile uint32_t RF1R;         // 0x010 - Receive FIFO 1 Register
+	volatile uint32_t IER;          // 0x014 - Interrupt Enable Register
+	volatile uint32_t ESR;          // 0x018 - Error Status Register
+	volatile uint32_t BTR;          // 0x01C - Bit Timing Register
+	uint32_t RESERVED0[88];         // 0x020-0x17F - Reserved
+
+	// TX Mailboxes 0-2 (3 mailboxes × 4 registers each)
+	struct {
+		volatile uint32_t TIR;      // TX Mailbox Identifier Register
+		volatile uint32_t TDTR; // TX Mailbox Data Length Control and Time Stamp
+		volatile uint32_t TDLR;     // TX Mailbox Data Low Register
+		volatile uint32_t TDHR;     // TX Mailbox Data High Register
+	} sTxMailBox[3];                // 0x180-0x1AF
+
+	// RX FIFOs 0-1 (2 FIFOs × 4 registers each)
+	struct {
+		volatile uint32_t RIR;      // RX FIFO Mailbox Identifier Register
+		volatile uint32_t RDTR; // RX FIFO Mailbox Data Length Control and Time Stamp
+		volatile uint32_t RDLR;     // RX FIFO Mailbox Data Low Register
+		volatile uint32_t RDHR;     // RX FIFO Mailbox Data High Register
+	} sFIFOMailBox[2];              // 0x1B0-0x1CF
+
+	uint32_t RESERVED1[12];         // 0x1D0-0x1FF - Reserved
+
+	// Filter Registers
+	volatile uint32_t FMR;          // 0x200 - Filter Master Register
+	volatile uint32_t FM1R;         // 0x204 - Filter Mode Register
+	uint32_t RESERVED2;             // 0x208 - Reserved
+	volatile uint32_t FS1R;         // 0x20C - Filter Scale Register
+	uint32_t RESERVED3;             // 0x210 - Reserved
+	volatile uint32_t FFA1R;        // 0x214 - Filter FIFO Assignment Register
+	uint32_t RESERVED4;             // 0x218 - Reserved
+	volatile uint32_t FA1R;         // 0x21C - Filter Activation Register
+	uint32_t RESERVED5[8];          // 0x220-0x23F - Reserved
+
+	// Filter Banks (28 filter banks × 2 registers each)
+	struct {
+		volatile uint32_t FR1;      // Filter Register 1
+		volatile uint32_t FR2;      // Filter Register 2
+	} sFilterRegister[28];          // 0x240-0x31F - Filter Banks 0-27
+} CAN_TypeDef;
+
+typedef struct {
+	CAN_TypeDef *CANx;
+	uint8_t mode;
+	uint8_t transmitPriority;
+	uint8_t receiveFIFOLockedMode;
+	uint8_t autoReTransmit;
+	uint8_t autoBusOff;
+	uint32_t bitrate;
+	uint8_t testModeSelected;
+} CAN_HandleTypedef;
+
+typedef struct {
+	uint8_t data[8];
+	uint32_t identifier;
+	uint8_t extd;
+	uint8_t dataLengthCode;
+	uint8_t frameType;
+} CAN_TXHandleTypeDef;
+
+typedef struct {
+	uint8_t data[8];
+	uint32_t identifier;
+	uint8_t extd;
+	uint8_t dataLengthCode;
+	uint8_t frameType;
+} CAN_RXHandleTypeDef;
+
+typedef struct {
+	uint8_t filterBank;
+	uint32_t filterId;
+	uint32_t filterMask;
+	uint8_t fifoAssignment;
+} CAN_FilterHandleTypeDef;
+
+// Base addresses
+#define CAN1_BASE    0x40006400UL
+#define CAN2_BASE    0x40006800UL
+
+// Peripheral declarations
+#define CAN1         ((CAN_TypeDef *) CAN1_BASE)
+#define CAN2         ((CAN_TypeDef *) CAN2_BASE)
+
+#define CAN_LOOP_BACK_MODE 0x1
+#define CAN_SILENT_MODE 0x2
+#define CAN_LOOP_BACK_SILENT_MODE 0x3
+
+#define CAN_MAILBOX_01 0x0
+#define CAN_MAILBOX_02 0x01
+#define CAN_MAILBOX_03 0x02
+
+#define CAN_STANDARD_IDE 0x0
+#define CAN_EXTENDED_IDE 0x1
+
+#define CAN_DATA_FRAME 0x0
+#define CAN_REMOTE_FRAME 0x1
+
+void CAN_INIT(CAN_HandleTypedef *canHandleTypeDef);
+void CAN_SEND(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef);
+uint8_t CAN_TX_FREE_LEVEL(CAN_HandleTypedef *canHandleTypeDef);
+uint8_t CAN_TX_CHECK_NEXT_MAILBOX_FREE(CAN_HandleTypedef *canHandleTypeDef);
+void CAN_ADD_MESSAGE(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef, uint8_t mailbox);
+uint8_t CAN_RX_FREE_LEVEL(CAN_HandleTypedef *canHandleTypeDef);
+void CAN_FILTER_CONFIG(CAN_HandleTypedef *canHandleTypeDef,);
+void CAN_RECEIVE(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_RXHandleTypeDef *CAN_RXHandleTypeDef);
+
+#endif /* INC_STM32F4XX_CUS_CAN_H_ */

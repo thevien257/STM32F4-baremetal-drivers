@@ -146,6 +146,10 @@ void Get_APB2_Clock_Speed(void);
 #define UART7_EN() (RCC->APB1ENR |= (HIGH << Shift_30_pos))
 #define UART8_EN() (RCC->APB1ENR |= (HIGH << Shift_31_pos))
 
+// Enable CAN Clock
+#define CAN1_EN() (RCC->APB1ENR |= (HIGH << Shift_25_pos))
+#define CAN2_EN() (RCC->APB1ENR |= (HIGH << Shift_26_pos))
+
 // System configuration
 typedef struct {
 	__IO uint32_t MEMRMP; /*!< SYSCFG memory remap register,                    Address offset: 0x00 */
@@ -215,5 +219,6 @@ typedef struct {
 #include "stm32f4xx_cus_spi.h"
 #include "stm32f4xx_cus_uart.h"
 #include "stm32f4xx_cus_scb.h"
+#include "stm32f4xx_cus_can.h"
 
 #endif // STM32F4XX_CUS_H

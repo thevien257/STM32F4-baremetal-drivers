@@ -1,0 +1,10 @@
+../Drivers/src/stm32f4xx_cus_can.c:3:13:CAN_ENTER_INIT_MODE	2
+../Drivers/src/stm32f4xx_cus_can.c:12:13:CAN_EXIT_INIT_MODE	2
+../Drivers/src/stm32f4xx_cus_can.c:21:6:CAN_INIT	17
+../Drivers/src/stm32f4xx_cus_can.c:156:9:CAN_TX_FREE_LEVEL	4
+../Drivers/src/stm32f4xx_cus_can.c:170:9:CAN_TX_CHECK_NEXT_MAILBOX_FREE	1
+../Drivers/src/stm32f4xx_cus_can.c:180:6:CAN_ADD_MESSAGE	7
+../Drivers/src/stm32f4xx_cus_can.c:230:6:CAN_SEND	2
+../Drivers/src/stm32f4xx_cus_can.c:251:6:CAN_FILTER_CONFIG	13
+../Drivers/src/stm32f4xx_cus_can.c:371:9:CAN_RX_FREE_LEVEL	3
+../Drivers/src/stm32f4xx_cus_can.c:381:9:CAN_RECEIVE	7

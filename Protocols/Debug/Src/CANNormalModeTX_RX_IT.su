@@ -1,0 +1,7 @@
+../Src/CANNormalModeTX_RX_IT.c:21:5:main	48	static
+../Src/CANNormalModeTX_RX_IT.c:125:6:CAN_GPIO_Init	32	static
+../Src/CANNormalModeTX_RX_IT.c:150:6:CAN_IT_Mode_Init	56	static
+../Src/CANNormalModeTX_RX_IT.c:186:6:GPIO_USER_INIT	8	static
+../Src/CANNormalModeTX_RX_IT.c:198:6:CAN1_TX_IRQHandler	8	static
+../Src/CANNormalModeTX_RX_IT.c:205:6:CAN1_RX0_IRQHandler	8	static
+../Src/CANNormalModeTX_RX_IT.c:211:6:delay_ms	24	static

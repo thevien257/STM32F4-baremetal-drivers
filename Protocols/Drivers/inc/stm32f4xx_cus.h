@@ -208,6 +208,17 @@ typedef struct {
 #define USART5_IRQ53       53   // USART5 global interrupt
 #define USART6_IRQ71       71   // USART6 global interrupt
 
+// CAN IRQ Numbers
+#define CAN1_TX_IRQ19   19  // CAN1 TX interrupts
+#define CAN1_RX0_IRQ20  20  // CAN1 RX0 interrupts
+#define CAN1_RX1_IRQ21  21  // CAN1 RX1 interrupt
+#define CAN1_SCE_IRQ22  22  // CAN1 SCE interrupt (Status Change Error)
+
+#define CAN2_TX_IRQ63   63  // CAN2 TX interrupts
+#define CAN2_RX0_IRQ64  64  // CAN2 RX0 interrupts
+#define CAN2_RX1_IRQ65  65  // CAN2 RX1 interrupt
+#define CAN2_SCE_IRQ66  66  // CAN2 SCE interrupt (Status Change Error)
+
 #define ISER_BASE_ADDR (__IO uint32_t*)(0xE000E100)
 #define ICER_BASE_ADDR (__IO uint32_t*)(0XE000E180)
 #define IPR_BASE_ADDR ((__IO uint32_t*)0xE000E400)

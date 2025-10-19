@@ -1,4 +1,0 @@
-../Src/CANSilentLoopBackMode.c:11:5:main	1
-../Src/CANSilentLoopBackMode.c:20:6:CAN_GPIO_Init	1
-../Src/CANSilentLoopBackMode.c:43:6:Test_Silent_Mode	6
-../Src/CANSilentLoopBackMode.c:141:6:delay_ms	3

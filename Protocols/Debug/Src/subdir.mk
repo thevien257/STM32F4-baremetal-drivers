@@ -5,17 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/CANSilentLoopBackMode.c \
+../Src/CANNormalModeTX_RX_IT.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/CANSilentLoopBackMode.o \
+./Src/CANNormalModeTX_RX_IT.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/CANSilentLoopBackMode.d \
+./Src/CANNormalModeTX_RX_IT.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d 
 
@@ -27,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/CANSilentLoopBackMode.cyclo ./Src/CANSilentLoopBackMode.d ./Src/CANSilentLoopBackMode.o ./Src/CANSilentLoopBackMode.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/CANNormalModeTX_RX_IT.cyclo ./Src/CANNormalModeTX_RX_IT.d ./Src/CANNormalModeTX_RX_IT.o ./Src/CANNormalModeTX_RX_IT.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

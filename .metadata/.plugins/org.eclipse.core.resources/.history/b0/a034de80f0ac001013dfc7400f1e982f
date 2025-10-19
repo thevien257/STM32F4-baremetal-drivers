@@ -1,0 +1,490 @@
+#include <stm32f4xx_cus_can.h>
+
+volatile uint8_t CAN_txCompl = LOW;
+volatile uint8_t CAN_rxCompl = LOW;
+
+static void CAN_ENTER_INIT_MODE(CAN_HandleTypedef *canHandleTypeDef) {
+	// Enter INIT MODE
+	canHandleTypeDef->CANx->MCR |= (HIGH << Shift_0_pos);
+
+	// Wait for enter INIT MODE
+	while (!((canHandleTypeDef->CANx->MSR >> Shift_0_pos) & HIGH))
+		;
+}
+
+static void CAN_EXIT_INIT_MODE(CAN_HandleTypedef *canHandleTypeDef) {
+	// Exit INIT MODE
+	canHandleTypeDef->CANx->MCR &= ~(HIGH << Shift_0_pos);
+
+	// Wait for Exit INIT MODE
+	while (((canHandleTypeDef->CANx->MSR >> Shift_0_pos) & HIGH))
+		;
+}
+
+void CAN_INIT(CAN_HandleTypedef *canHandleTypeDef) {
+
+	// Enable CLOCK CAN
+	if (canHandleTypeDef->CANx == CAN1) {
+		CAN1_EN();
+	} else if (canHandleTypeDef->CANx == CAN2) {
+		CAN2_EN();
+	}
+
+	canHandleTypeDef->CANx->MCR &= ~(HIGH << Shift_1_pos);  // Clear SLEEP bit
+
+	while (canHandleTypeDef->CANx->MSR & (HIGH << Shift_1_pos))
+		;
+
+	// Enter INIT MODE
+	CAN_ENTER_INIT_MODE(canHandleTypeDef);
+
+	// Priority mode
+	canHandleTypeDef->CANx->MCR &= ~(HIGH << Shift_2_pos);
+	canHandleTypeDef->CANx->MCR |= (canHandleTypeDef->transmitPriority
+			<< Shift_2_pos);
+
+	// Receive FIFO locked mode
+	canHandleTypeDef->CANx->MCR &= ~(HIGH << Shift_3_pos);
+	canHandleTypeDef->CANx->MCR |= (canHandleTypeDef->receiveFIFOLockedMode
+			<< Shift_3_pos);
+
+	// No automatic retransmission
+	canHandleTypeDef->CANx->MCR &= ~(HIGH << Shift_4_pos);
+	canHandleTypeDef->CANx->MCR |= (canHandleTypeDef->autoReTransmit
+			<< Shift_4_pos);
+
+	// Automatic bus-off management
+	/*
+	 * If ABOM is set, the bxCAN starts the recovering sequence automatically after it has entered Bus-Off state.
+	 * If ABOM is cleared, the software must initiate the recovering sequence by requesting bxCAN to enter and to leave initialization mode.*/
+	canHandleTypeDef->CANx->MCR &= ~(HIGH << Shift_6_pos);
+	canHandleTypeDef->CANx->MCR |=
+			(canHandleTypeDef->autoBusOff << Shift_6_pos);
+
+	// CAN BIT TIMING
+	Get_APB1_Clock_Speed();
+
+	uint32_t target_sample_point = 875; // 87.5% in tenths of percent
+	uint32_t best_prescaler = 0;
+	uint32_t best_ntq = 0;
+	uint32_t best_error = 0xFFFFFFFF;
+
+	// Search for best prescaler and Ntq combination
+	for (uint16_t prescaler = 1; prescaler <= 1024; prescaler++) {
+		// Step 1: Calculate tq frequency
+		uint32_t tq_frequency = SystemClockSrc / prescaler;
+
+		// Step 2: Calculate required Ntq
+		uint32_t ntq = tq_frequency / canHandleTypeDef->bitrate;
+
+		// Step 3: Check if Ntq is in valid range (8-25 for bxCAN)
+		if (ntq >= 8 && ntq <= 25) {
+			// Step 4: Calculate actual bit rate and error
+			uint32_t actual_bit_rate = tq_frequency / ntq;
+			uint32_t error =
+					(actual_bit_rate > canHandleTypeDef->bitrate) ?
+							(actual_bit_rate - canHandleTypeDef->bitrate) :
+							(canHandleTypeDef->bitrate - actual_bit_rate);
+
+			// Step 5: Keep track of best solution (prefer Ntq=16 if error is same)
+			if (error < best_error || (error == 0 && ntq == 16)) {
+				best_error = error;
+				best_ntq = ntq;
+				best_prescaler = prescaler;
+			}
+
+			// If perfect match found with Ntq=16, stop searching
+			if (error == 0 && ntq == 16) {
+				break;
+			}
+		}
+	}
+
+	/*
+	 * The **sample point** is where the CAN controller reads/samples the bus value to determine if it's a 0 or 1. It occurs at the **end of Phase_Seg1**, which means:
+	 * 		Sample Point Location = SYNC_SEG + PROP_SEG + PHASE_SEG1
+	 *The calculated table shows **(PROP_SEG + PHASE_SEG1) as Seg 1**.
+	 So:
+	 - **Seg1** = PROP_SEG + PHASE_SEG1
+	 - **Seg2** = PHASE_SEG2
+	 **Total bit time:**
+	 ```
+	 Ntq = SYNC_SEG + Seg1 + Seg2
+	 Ntq = 1 + Seg1 + Seg2
+	 ```
+	 **Sample Point percentage:**
+	 ```
+	 Sample Point % = (Distance from start to sample point) / (Total bit time) × 100%
+
+	 Sample Point % = (SYNC_SEG + Seg1) / Ntq × 100%
+
+	 Sample Point % = (1 + Seg1) / Ntq × 100%
+	 ```
+	 * */
+
+	// Step 6: Calculate Seg1 and Seg2 for 87.5% sample point
+	// Sample Point = (SYNC_SEG + Seg1) / Ntq
+	// SYNC_SEG is always 1 tq
+	// 87.5% = (1 + Seg1) / Ntq
+	// Seg1 = (Ntq * 0.875) - 1
+	uint32_t seg1 = ((best_ntq * target_sample_point) / 1000) - 1;
+	uint32_t seg2 = best_ntq - 1 - seg1;
+
+	// Ensure constraints are met
+	if (seg1 > 16)
+		seg1 = 16;  // Max for bxCAN
+	if (seg1 < 1)
+		seg1 = 1;    // Min value
+	if (seg2 > 8)
+		seg2 = 8;    // Max for bxCAN
+	if (seg2 < 1)
+		seg2 = 1;    // Min value (must be >= SJW)
+
+	uint32_t btr_value = 0;
+	btr_value |= ((best_prescaler - 1) & 0x3FF);      // BRP bits 0-9
+	btr_value |= (((seg1 - 1) & 0x0F) << 16);         // TS1 bits 16-19
+	btr_value |= (((seg2 - 1) & 0x07) << 20);         // TS2 bits 20-22
+	btr_value |= (0 << 24);                      // SJW = 1 (SJW-1=0) bits 24-25
+
+	canHandleTypeDef->CANx->BTR = btr_value;
+
+	canHandleTypeDef->CANx->BTR &= ~(GPIO_BIT_11_Mask << Shift_30_pos);
+	canHandleTypeDef->CANx->BTR |= (canHandleTypeDef->testModeSelected
+			<< Shift_30_pos);
+
+	// Exit INIT Mode
+	CAN_EXIT_INIT_MODE(canHandleTypeDef);
+}
+
+uint8_t CAN_TX_FREE_LEVEL(CAN_HandleTypedef *canHandleTypeDef) {
+	uint8_t freeLevel = 0;
+	if ((canHandleTypeDef->CANx->TSR >> Shift_26_pos) & 0x1) {
+		freeLevel++;
+	}
+	if ((canHandleTypeDef->CANx->TSR >> Shift_27_pos) & 0x1) {
+		freeLevel++;
+	}
+	if ((canHandleTypeDef->CANx->TSR >> Shift_28_pos) & 0x1) {
+		freeLevel++;
+	}
+	return freeLevel;
+}
+
+uint8_t CAN_TX_CHECK_NEXT_MAILBOX_FREE(CAN_HandleTypedef *canHandleTypeDef) {
+	/*
+	 * CODE[1:0]: Mailbox code
+	 In case at least one transmit mailbox is free, the code value is equal to the number of the next transmit mailbox free.
+	 In case all transmit mailboxes are pending, the code value is equal to the number of the transmit mailbox with the lowest priority.*/
+	uint8_t mailBox = (canHandleTypeDef->CANx->TSR >> Shift_24_pos)
+			& GPIO_BIT_11_Mask;
+	return mailBox;
+}
+
+void CAN_ADD_MESSAGE(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef, uint8_t mailbox) {
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(HIGH << Shift_1_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+			(canTXHandleTypeDef->frameType << Shift_1_pos);
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(HIGH << Shift_2_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |= (canTXHandleTypeDef->extd
+			<< Shift_2_pos);
+
+	if (canTXHandleTypeDef->extd == CAN_STANDARD_IDE) {
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(0x7FF
+				<< Shift_21_pos);
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+				(canTXHandleTypeDef->identifier << Shift_21_pos);
+	} else if (canTXHandleTypeDef->extd == CAN_EXTENDED_IDE) {
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(0x1FFFFFFF
+				<< Shift_3_pos);
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+				(canTXHandleTypeDef->identifier << Shift_3_pos);
+	}
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDTR &= ~(0xF << Shift_0_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDTR |=
+			(canTXHandleTypeDef->dataLengthCode << Shift_0_pos);
+
+	// Clear TDLR and TDHR completely before writing data
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDLR = 0;
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDHR = 0;
+	for (uint8_t i = 0; i < canTXHandleTypeDef->dataLengthCode; i++) {
+		if (i < 4) {
+			canHandleTypeDef->CANx->sTxMailBox[mailbox].TDLR |=
+					(canTXHandleTypeDef->data[i] << (i * 8));
+		} else {
+			canHandleTypeDef->CANx->sTxMailBox[mailbox].TDHR |=
+					(canTXHandleTypeDef->data[i] << ((i - 4) * 8));
+		}
+	}
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |= (HIGH << Shift_0_pos);
+
+	uint32_t mailBoxBit = mailbox * 8;
+	// Chekc RQCP and TXOK0
+	// Wait for transmission complete
+	while (!((canHandleTypeDef->CANx->TSR >> mailBoxBit) & 0x1)
+			&& !((canHandleTypeDef->CANx->TSR >> (mailBoxBit + 1)) & 0x1))
+		;
+}
+
+void CAN_SEND(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef) {
+	uint8_t mailBox;
+	mailBox = CAN_TX_CHECK_NEXT_MAILBOX_FREE(canHandleTypeDef);
+	if (CAN_TX_FREE_LEVEL(canHandleTypeDef) > 0) {
+		CAN_ADD_MESSAGE(canHandleTypeDef, canTXHandleTypeDef, mailBox);
+	}
+}
+
+/*
+ * Mask Mode (FM1R bit = 0):
+ * One register = Identifier (the ID you want)
+ * Other register = Mask (which bits must match)
+ * Example: ID=0x123, Mask=0x7FF means "accept only 0x123"
+ * Example: ID=0x100, Mask=0x700 means "accept 0x100-0x1FF" (don't care about lower bits)
+
+ * List Mode (FM1R bit = 1):
+ * Both registers = Identifiers
+ * Accepts exactly those IDs, nothing else
+ * Example: FR1=0x123, FR2=0x456 accepts only 0x123 OR 0x456*/
+
+void CAN_FILTER_CONFIG(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_FilterHandleTypeDef *canFilterHandleTypedef) {
+	// Enter filter init mode
+	canHandleTypeDef->CANx->FMR |= (HIGH << Shift_0_pos);
+
+	// Deactivated filter bank first
+	canHandleTypeDef->CANx->FA1R &=
+			~(HIGH << canFilterHandleTypedef->filterBank);
+
+	// Configure filter scale
+	/*
+	 * FSCx: Filter scale configuration
+	 These bits define the scale configuration of Filters 13-0. 0: Dual 16-bit scale configuration
+	 1: Single 32-bit scale configuration*/
+	canHandleTypeDef->CANx->FS1R &=
+			~(HIGH << canFilterHandleTypedef->filterBank);
+	canHandleTypeDef->CANx->FS1R |= (canFilterHandleTypedef->filterScale
+			<< canFilterHandleTypedef->filterBank);
+
+	// Mask mode or List mode
+	canHandleTypeDef->CANx->FM1R &=
+			~(HIGH << canFilterHandleTypedef->filterBank);
+	canHandleTypeDef->CANx->FM1R |= (canFilterHandleTypedef->filterMaskListMode
+			<< canFilterHandleTypedef->filterBank);
+
+	if (canFilterHandleTypedef->filterScale == CAN_FILTER_16_BIT_SCALE) {
+		if (canFilterHandleTypedef->filterMaskListMode == CAN_ID_LIST_MODE) {
+			/*
+			 * Bits:  15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+			 * |--------STID[10:0]--------|RTR|IDE|EXID[17:15]|  (don't care)  |
+			 * |<------- 11 bits -------->|*/
+			uint16_t idBit1 =
+					((canFilterHandleTypedef->CAN_Filter16BitListHandleTypeDef.id1)
+							<< Shift_5_pos);
+			uint16_t idBit2 =
+					((canFilterHandleTypedef->CAN_Filter16BitListHandleTypeDef.id2)
+							<< Shift_5_pos);
+			uint16_t idBit3 =
+					((canFilterHandleTypedef->CAN_Filter16BitListHandleTypeDef.id3)
+							<< Shift_5_pos);
+			uint16_t idBit4 =
+					((canFilterHandleTypedef->CAN_Filter16BitListHandleTypeDef.id4)
+							<< Shift_5_pos);
+			canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR1 =
+					((idBit1) | (idBit2 << Shift_16_pos));
+			canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR2 =
+					((idBit3) | (idBit4 << Shift_16_pos));
+		} else if (canFilterHandleTypedef->filterMaskListMode
+				== CAN_ID_MASK_MODE) {
+			uint16_t maskBit1 =
+					((canFilterHandleTypedef->CAN_Filter16BitMaskHandleTypeDef.mask1)
+							<< Shift_5_pos);
+			uint16_t idBit1 =
+					((canFilterHandleTypedef->CAN_Filter16BitMaskHandleTypeDef.id1)
+							<< Shift_5_pos);
+			uint16_t maskBit2 =
+					((canFilterHandleTypedef->CAN_Filter16BitMaskHandleTypeDef.mask2)
+							<< Shift_5_pos);
+			uint16_t idBit2 =
+					((canFilterHandleTypedef->CAN_Filter16BitMaskHandleTypeDef.id2)
+							<< Shift_5_pos);
+
+			canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR1 =
+					((idBit1) | (maskBit1 << Shift_16_pos));
+			canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR2 =
+					((idBit2) | (maskBit2 << Shift_16_pos));
+		}
+	} else if (canFilterHandleTypedef->filterScale == CAN_FILTER_32_BIT_SCALE) {
+		if (canFilterHandleTypedef->filterMaskListMode == CAN_ID_LIST_MODE) {
+			if (canFilterHandleTypedef->extd == CAN_STANDARD_IDE) {
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR1 =
+						(canFilterHandleTypedef->CAN_Filter32BitListHandleTypeDef.id1
+								<< Shift_21_pos);
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR2 =
+						(canFilterHandleTypedef->CAN_Filter32BitListHandleTypeDef.id2
+								<< Shift_21_pos);
+			} else if (canFilterHandleTypedef->extd == CAN_EXTENDED_IDE) {
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR1 =
+						((canFilterHandleTypedef->CAN_Filter32BitListHandleTypeDef.id1
+								<< Shift_3_pos) | (HIGH << Shift_2_pos));
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR2 =
+						((canFilterHandleTypedef->CAN_Filter32BitListHandleTypeDef.id2
+								<< Shift_3_pos) | (HIGH << Shift_2_pos));
+			}
+		} else if (canFilterHandleTypedef->filterMaskListMode
+				== CAN_ID_MASK_MODE) {
+			if (canFilterHandleTypedef->extd == CAN_STANDARD_IDE) {
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR1 =
+						(canFilterHandleTypedef->CAN_Filter32BitMaskHandleTypeDef.id1
+								<< Shift_21_pos);
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR2 =
+						(canFilterHandleTypedef->CAN_Filter32BitMaskHandleTypeDef.mask1
+								<< Shift_21_pos);
+			} else if (canFilterHandleTypedef->extd == CAN_EXTENDED_IDE) {
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR1 =
+						((canFilterHandleTypedef->CAN_Filter32BitMaskHandleTypeDef.id1
+								<< Shift_3_pos) | (HIGH << Shift_2_pos));
+				canHandleTypeDef->CANx->sFilterRegister[canFilterHandleTypedef->filterBank].FR2 =
+						((canFilterHandleTypedef->CAN_Filter32BitMaskHandleTypeDef.mask1
+								<< Shift_3_pos) | (HIGH << Shift_2_pos));
+			}
+		}
+	}
+
+	if (canFilterHandleTypedef->fifoAssignment == CAN_FIFO_0) {
+		canHandleTypeDef->CANx->FFA1R &= ~(HIGH
+				<< canFilterHandleTypedef->filterBank);
+	} else if (canFilterHandleTypedef->fifoAssignment == CAN_FIFO_1) {
+		canHandleTypeDef->CANx->FFA1R |= (HIGH
+				<< canFilterHandleTypedef->filterBank);
+	}
+
+	// Activate the filter bank
+	canHandleTypeDef->CANx->FA1R |=
+			(HIGH << canFilterHandleTypedef->filterBank);
+
+	// Exit filter init mode
+	canHandleTypeDef->CANx->FMR &= ~(HIGH << Shift_0_pos);
+}
+
+uint8_t CAN_RX_FREE_LEVEL(CAN_HandleTypedef *canHandleTypeDef, uint8_t fifo) {
+	if (fifo == CAN_FIFO_0) {
+		return (canHandleTypeDef->CANx->RFxR[CAN_FIFO_0] & GPIO_BIT_11_Mask);
+	} else if (fifo == CAN_FIFO_1) {
+		return (canHandleTypeDef->CANx->RFxR[CAN_FIFO_1] & GPIO_BIT_11_Mask);
+	}
+
+	return CAN_INVALID_FIFO;
+}
+
+uint8_t CAN_RECEIVE(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_RXHandleTypeDef *can_RXHandleTypeDef, uint8_t fifo) {
+	uint8_t messagePendding = CAN_RX_FREE_LEVEL(canHandleTypeDef, fifo);
+	if (messagePendding == 0) {
+		return CAN_RCV_NOT_SUCCESS;
+	}
+
+	can_RXHandleTypeDef->rtr = (canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR
+			>> Shift_1_pos) & HIGH;
+	can_RXHandleTypeDef->extd = ((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR
+			>> Shift_2_pos) & HIGH);
+	if (can_RXHandleTypeDef->extd == CAN_STANDARD_IDE) {
+		can_RXHandleTypeDef->identifier =
+				((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR >> Shift_21_pos)
+						& 0x7FF);
+	} else if (can_RXHandleTypeDef->extd == CAN_EXTENDED_IDE) {
+		can_RXHandleTypeDef->identifier =
+				((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR >> Shift_3_pos)
+						& 0x1FFFFFFF);
+	}
+
+	can_RXHandleTypeDef->dataLengthCode =
+			((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RDTR >> Shift_0_pos)
+					& 0xF);
+
+	uint8_t j = 0;
+	for (uint8_t i = 0; i < can_RXHandleTypeDef->dataLengthCode && i < 8; i++) {
+		if (i < 4) {
+			can_RXHandleTypeDef->data[i] =
+					((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RDLR >> (i * 8))
+							& 0xFF);
+		} else {
+			can_RXHandleTypeDef->data[i] =
+					((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RDHR >> (j * 8))
+							& 0xFF);
+			j++;
+		}
+	}
+
+	// Release FIFO 0/1 by setting RFOMx bit
+	canHandleTypeDef->CANx->RFxR[fifo] |= (HIGH << Shift_5_pos);
+	return CAN_RCV_SUCCESS;
+}
+
+void CAN_ADD_MESSAGE_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef, uint8_t mailbox) {
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(HIGH << Shift_1_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+			(canTXHandleTypeDef->frameType << Shift_1_pos);
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(HIGH << Shift_2_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |= (canTXHandleTypeDef->extd
+			<< Shift_2_pos);
+
+	if (canTXHandleTypeDef->extd == CAN_STANDARD_IDE) {
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(0x7FF
+				<< Shift_21_pos);
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+				(canTXHandleTypeDef->identifier << Shift_21_pos);
+	} else if (canTXHandleTypeDef->extd == CAN_EXTENDED_IDE) {
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(0x1FFFFFFF
+				<< Shift_3_pos);
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+				(canTXHandleTypeDef->identifier << Shift_3_pos);
+	}
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDTR &= ~(0xF << Shift_0_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDTR |=
+			(canTXHandleTypeDef->dataLengthCode << Shift_0_pos);
+
+	// Clear TDLR and TDHR completely before writing data
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDLR = 0;
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDHR = 0;
+	for (uint8_t i = 0; i < canTXHandleTypeDef->dataLengthCode; i++) {
+		if (i < 4) {
+			canHandleTypeDef->CANx->sTxMailBox[mailbox].TDLR |=
+					(canTXHandleTypeDef->data[i] << (i * 8));
+		} else {
+			canHandleTypeDef->CANx->sTxMailBox[mailbox].TDHR |=
+					(canTXHandleTypeDef->data[i] << ((i - 4) * 8));
+		}
+	}
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |= (HIGH << Shift_0_pos);
+
+	static uint32_t mailBoxBit = mailbox * 8;
+
+}
+
+void CAN_SEND_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef) {
+	uint8_t mailBox;
+	mailBox = CAN_TX_CHECK_NEXT_MAILBOX_FREE(canHandleTypeDef);
+	if (CAN_TX_FREE_LEVEL(canHandleTypeDef) > 0) {
+		canHandleTypeDef->CANx->IER |= (HIGH << Shift_0_pos);
+		CAN_ADD_MESSAGE_IT(canHandleTypeDef, canTXHandleTypeDef, mailBox);
+	}
+}
+
+void CAN_TX_Handling(CAN_HandleTypedef *canHandleTypeDef) {
+	// Chekc RQCP and TXOK0
+	// Wait for transmission complete
+	if ((canHandleTypeDef->CANx->TSR >> mailBoxBit) & 0x1) {
+
+	}
+}

@@ -149,6 +149,11 @@ typedef struct {
 #define CAN_RCV_NOT_SUCCESS 0x0
 #define CAN_RCV_SUCCESS 0x1
 
+extern uint32_t mailBoxBitIT[3];
+
+extern volatile uint8_t CAN_txCompl;
+extern volatile uint8_t CAN_rxCompl;
+
 void CAN_INIT(CAN_HandleTypedef *canHandleTypeDef);
 void CAN_SEND(CAN_HandleTypedef *canHandleTypeDef,
 		CAN_TXHandleTypeDef *canTXHandleTypeDef);
@@ -162,4 +167,14 @@ uint8_t CAN_RX_FREE_LEVEL(CAN_HandleTypedef *canHandleTypeDef, uint8_t fifo);
 uint8_t CAN_RECEIVE(CAN_HandleTypedef *canHandleTypeDef,
 		CAN_RXHandleTypeDef *can_RXHandleTypeDef, uint8_t fifo);
 
+void CAN_SEND_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef);
+void CAN_ADD_MESSAGE_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef, uint8_t mailbox);
+void CAN_TX_Handling(CAN_HandleTypedef *canHandleTypeDef);
+
+void CAN_RECEIVE_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_RXHandleTypeDef *can_RXHandleTypeDef, uint8_t fifo);
+void CAN_RX_Handling(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_RXHandleTypeDef *can_RXHandleTypeDef, uint8_t fifo);
 #endif /* INC_STM32F4XX_CUS_CAN_H_ */

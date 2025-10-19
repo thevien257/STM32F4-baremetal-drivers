@@ -35,19 +35,27 @@ void setup() {
   }
 }
 
+uint32_t messageCount = 0;
+
 void loop() {
   // Create a CAN frame
 
   CanFrame txFrame;
-  txFrame.identifier = 0x458;  // CAN ID
+  txFrame.identifier = 0x458;    // CAN ID
   txFrame.extd = 0;              // 0 = Standard ID, 1 = Extended ID
   txFrame.rtr = 0;               // 0 = Data frame, 1 = Remote frame
   txFrame.data_length_code = 8;  // Number of bytes (0–8)
 
-  // Example data payload
-  for (int i = 0; i < 8; i++) {
-    txFrame.data[i] = i;  // Fill with simple counter values
-  }
+  txFrame.data[0] = 0xAA;
+  txFrame.data[1] = 0xBB;
+  txFrame.data[2] = 0xCC;
+  txFrame.data[3] = 0xDD;
+  txFrame.data[4] = (messageCount >> 24) & 0xFF;
+  txFrame.data[5] = (messageCount >> 16) & 0xFF;
+  txFrame.data[6] = (messageCount >> 8) & 0xFF;
+  txFrame.data[7] = messageCount & 0xFF;
+
+  messageCount++;
 
   // Send the frame
   if (ESP32Can.writeFrame(txFrame)) {

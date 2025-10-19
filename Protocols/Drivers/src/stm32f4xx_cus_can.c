@@ -1,5 +1,9 @@
 #include <stm32f4xx_cus_can.h>
 
+volatile uint8_t CAN_txCompl = LOW;
+volatile uint8_t CAN_rxCompl = LOW;
+uint32_t mailBoxBitIT[3] = { 0 };
+
 static void CAN_ENTER_INIT_MODE(CAN_HandleTypedef *canHandleTypeDef) {
 	// Enter INIT MODE
 	canHandleTypeDef->CANx->MCR |= (HIGH << Shift_0_pos);
@@ -420,4 +424,142 @@ uint8_t CAN_RECEIVE(CAN_HandleTypedef *canHandleTypeDef,
 	// Release FIFO 0/1 by setting RFOMx bit
 	canHandleTypeDef->CANx->RFxR[fifo] |= (HIGH << Shift_5_pos);
 	return CAN_RCV_SUCCESS;
+}
+
+void CAN_ADD_MESSAGE_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef, uint8_t mailbox) {
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(HIGH << Shift_1_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+			(canTXHandleTypeDef->frameType << Shift_1_pos);
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(HIGH << Shift_2_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |= (canTXHandleTypeDef->extd
+			<< Shift_2_pos);
+
+	if (canTXHandleTypeDef->extd == CAN_STANDARD_IDE) {
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(0x7FF
+				<< Shift_21_pos);
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+				(canTXHandleTypeDef->identifier << Shift_21_pos);
+	} else if (canTXHandleTypeDef->extd == CAN_EXTENDED_IDE) {
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR &= ~(0x1FFFFFFF
+				<< Shift_3_pos);
+		canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |=
+				(canTXHandleTypeDef->identifier << Shift_3_pos);
+	}
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDTR &= ~(0xF << Shift_0_pos);
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDTR |=
+			(canTXHandleTypeDef->dataLengthCode << Shift_0_pos);
+
+	// Clear TDLR and TDHR completely before writing data
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDLR = 0;
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TDHR = 0;
+	for (uint8_t i = 0; i < canTXHandleTypeDef->dataLengthCode; i++) {
+		if (i < 4) {
+			canHandleTypeDef->CANx->sTxMailBox[mailbox].TDLR |=
+					(canTXHandleTypeDef->data[i] << (i * 8));
+		} else {
+			canHandleTypeDef->CANx->sTxMailBox[mailbox].TDHR |=
+					(canTXHandleTypeDef->data[i] << ((i - 4) * 8));
+		}
+	}
+
+	canHandleTypeDef->CANx->sTxMailBox[mailbox].TIR |= (HIGH << Shift_0_pos);
+
+	mailBoxBitIT[mailbox] = mailbox * 8;
+
+}
+
+void CAN_SEND_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_TXHandleTypeDef *canTXHandleTypeDef) {
+	uint8_t mailBox;
+	mailBox = CAN_TX_CHECK_NEXT_MAILBOX_FREE(canHandleTypeDef);
+	if (CAN_TX_FREE_LEVEL(canHandleTypeDef) > 0) {
+		canHandleTypeDef->CANx->IER |= (HIGH << Shift_0_pos);
+		CAN_ADD_MESSAGE_IT(canHandleTypeDef, canTXHandleTypeDef, mailBox);
+	}
+}
+
+void CAN_TX_Handling(CAN_HandleTypedef *canHandleTypeDef) {
+	// Check all 3 mailboxes
+	for (uint8_t mailbox = 0; mailbox < 3; mailbox++) {
+		if ((canHandleTypeDef->CANx->TSR >> mailBoxBitIT[mailbox]) & 0x1) {
+			CAN_txCompl = HIGH;
+			// Clear Interrupt Transmit
+			canHandleTypeDef->CANx->IER &= ~(HIGH << Shift_0_pos);
+			// Clear the RQCP flag by writing 1 to it
+			canHandleTypeDef->CANx->TSR |= (0x1 << mailBoxBitIT[mailbox]);
+			break;  // Exit after handling first completed mailbox
+		}
+	}
+}
+
+void CAN_RECEIVE_IT(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_RXHandleTypeDef *can_RXHandleTypeDef, uint8_t fifo) {
+	// Enable FIFO message pending interrupt
+	if (fifo == CAN_FIFO_0) {
+		// Enable FIFO 0 message pending interrupt (FMPIE0)
+		canHandleTypeDef->CANx->IER |= (HIGH << Shift_1_pos);
+	} else if (fifo == CAN_FIFO_1) {
+		// Enable FIFO 1 message pending interrupt (FMPIE1)
+		canHandleTypeDef->CANx->IER |= (HIGH << Shift_4_pos);
+	}
+}
+void CAN_RX_Handling(CAN_HandleTypedef *canHandleTypeDef,
+		CAN_RXHandleTypeDef *can_RXHandleTypeDef, uint8_t fifo) {
+
+	// Check if FIFO has pending messages
+	uint8_t messagePending = CAN_RX_FREE_LEVEL(canHandleTypeDef, fifo);
+
+	if (messagePending > 0) {
+		// Read RTR bit
+		can_RXHandleTypeDef->rtr =
+				(canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR >> Shift_1_pos)
+						& HIGH;
+
+		// Read IDE bit (Standard or Extended)
+		can_RXHandleTypeDef->extd =
+				((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR >> Shift_2_pos)
+						& HIGH);
+
+		// Read Identifier
+		if (can_RXHandleTypeDef->extd == CAN_STANDARD_IDE) {
+			can_RXHandleTypeDef->identifier =
+					((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR
+							>> Shift_21_pos) & 0x7FF);
+		} else if (can_RXHandleTypeDef->extd == CAN_EXTENDED_IDE) {
+			can_RXHandleTypeDef->identifier =
+					((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RIR
+							>> Shift_3_pos) & 0x1FFFFFFF);
+		}
+
+		// Read Data Length Code
+		can_RXHandleTypeDef->dataLengthCode =
+				((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RDTR >> Shift_0_pos)
+						& 0xF);
+
+		// Read Data bytes
+		uint8_t j = 0;
+		for (uint8_t i = 0; i < can_RXHandleTypeDef->dataLengthCode && i < 8;
+				i++) {
+			if (i < 4) {
+				can_RXHandleTypeDef->data[i] =
+						((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RDLR
+								>> (i * 8)) & 0xFF);
+			} else {
+				can_RXHandleTypeDef->data[i] =
+						((canHandleTypeDef->CANx->sFIFOMailBox[fifo].RDHR
+								>> (j * 8)) & 0xFF);
+				j++;
+			}
+		}
+
+		// Set completion flag
+		CAN_rxCompl = HIGH;
+
+		// Release FIFO by setting RFOM bit
+		canHandleTypeDef->CANx->RFxR[fifo] |= (HIGH << Shift_5_pos);
+	}
 }

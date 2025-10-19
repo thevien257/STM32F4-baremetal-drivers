@@ -4,7 +4,7 @@
 "./Drivers/src/stm32f4xx_cus_i2c.o"
 "./Drivers/src/stm32f4xx_cus_spi.o"
 "./Drivers/src/stm32f4xx_cus_uart.o"
-"./Src/CANSilentLoopBackMode.o"
+"./Src/CANNormalModeTX_RX_IT.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f407vgtx.o"

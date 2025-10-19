@@ -510,3 +510,582 @@ Finished building: default.size.stdout
  
 Finished building: Protocols.list
  
+17:51:43 **** Clean-only build of configuration Debug for project Protocols ****
+make -j12 clean 
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/CANNormalMode.cyclo ./Src/CANNormalMode.d ./Src/CANNormalMode.o ./Src/CANNormalMode.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
+rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
+ 
+17:51:44 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:52:24 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:52:49 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:56:30 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:57:00 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:57:24 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:58:51 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+17:59:06 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:00:39 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10196	    100	   1924	  12220	   2fbc	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:01:05 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10192	    100	   1924	  12216	   2fb8	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:02:17 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10196	    100	   1924	  12220	   2fbc	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:12:11 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalMode.d" -MT"Src/CANNormalMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalMode.o"
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/CANNormalModeEXTDID.o:C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalModeEXTDID.c:14: multiple definition of `canHandle'; ./Src/CANNormalMode.o:C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalMode.c:14: first defined here
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/CANNormalModeEXTDID.o: in function `main':
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalModeEXTDID.c:16: multiple definition of `main'; ./Src/CANNormalMode.o:C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalMode.c:16: first defined here
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/CANNormalModeEXTDID.o: in function `CAN_Normal_Mode_Init':
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalModeEXTDID.c:105: multiple definition of `CAN_Normal_Mode_Init'; ./Src/CANNormalMode.o:C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalMode.c:105: first defined here
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/CANNormalModeEXTDID.o: in function `delay_ms':
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalModeEXTDID.c:168: multiple definition of `delay_ms'; ./Src/CANNormalMode.o:C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalMode.c:166: first defined here
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/CANNormalModeEXTDID.o: in function `CAN_GPIO_Init':
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalModeEXTDID.c:80: multiple definition of `CAN_GPIO_Init'; ./Src/CANNormalMode.o:C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANNormalMode.c:80: first defined here
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+collect2.exe: error: ld returned 1 exit status
+make: *** [makefile:64: Protocols.elf] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+18:12:29 **** Clean-only build of configuration Debug for project Protocols ****
+make -j12 clean 
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/CANNormalMode.cyclo ./Src/CANNormalMode.d ./Src/CANNormalMode.o ./Src/CANNormalMode.su ./Src/CANNormalModeEXTDID.cyclo ./Src/CANNormalModeEXTDID.d ./Src/CANNormalModeEXTDID.o ./Src/CANNormalModeEXTDID.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
+rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
+ 
+18:12:29 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:12:32 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+18:13:28 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10188	    100	   1924	  12212	   2fb4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:14:53 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:15:32 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10188	    100	   1924	  12212	   2fb4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:15:59 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10188	    100	   1924	  12212	   2fb4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:17:25 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10188	    100	   1924	  12212	   2fb4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:18:42 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10200	    100	   1924	  12224	   2fc0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:21:08 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANNormalModeEXTDID.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeEXTDID.d" -MT"Src/CANNormalModeEXTDID.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeEXTDID.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10184	    100	   1924	  12208	   2fb0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:23:55 **** Clean-only build of configuration Debug for project Protocols ****
+make -j12 clean 
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/CANNormalModeEXTDID.cyclo ./Src/CANNormalModeEXTDID.d ./Src/CANNormalModeEXTDID.o ./Src/CANNormalModeEXTDID.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
+rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
+ 
+18:23:56 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+../Src/CANSilentMode.c: In function 'Test_Loopback_Mode':
+../Src/CANSilentMode.c:131:62: error: 'txMsg' undeclared (first use in this function); did you mean 'rxMsg'?
+  131 |                                         if (rxMsg.data[i] != txMsg.data[i]) {
+      |                                                              ^~~~~
+      |                                                              rxMsg
+../Src/CANSilentMode.c:131:62: note: each undeclared identifier is reported only once for each function it appears in
+../Src/CANSilentMode.c:75:18: warning: unused variable 'messageCount' [-Wunused-variable]
+   75 |         uint32_t messageCount = 0;
+      |                  ^~~~~~~~~~~~
+make: *** [Src/subdir.mk:25: Src/CANSilentMode.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+18:24:13 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+../Src/CANSilentMode.c: In function 'Test_Loopback_Mode':
+../Src/CANSilentMode.c:75:18: warning: unused variable 'messageCount' [-Wunused-variable]
+   75 |         uint32_t messageCount = 0;
+      |                  ^~~~~~~~~~~~
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/CANSilentMode.o: in function `main':
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/CANSilentMode.c:13:(.text.main+0x4): undefined reference to `Test_Silent_Mode'
+collect2.exe: error: ld returned 1 exit status
+make: *** [makefile:64: Protocols.elf] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+18:24:45 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   9076	    100	   1908	  11084	   2b4c	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:24:47 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   9076	    100	   1908	  11084	   2b4c	Protocols.elf
+Finished building: default.size.stdout
+ 
+18:26:03 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10028	    100	   1908	  12036	   2f04	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:26:29 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+  10028	    100	   1908	  12036	   2f04	Protocols.elf
+Finished building: default.size.stdout
+ 
+18:26:55 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10028	    100	   1908	  12036	   2f04	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:28:36 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+../Src/CANSilentMode.c: In function 'Test_Silent_Mode':
+../Src/CANSilentMode.c:96:61: error: 'messageCount' undeclared (first use in this function)
+   96 |                 printf("Sending CAN message #%lu...\r\n", ++messageCount);
+      |                                                             ^~~~~~~~~~~~
+../Src/CANSilentMode.c:96:61: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [Src/subdir.mk:25: Src/CANSilentMode.o] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+18:28:45 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10028	    100	   1908	  12036	   2f04	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:28:46 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+  10028	    100	   1908	  12036	   2f04	Protocols.elf
+Finished building: default.size.stdout
+ 
+18:30:41 **** Clean-only build of configuration Debug for project Protocols ****
+make -j12 clean 
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/CANSilentMode.cyclo ./Src/CANSilentMode.d ./Src/CANSilentMode.o ./Src/CANSilentMode.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
+rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
+ 
+18:30:41 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10024	    100	   1908	  12032	   2f00	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:31:04 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+  10024	    100	   1908	  12032	   2f00	Protocols.elf
+Finished building: default.size.stdout
+ 
+18:32:07 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10024	    100	   1908	  12032	   2f00	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:33:50 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/CANSilentMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentMode.d" -MT"Src/CANSilentMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentMode.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   9072	    100	   1908	  11080	   2b48	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+18:35:36 **** Clean-only build of configuration Debug for project Protocols ****
+make -j12 clean 
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/CANSilentMode.cyclo ./Src/CANSilentMode.d ./Src/CANSilentMode.o ./Src/CANSilentMode.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
+rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
+ 
+18:35:36 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/CANSilentLoopBackMode.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANSilentLoopBackMode.d" -MT"Src/CANSilentLoopBackMode.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANSilentLoopBackMode.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+  10024	    100	   1908	  12032	   2f00	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 

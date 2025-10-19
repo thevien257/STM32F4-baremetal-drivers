@@ -1,0 +1,155 @@
+#include "stm32f4xx_cus.h"
+#include "stm32f4xx_cus_gpio.h"
+#include "stm32f4xx_cus_can.h"
+#include <stdio.h>
+
+// =============================
+// Function prototypes
+// =============================
+void CAN_GPIO_Init(void);
+void CAN_Normal_Mode_Init(void);
+void delay_ms(uint32_t ms);
+
+// Global CAN handle
+CAN_HandleTypedef canHandle;
+
+int main(void) {
+	// Initialize CAN in normal mode
+	CAN_Normal_Mode_Init();
+
+	printf("STM32 CAN Normal Mode Started\r\n");
+	printf("==============================\r\n\r\n");
+
+	uint32_t messageCount = 0;
+
+	while (1) {
+		// ---------- Transmit ----------
+		CAN_TXHandleTypeDef txMsg;
+		txMsg.identifier = 0x1234567;
+		txMsg.extd = CAN_EXTENDED_IDE;
+		txMsg.frameType = CAN_DATA_FRAME;
+		txMsg.dataLengthCode = 8;
+
+		// Fill data pattern
+		txMsg.data[0] = 0xAA;
+		txMsg.data[1] = 0xBB;
+		txMsg.data[2] = 0xCC;
+		txMsg.data[3] = 0xDD;
+		txMsg.data[4] = 0xEE;
+		txMsg.data[5] = 0x01;
+		txMsg.data[6] = 0x02;
+		txMsg.data[7] = 0x03;
+
+		printf("Sending CAN message #%lu...\r\n", ++messageCount);
+		CAN_SEND(&canHandle, &txMsg);
+		printf("Message sent successfully!\r\n");
+
+		// ---------- Receive ----------
+		uint8_t msgPending = CAN_RX_FREE_LEVEL(&canHandle, CAN_FIFO_0);
+		if (msgPending > 0) {
+			CAN_RXHandleTypeDef rxMsg;
+			uint8_t status = CAN_RECEIVE(&canHandle, &rxMsg, CAN_FIFO_0);
+
+			if (status == CAN_RCV_SUCCESS) {
+				printf("CAN Message Received!\r\n");
+				printf("  ID: 0x%03lX\r\n", rxMsg.identifier);
+				printf("  Type: %s\r\n",
+						rxMsg.extd == CAN_STANDARD_IDE ?
+								"Standard" : "Extended");
+				printf("  Frame: %s\r\n", rxMsg.rtr ? "Remote" : "Data");
+				printf("  DLC: %d\r\n", rxMsg.dataLengthCode);
+				printf("  Data: ");
+				for (uint8_t i = 0; i < rxMsg.dataLengthCode; i++) {
+					printf("0x%02X ", rxMsg.data[i]);
+				}
+				printf("\r\n==============================\r\n\r\n");
+			} else {
+				printf("Failed to receive message\r\n");
+			}
+		} else {
+			printf("No message pending in FIFO\r\n\r\n");
+		}
+
+		delay_ms(1000);
+	}
+}
+
+// =============================
+// GPIO Configuration (PD0, PD1)
+// =============================
+void CAN_GPIO_Init(void) {
+	GPIO_Handle_TypeDef canTxPin;
+	canTxPin.GPIOX = GPIOD;
+	canTxPin.pin_number = GPIO_PIN_1;              // CAN1_TX = PD1
+	canTxPin.mode = GPIO_MODE_AF;
+	canTxPin.alternate_function_select = GPIO_AF9; // AF9 = CAN1
+	canTxPin.output_type = GPIO_OUTPUT_TYPE_PP;
+	canTxPin.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	canTxPin.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&canTxPin);
+
+	GPIO_Handle_TypeDef canRxPin;
+	canRxPin.GPIOX = GPIOD;
+	canRxPin.pin_number = GPIO_PIN_0;              // CAN1_RX = PD0
+	canRxPin.mode = GPIO_MODE_AF;
+	canRxPin.alternate_function_select = GPIO_AF9; // AF9 = CAN1
+	canRxPin.output_type = GPIO_OUTPUT_TYPE_PP;
+	canRxPin.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	canRxPin.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&canRxPin);
+}
+
+// =============================
+// CAN Normal Mode Initialization
+// =============================
+void CAN_Normal_Mode_Init(void) {
+	// Step 1: Init GPIO
+	CAN_GPIO_Init();
+
+	// Step 2: Configure CAN parameters
+	canHandle.CANx = CAN1;
+	canHandle.transmitPriority = 0;
+	canHandle.receiveFIFOLockedMode = 0;
+	canHandle.autoReTransmit = 1;
+	canHandle.autoBusOff = 1;
+	canHandle.bitrate = 1000000;            // 1 Mbps
+	canHandle.testModeSelected = CAN_NORMAL_MODE;         // NORMAL MODE
+
+	// Step 3: Init CAN
+	CAN_INIT(&canHandle);
+
+	CAN_FilterHandleTypeDef filterConfig;
+	filterConfig.filterBank = 0;
+	filterConfig.extd = CAN_EXTENDED_IDE;
+	filterConfig.fifoAssignment = CAN_FIFO_0;
+
+	// Use 32-bit filter for 29-bit IDs
+	filterConfig.filterScale = CAN_FILTER_32_BIT_SCALE;
+	filterConfig.filterMaskListMode = CAN_ID_MASK_MODE;
+
+//	filterConfig.CAN_Filter32BitMaskHandleTypeDef.id1 = 0x0;
+//	filterConfig.CAN_Filter32BitMaskHandleTypeDef.mask1 = 0x0; // accept all ID
+
+//	filterConfig.CAN_Filter32BitMaskHandleTypeDef.id1 = 0x1234567; // Accept only 0x1234567
+//	filterConfig.CAN_Filter32BitMaskHandleTypeDef.mask1 = 0x1FFFFFFF; // Exact match for 29-bit IDs
+
+	filterConfig.filterScale = CAN_FILTER_32_BIT_SCALE;
+	filterConfig.filterMaskListMode = CAN_ID_LIST_MODE;
+	filterConfig.CAN_Filter32BitListHandleTypeDef.id1 = 0x1234567; // accept only 0x1234567
+	filterConfig.CAN_Filter32BitListHandleTypeDef.id2 = 0x1234568; // accept only 0x1234568
+	CAN_FILTER_CONFIG(&canHandle, &filterConfig);
+
+	printf("CAN initialized in NORMAL mode\r\n");
+	printf("Bitrate: 1000 kbps\r\n");
+	printf("Filter: Accept All\r\n\r\n");
+}
+
+// =============================
+// Simple delay
+// =============================
+void delay_ms(uint32_t ms) {
+	for (uint32_t i = 0; i < ms; i++) {
+		for (volatile uint32_t j = 0; j < 4000; j++)
+			;
+	}
+}

@@ -37,8 +37,9 @@ void setup() {
 
 void loop() {
   // Create a CAN frame
+
   CanFrame txFrame;
-  txFrame.identifier = 0x123;    // CAN ID
+  txFrame.identifier = 0x458;  // CAN ID
   txFrame.extd = 0;              // 0 = Standard ID, 1 = Extended ID
   txFrame.rtr = 0;               // 0 = Data frame, 1 = Remote frame
   txFrame.data_length_code = 8;  // Number of bytes (0–8)

@@ -170,8 +170,8 @@ void CAN_IT_Mode_Init(void) {
 	filterConfig.fifoAssignment = CAN_FIFO_0;
 	filterConfig.filterScale = CAN_FILTER_32_BIT_SCALE;
 	filterConfig.filterMaskListMode = CAN_ID_LIST_MODE;
-	filterConfig.CAN_Filter32BitListHandleTypeDef.id1 = 0x456;
-	filterConfig.CAN_Filter32BitListHandleTypeDef.id2 = 0x458;
+	filterConfig.CAN_Filter32BitMaskHandleTypeDef.id1 = 0x000;
+	filterConfig.CAN_Filter32BitMaskHandleTypeDef.mask1 = 0x000; // Accept all IDs
 
 	CAN_FILTER_CONFIG(&canHandle, &filterConfig);
 

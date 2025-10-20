@@ -31,6 +31,7 @@
   - [I2C Slave Write Function](#i2c-slave-write-function)
   - [I2C Slave Read Function](#i2c-slave-read-function)
   - [What I Learned from I2C](#what-i-learned-from-i2c)
+- [SPI (Serial Peripheral Interface)](#spi-serial-peripheral-interface)
 
 
 ## 🎯 Overview
@@ -589,7 +590,7 @@ typedef struct {
 
 #### Structure I2C_typeDef
 
-The `I2C_TypeDef` structure represents the I2C peripheral registers. It is defined in the `stm32f4xx_cus.h` file as follows:
+The `I2C_TypeDef` structure represents the I2C peripheral registers. It is defined in the `stm32f4xx_cus_i2c.h` file as follows:
 
 ```c
 typedef struct {
@@ -1477,6 +1478,250 @@ Why no STOPF during slave TX?
 6. Implementing I2C_OnEvent callback function allows the user to handle specific events in slave mode.
 7. In I2C master mode interrupt communication, we must generate START condition first to initiate communication then we enable interrupts because if we enable interrupts first, the interrupt handler will be called before we generate START condition, which will cause the communication to fail.
 8. Knowing why AF flag only during slave TX and STOPF flag only during slave RX is crucial for correctly handling I2C slave events.
+
+## SPI (Serial Peripheral Interface)
+
+The SPI driver provides functions to initialize and configure the SPI peripheral, as well as functions to send and receive data in both polling and interrupt modes.
+
+**Features Implemented:**
+
+- Half-duplex communication
+- Full-duplex communication
+- Master mode
+- Sending and receiving data in polling mode
+- Sending and receiving data in interrupt mode
+
+**Key Functions:**
+
+```c
+void SPI_INIT(SPI_HandleTypedef *spi_handle);
+void SPI_SEND(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer, uint32_t len);
+void SPI_RECEIVE(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer, uint32_t len);
+void SPI_SendReceive_FullDuplex(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
+uint8_t SPI_SendIT(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer,
+		uint32_t len);
+uint8_t SPI_ReceiveIT(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer,
+		uint32_t len);
+uint8_t SPI_SendReceive_FullDuplex_IT(SPI_HandleTypedef *spi_handle,
+		uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
+void SPI_TxRx_HandlingIT(SPI_HandleTypedef *spi_handle);
+void SPI_Err_HandlingIT(SPI_HandleTypedef *spi_handle);
+```
+
+#### User configurable Structure
+
+To make the SPI driver more flexible and easier to use, we define a user-configurable structure `SPI_HandleTypedef` that contains all the necessary configuration parameters for the SPI peripheral.
+
+This structure can be found in the `stm32f4xx_cus_spi.h` file.
+
+```c
+typedef struct {
+	SPI_TypeDef *SPIx;
+	uint8_t spi_data_direction;
+	uint8_t spi_frame_format;
+	uint8_t spi_master_slave;
+	uint8_t spi_clock_polarity;
+	uint8_t spi_clock_phase;
+	uint8_t spi_ssm;
+	uint8_t spi_sclk_prescaler;
+	uint8_t spi_nss_output_en;
+} SPI_HandleTypedef;
+```
+
+#### Structure SPI_TypeDef
+
+The `SPI_TypeDef` structure represents the SPI peripheral registers. This structure is defined in the `stm32f4xx_cus_spi.h` file.
+
+```c
+typedef struct {
+	volatile uint32_t CR1; /**< SPI Control Register 1,           Address offset: 0x00 */
+	volatile uint32_t CR2; /**< SPI Control Register 2,           Address offset: 0x04 */
+	volatile uint32_t SR; /**< SPI Status Register,              Address offset: 0x08 */
+	volatile uint32_t DR; /**< SPI Data Register,                Address offset: 0x0C */
+	volatile uint32_t CRCPR; /**< SPI CRC Polynomial Register,      Address offset: 0x10 */
+	volatile uint32_t RXCRCR; /**< SPI RX CRC Register,              Address offset: 0x14 */
+	volatile uint32_t TXCRCR; /**< SPI TX CRC Register,              Address offset: 0x18 */
+	volatile uint32_t I2SCFGR; /**< SPI I2S Configuration Register,   Address offset: 0x1C */
+	volatile uint32_t I2SPR; /**< SPI I2S Prescaler Register,       Address offset: 0x20 */
+} SPI_TypeDef;
+```
+
+We also define some macros for SPI base addresses and peripheral definitions in the `stm32f4xx_cus_spi.h` file.
+
+```c
+/* SPI Base Addresses */
+#define SPI1_BASE    0x40013000U  /* APB2 - 0x40013000 to 0x400133FF */
+#define SPI2_BASE    0x40003800U  /* APB1 - 0x40003800 to 0x40003BFF (SPI2/I2S2) */
+#define SPI3_BASE    0x40003C00U  /* APB1 - 0x40003C00 to 0x40003FFF (SPI3/I2S3) */
+#define SPI4_BASE    0x40013400U  /* APB2 - 0x40013400 to 0x400137FF */
+#define SPI5_BASE    0x40015000U  /* APB2 - 0x40015000 to 0x400153FF */
+#define SPI6_BASE    0x40015400U  /* APB2 - 0x40015400 to 0x400157FF */
+/* SPI Peripheral Instances */
+#define SPI1         ((SPI_TypeDef *) SPI1_BASE)
+#define SPI2         ((SPI_TypeDef *) SPI2_BASE)  /* Also supports I2S2 */
+#define SPI3         ((SPI_TypeDef *) SPI3_BASE)  /* Also supports I2S3 */
+#define SPI4         ((SPI_TypeDef *) SPI4_BASE)
+#define SPI5         ((SPI_TypeDef *) SPI5_BASE)
+#define SPI6         ((SPI_TypeDef *) SPI6_BASE)
+```
+
+#### SPI Initialization Function
+
+We implement the `SPI_INIT` function to initialize the SPI peripheral based on the user-defined configuration structure as follows:
+
+1. Enable the SPI peripheral clock.
+2. Configure Master/Slave mode.
+3. Configure the data direction (full-duplex, half-duplex, simplex).
+4. Configure the baud rate.
+5. Configure the data frame format (8-bit or 16-bit).
+6. Configure the clock polarity and phase.
+7. Configure the Software Slave Management (SSM) and NSS pin.
+
+AS always, we need to Enable the SPI peripheral clock first.
+
+```c
+void SPI_INIT(SPI_HandleTypedef *spi_handle) {
+	if (spi_handle->SPIx == SPI1) {
+		SPI1_EN();
+	} else if (spi_handle->SPIx == SPI2) {
+		SPI2_EN();
+	} else if (spi_handle->SPIx == SPI3) {
+		SPI3_EN();
+	} else if (spi_handle->SPIx == SPI4) {
+		SPI4_EN();
+	} else if (spi_handle->SPIx == SPI5) {
+		SPI5_EN();
+	} else if (spi_handle->SPIx == SPI6) {
+		SPI6_EN();
+	}
+}
+```
+
+Then we configure Master/Slave mode.
+
+```c
+	spi_handle->SPIx->CR1 &= ~(HIGH << Shift_2_pos);
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		spi_handle->SPIx->CR1 |= (HIGH << Shift_2_pos); // Set MSTR bit for master
+	}
+```
+
+<img src="img/SPI_SimplexMode.png" alt="SPI Master/Slave Mode"/>
+
+As above image shows, for simplex receive only mode, we need to clear BIDIMODE bit and set BIDIOE bit in CR1 register.
+
+<img src="img/RXONLY.png" alt="SPI Simplex Rx Only Mode"/>
+<img src="img/BIDMODE.png" alt="SPI Simplex Rx Only Mode"/>
+
+```c
+	if (spi_handle->spi_data_direction == SPI_SIMPLEX_MODE_RX) {
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_15_pos);
+		spi_handle->SPIx->CR1 |= (HIGH << Shift_10_pos);
+	}
+```
+
+For simplex transmit only mode, we need to clear BIDIMODE bit and clear BIDIOE bit in CR1 register.
+
+```c
+	if (spi_handle->spi_data_direction == SPI_SIMPLEX_MODE_TX) {
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_15_pos);
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_10_pos);
+	}
+```
+
+For half-duplex mode, in this mode we use a single data line for both transmission and reception, but not simultaneously.
+
+```c
+	if (spi_handle->spi_data_direction == SPI_HALF_DUPLEX_MODE) {
+		spi_handle->SPIx->CR1 |= (HIGH << Shift_15_pos);
+	}
+```
+
+For full-duplex mode, in this mode we use two data lines: MOSI and MISO for simultaneous data transmission and reception.
+
+```c
+	if (spi_handle->spi_data_direction == SPI_FULL_DUPLEX_MODE) {
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_15_pos);
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_10_pos);
+	}
+```
+
+<img src="img/SPI_BaudRate.png" alt="SPI Baud Rate Prescaler"/>
+
+Then we configure the baud rate by setting prescaler value in BR[2:0] bits in CR1 register.
+
+```c
+	spi_handle->SPIx->CR1 &= ~(BIT_111_MASK << Shift_3_pos);
+	spi_handle->SPIx->CR1 |= (spi_handle->spi_sclk_prescaler << Shift_3_pos);
+```
+
+Then we configure the data frame format by setting DFF bit in CR1 register.
+
+```c
+	spi_handle->SPIx->CR1 &= ~(HIGH << Shift_11_pos);
+	spi_handle->SPIx->CR1 |= (spi_handle->spi_frame_format << Shift_11_pos);
+```
+
+Then we configure the clock polarity and phase by setting CPOL and CPHA bits in CR1 register.
+
+```c
+	// Configure CPOL and CPHA
+	// CPHA
+	spi_handle->SPIx->CR1 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+	spi_handle->SPIx->CR1 |= (spi_handle->spi_clock_phase << Shift_0_pos);
+
+	//CPOL
+	spi_handle->SPIx->CR1 |= (spi_handle->spi_clock_polarity << Shift_1_pos);
+```
+
+Finally, we configure the Software Slave Management (SSM) and NSS pin.
+
+Hardware or software slave select management can be set using the SSM bit in the SPI_CR1 register.
+
+* Software NSS management (SSM = 1): The slave select information is driven internally by the value of the SSI bit in the SPI_CR1 register. The external NSS pin remains free for other application uses.
+
+* Hardware NSS management (SSM = 0): Two configurations are possible depending on the NSS output configuration (SSOE bit in register SPI_CR2).
+ 	- NSS output enabled (SSM = 0, SSOE = 1): This configuration is used only when the device operates in master mode. The NSS signal is driven low when the master starts the communication and is kept low until the SPI is disabled.
+	- NSS output disabled (SSM = 0, SSOE = 0): This configuration allows multimaster capability for devices operating in master mode. For devices set as slave, the NSS pin acts as a classical NSS input: the slave is selected when NSS is low and deselected when NSS high.
+
+In CR1 register:
+
+<img src="img/SPI_SSM_SSI.png" alt="SPI SSM and NSS Configuration"/>
+
+In CR2 register:
+
+<img src="img/SPI_SSOE.png" alt="SPI SSOE Configuration"/>
+
+```c
+// Software slave management
+if (spi_handle->spi_ssm == SPI_SOFTWARE_SLAVE_EN) {
+	spi_handle->SPIx->CR1 &= ~(HIGH << Shift_9_pos);
+	spi_handle->SPIx->CR1 |= (HIGH << Shift_9_pos);
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		// Internal slave select HIGH
+		SPI_SSI_CONFIG(spi_handle, HIGH);
+	}
+} else {
+	// Hardware slave management
+	spi_handle->SPIx->CR1 &= ~(HIGH << Shift_9_pos); // Clear SSM bit
+	// Hardware output enable
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		spi_handle->SPIx->CR2 |= (HIGH << Shift_2_pos);
+	} else if (spi_handle->spi_master_slave == SPI_SLAVE_MODE) {
+		spi_handle->SPIx->CR2 &= ~(HIGH << Shift_2_pos);
+	}
+}
+```
+
+```c
+void SPI_SSI_CONFIG(SPI_HandleTypedef *spi_handle, uint8_t EN) {
+	if (EN == HIGH) {
+		spi_handle->SPIx->CR1 |= (HIGH << Shift_8_pos);
+	} else {
+		spi_handle->SPIx->CR1 &= ~(HIGH << Shift_8_pos);
+	}
+}
+```
 
 !!! IMPROTANT AT SPI:
 WHAT I HAVE LEARNT: SPI is Shift register, so for master to read from slave, we need to send dummy data to slave to read data.

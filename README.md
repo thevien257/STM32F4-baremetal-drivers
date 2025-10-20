@@ -32,6 +32,9 @@
   - [I2C Slave Read Function](#i2c-slave-read-function)
   - [What I Learned from I2C](#what-i-learned-from-i2c)
 - [SPI (Serial Peripheral Interface)](#spi-serial-peripheral-interface)
+	- [User configurable structure](#user-configurable-structure-2)
+	- [Structure SPI_typeDef](#structure-spi_typedef)
+	- [SPI Initialization Function](#spi-initialization-function)
 
 
 ## 🎯 Overview

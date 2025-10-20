@@ -1649,7 +1649,7 @@ For full-duplex mode, in this mode we use two data lines: MOSI and MISO for simu
 	}
 ```
 
-<img src="img/SPI_BaudRate.png" alt="SPI Baud Rate Prescaler"/>
+<img src="img/SPI_Baudrate.png" alt="SPI Baud Rate Prescaler"/>
 
 Then we configure the baud rate by setting prescaler value in BR[2:0] bits in CR1 register.
 

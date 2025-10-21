@@ -1,10 +1,24 @@
-10:37:23 **** Incremental Build of configuration Debug for project Protocols ****
+09:57:59 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
 arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-  10724	    100	   1964	  12788	   31f4	Protocols.elf
+   2932	      8	   1576	   4516	   11a4	Protocols.elf
 Finished building: default.size.stdout
  
+Finished building: Protocols.list
+ 
 
-10:37:24 Build Finished. 0 errors, 0 warnings. (took 195ms)
+09:58:00 Build Finished. 0 errors, 1 warnings. (took 912ms)
 

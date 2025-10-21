@@ -193,12 +193,17 @@ void SPI_SEND(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer, uint32_t len) {
 	while (!((spi_handle->SPIx->SR >> Shift_1_pos) & 0x1))
 		;
 
-	// Wait until BSY=0
-	while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
-		;
+	// Only wait for BSY in MASTER mode
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		// Wait until BSY=0
+		while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
+			;
+	}
 
-	// Disable SPI
-	SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+	// Disable SPI only in master mode
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+	}
 }
 
 void SPI_RECEIVE(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer, uint32_t len) {
@@ -228,12 +233,17 @@ void SPI_RECEIVE(SPI_HandleTypedef *spi_handle, uint8_t *rxBuffer, uint32_t len)
 
 	}
 
-	// Wait until BSY=0
-	while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
-		;
+	// Only wait for BSY in MASTER mode
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		// Wait until BSY=0
+		while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
+			;
+	}
 
-	// Disable SPI
-	SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+	// Disable SPI only in master mode
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+	}
 }
 
 void SPI_SendReceive_FullDuplex(SPI_HandleTypedef *spi_handle,
@@ -242,7 +252,6 @@ void SPI_SendReceive_FullDuplex(SPI_HandleTypedef *spi_handle,
 	SPI_PERIPHERAL_ENABLE(spi_handle, HIGH);
 
 	while (len > 0) {
-
 		// Wait for TXE is empty
 		while (!((spi_handle->SPIx->SR >> Shift_1_pos) & 0x1))
 			;
@@ -257,7 +266,7 @@ void SPI_SendReceive_FullDuplex(SPI_HandleTypedef *spi_handle,
 			(uint16_t*) txBuffer++;
 		}
 
-		// Wait for RXE is not empty
+		// Wait for RXNE is not empty
 		while (!((spi_handle->SPIx->SR >> Shift_0_pos) & 0x1))
 			;
 
@@ -268,19 +277,23 @@ void SPI_SendReceive_FullDuplex(SPI_HandleTypedef *spi_handle,
 			*(uint16_t*) rxBuffer = spi_handle->SPIx->DR;
 			(uint16_t*) rxBuffer++;
 		}
-
 	}
 
 	// Wait for TXE is empty
 	while (!((spi_handle->SPIx->SR >> Shift_1_pos) & 0x1))
 		;
 
-	// Wait until BSY=0
-	while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
-		;
+	// Only wait for BSY in MASTER mode
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		// Wait until BSY=0
+		while ((spi_handle->SPIx->SR >> Shift_7_pos) & 0x1)
+			;
+	}
 
-	// Disable SPI
-	SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+	// Disable SPI only in master mode
+	if (spi_handle->spi_master_slave == SPI_MASTER_MODE) {
+		SPI_PERIPHERAL_ENABLE(spi_handle, LOW);
+	}
 }
 
 uint8_t SPI_SendIT(SPI_HandleTypedef *spi_handle, uint8_t *txBuffer,
@@ -332,8 +345,25 @@ uint8_t SPI_SendReceive_FullDuplex_IT(SPI_HandleTypedef *spi_handle,
 		spi_handleIT.rxLen = len;
 		rxCompl = LOW;
 
+		// CRITICAL: Preload first byte for SLAVE mode (per reference manual)
+		if (spi_handle->spi_master_slave == SPI_SLAVE_MODE) {
+			if (spi_handleIT.txLen > 0) {
+				if (spi_handle->spi_frame_format == SPI_8_BIT_FRAME_FORMAT) {
+					spi_handle->SPIx->DR = *spi_handleIT.txBuffer;
+					spi_handleIT.txBuffer++;
+					spi_handleIT.txLen--;
+				} else if (spi_handle->spi_frame_format
+						== SPI_16_BIT_FRAME_FORMAT) {
+					spi_handle->SPIx->DR = *(uint16_t*) spi_handleIT.txBuffer;
+					spi_handleIT.txLen -= 2;
+					(uint16_t*) spi_handleIT.txBuffer++;
+				}
+			}
+		}
+
 		// Enable Error interrupt, Rx buffer interrupt and Tx buffer interrupt
 		spi_handle->SPIx->CR2 |= (Shift_7_pos << Shift_5_pos);
+
 	}
 
 	return state;
@@ -362,4 +392,3 @@ void SPI_TxRx_HandlingIT(SPI_HandleTypedef *spi_handle) {
 		(void) temp;
 	}
 }
-

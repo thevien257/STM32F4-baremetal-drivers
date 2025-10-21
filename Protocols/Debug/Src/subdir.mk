@@ -5,17 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/CANNormalModeTX_RX_IT.c \
+../Src/spiSlaveSendAndReceive.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/CANNormalModeTX_RX_IT.o \
+./Src/spiSlaveSendAndReceive.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/CANNormalModeTX_RX_IT.d \
+./Src/spiSlaveSendAndReceive.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d 
 
@@ -27,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/CANNormalModeTX_RX_IT.cyclo ./Src/CANNormalModeTX_RX_IT.d ./Src/CANNormalModeTX_RX_IT.o ./Src/CANNormalModeTX_RX_IT.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/spiSlaveSendAndReceive.cyclo ./Src/spiSlaveSendAndReceive.d ./Src/spiSlaveSendAndReceive.o ./Src/spiSlaveSendAndReceive.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

@@ -1,0 +1,92 @@
+#include "stm32f4xx_cus_spi.h"
+#include "stm32f4xx_cus_gpio.h"
+#include <string.h>
+// SPI2 Pins Configuration:
+// PB12 -> NSS (Slave Select)
+// PB13 -> SCK (Clock)
+// PB14 -> MISO (Master In Slave Out)
+// PB15 -> MOSI (Master Out Slave In)
+
+SPI_HandleTypedef spi2_slave;
+uint8_t rxBuffer[32];
+uint8_t txBuffer[32] = "Hello from STM32!";
+
+void SPI2_GPIO_Init(void) {
+	GPIO_Handle_TypeDef spi_pins;
+
+	// Configure PB12 (NSS) as AF
+	spi_pins.GPIOX = GPIOB;
+	spi_pins.pin_number = GPIO_PIN_12;
+	spi_pins.mode = GPIO_MODE_AF;
+	spi_pins.alternate_function_select = GPIO_AF5;  // AF5 for SPI2
+	spi_pins.output_type = GPIO_OUTPUT_TYPE_PP;
+	spi_pins.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	spi_pins.pull_up_pull_down = GPIO_PUPD_PU;  // Pull-up for NSS
+	GPIO_INIT(&spi_pins);
+
+	// Configure PB13 (SCK) as AF
+	spi_pins.pin_number = GPIO_PIN_13;
+	spi_pins.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&spi_pins);
+
+	// Configure PB14 (MISO) as AF
+	spi_pins.pin_number = GPIO_PIN_14;
+	GPIO_INIT(&spi_pins);
+
+	// Configure PB15 (MOSI) as AF
+	spi_pins.pin_number = GPIO_PIN_15;
+	GPIO_INIT(&spi_pins);
+}
+
+void SPI2_Slave_Init(void) {
+	spi2_slave.SPIx = SPI2;
+	spi2_slave.spi_master_slave = SPI_SLAVE_MODE;
+	spi2_slave.spi_data_direction = SPI_FULL_DUPLEX_MODE;
+	spi2_slave.spi_frame_format = SPI_8_BIT_FRAME_FORMAT;
+	spi2_slave.spi_clock_polarity = SPI_IDLE_LOW;  // CPOL = 0
+	spi2_slave.spi_clock_phase = SPI_DATA_CAPTURED_FIRST_CLOCK;  // CPHA = 0
+	spi2_slave.spi_ssm = SPI_SOFTWARE_SLAVE_DIS;  // Hardware NSS management
+	spi2_slave.spi_sclk_prescaler = SPI_PRES_2;  // Don't care for slave
+
+	SPI_INIT(&spi2_slave);
+}
+
+void SPI2_IRQHandler(void) {
+	SPI_TxRx_HandlingIT(&spi2_slave);
+}
+
+int main(void) {
+	uint8_t rxData[32];
+	uint8_t txData[32] = "STM32 Response!";
+
+	SPI2_GPIO_Init();
+	SPI2_Slave_Init();
+
+	// Enable SPI2 interrupt
+	IRQ_Config(SPI2_IRQn, ENABLE);  // SPI2_IRQn is typically 36
+	IRQ_SetPriority(SPI2_IRQn, 5);
+
+	SPI_PERIPHERAL_ENABLE(&spi2_slave, HIGH);
+
+	while (1) {
+		// Wait for master to select (NSS LOW)
+		while (GPIOB->IDR & (1 << 12))
+			;
+
+		// Start interrupt-driven transfer
+		SPI_SendReceive_FullDuplex_IT(&spi2_slave, txData, rxData, 16);
+
+		// Wait for transfer complete
+		while (txCompl == LOW || rxCompl == LOW)
+			;
+
+		// Process received data
+
+		// Wait for NSS to go HIGH (master deselects)
+		while (!(GPIOB->IDR & (1 << 12)))
+			;
+
+		for (volatile uint32_t i = 0; i < 10000; i++)
+			;
+	}
+}

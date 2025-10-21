@@ -3,6 +3,7 @@
 	<item key="hasShownOverlayPopupBefore" value="true"/>
 	<item key="replaceBarOpen" value="false"/>
 	<list key="searchhistory">
+		<item value="PI_SendReceive_FullDuplex_SLAVE"/>
 		<item value="CAN_LOOP_BACK_MODE"/>
 		<item value="mode"/>
 		<item value="dataLengthCode;"/>
@@ -17,7 +18,6 @@
 		<item value="SystemInit"/>
 		<item value="CommandCode"/>
 		<item value="busy_state"/>
-		<item value="close"/>
 	</list>
 	<section name="org.eclipse.ui.texteditor.GotoLineAction$GotoLineDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="646"/>

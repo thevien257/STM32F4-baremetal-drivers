@@ -124,5 +124,4 @@ uint8_t SPI_SendReceive_FullDuplex_IT(SPI_HandleTypedef *spi_handle,
 		uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
 void SPI_TxRx_HandlingIT(SPI_HandleTypedef *spi_handle);
 void SPI_Err_HandlingIT(SPI_HandleTypedef *spi_handle);
-
 #endif /* INC_STM32F4XX_CUS_SPI_H_ */

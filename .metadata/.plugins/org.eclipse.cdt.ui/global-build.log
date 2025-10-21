@@ -1,73 +1,7 @@
-21:17:19 **** Incremental Build of configuration Debug for project Protocols ****
-make -j12 all 
-arm-none-eabi-gcc "../Src/CANNormalModeTX_RX_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeTX_RX_IT.d" -MT"Src/CANNormalModeTX_RX_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeTX_RX_IT.o"
-arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
-Finished building target: Protocols.elf
- 
-arm-none-eabi-size  Protocols.elf 
-arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
-   text	   data	    bss	    dec	    hex	filename
-  10568	    100	   1964	  12632	   3158	Protocols.elf
-Finished building: default.size.stdout
- 
-Finished building: Protocols.list
- 
-21:19:41 **** Incremental Build of configuration Debug for project Protocols ****
-make -j12 all 
-arm-none-eabi-gcc "../Src/CANNormalModeTX_RX_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeTX_RX_IT.d" -MT"Src/CANNormalModeTX_RX_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeTX_RX_IT.o"
-arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
-Finished building target: Protocols.elf
- 
-arm-none-eabi-size  Protocols.elf 
-arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
-   text	   data	    bss	    dec	    hex	filename
-  10648	    100	   1964	  12712	   31a8	Protocols.elf
-Finished building: default.size.stdout
- 
-Finished building: Protocols.list
- 
-21:20:24 **** Incremental Build of configuration Debug for project Protocols ****
-make -j12 all 
-arm-none-eabi-gcc "../Src/CANNormalModeTX_RX_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeTX_RX_IT.d" -MT"Src/CANNormalModeTX_RX_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeTX_RX_IT.o"
-arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
-Finished building target: Protocols.elf
- 
-arm-none-eabi-size  Protocols.elf 
-arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
-   text	   data	    bss	    dec	    hex	filename
-  10720	    100	   1964	  12784	   31f0	Protocols.elf
-Finished building: default.size.stdout
- 
-Finished building: Protocols.list
- 
-21:21:02 **** Incremental Build of configuration Debug for project Protocols ****
-make -j12 all 
-arm-none-eabi-gcc "../Src/CANNormalModeTX_RX_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeTX_RX_IT.d" -MT"Src/CANNormalModeTX_RX_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeTX_RX_IT.o"
-arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
-Finished building target: Protocols.elf
- 
-arm-none-eabi-size  Protocols.elf 
-arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
-   text	   data	    bss	    dec	    hex	filename
-  10720	    100	   1964	  12784	   31f0	Protocols.elf
-Finished building: default.size.stdout
- 
-Finished building: Protocols.list
- 
-10:37:01 **** Clean-only build of configuration Debug for project Protocols ****
-make -j12 clean 
-rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
-rm -rf ./Src/CANNormalModeTX_RX_IT.cyclo ./Src/CANNormalModeTX_RX_IT.d ./Src/CANNormalModeTX_RX_IT.o ./Src/CANNormalModeTX_RX_IT.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
-rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
-rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
- 
-10:37:02 **** Incremental Build of configuration Debug for project Protocols ****
+08:41:50 **** Build of configuration Debug for project Protocols ****
 make -j12 all 
 arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
 arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
 arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
@@ -76,26 +10,582 @@ arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:69:17: warning: implicit declaration of function 'memcpy' [-Wimplicit-function-declaration]
+   69 |                 memcpy(txData, "Hello Arduino!", 15);
+      |                 ^~~~~~
+../Src/spiSlaveSendAndReceive.c:3:1: note: include '<string.h>' or provide a declaration of 'memcpy'
+    2 | #include "stm32f4xx_cus_gpio.h"
+  +++ |+#include <string.h>
+    3 | 
+../Src/spiSlaveSendAndReceive.c:69:17: warning: incompatible implicit declaration of built-in function 'memcpy' [-Wbuiltin-declaration-mismatch]
+   69 |                 memcpy(txData, "Hello Arduino!", 15);
+      |                 ^~~~~~
+../Src/spiSlaveSendAndReceive.c:69:17: note: include '<string.h>' or provide a declaration of 'memcpy'
 arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
-D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Startup/startup_stm32f407vgtx.o: in function `Reset_Handler':
-C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Startup/startup_stm32f407vgtx.s:97:(.text.Reset_Handler+0x32): undefined reference to `main'
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2996	      8	   1576	   4580	   11e4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+08:42:08 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2996	      8	   1576	   4580	   11e4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+08:45:24 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:77:17: warning: implicit declaration of function 'SPI_SendReceive_FullDuplex_SLAVE'; did you mean 'SPI_SendReceive_FullDuplex_IT'? [-Wimplicit-function-declaration]
+   77 |                 SPI_SendReceive_FullDuplex_SLAVE(&spi2_slave, txData, rxData, 16);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                 SPI_SendReceive_FullDuplex_IT
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2988	      8	   1576	   4572	   11dc	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+08:46:22 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:230,
+                 from ../Drivers/src/stm32f4xx_cus.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+In file included from ../Src/spiSlaveSendAndReceive.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+make: *** [Drivers/src/subdir.mk:34: Drivers/src/stm32f4xx_cus.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:230,
+                 from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_can.h:4,
+                 from ../Drivers/src/stm32f4xx_cus_can.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+make: *** [Src/subdir.mk:25: Src/spiSlaveSendAndReceive.o] Error 1
+In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:230,
+                 from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_gpio.h:4,
+                 from ../Drivers/src/stm32f4xx_cus_gpio.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+make: *** [Drivers/src/subdir.mk:34: Drivers/src/stm32f4xx_cus_can.o] Error 1
+In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:230,
+                 from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_i2c.h:3,
+                 from ../Drivers/src/stm32f4xx_cus_i2c.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+make: *** [Drivers/src/subdir.mk:34: Drivers/src/stm32f4xx_cus_gpio.o] Error 1
+In file included from ../Drivers/src/stm32f4xx_cus_spi.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+make: *** [Drivers/src/subdir.mk:34: Drivers/src/stm32f4xx_cus_i2c.o] Error 1
+In file included from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus.h:230,
+                 from C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_uart.h:4,
+                 from ../Drivers/src/stm32f4xx_cus_uart.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:127:6: error: two or more data types in declaration specifiers
+  127 | void void SPI_SendReceive_FullDuplex_SLAVE(SPI_HandleTypedef *spi_handle,
+      |      ^~~~
+make: *** [Drivers/src/subdir.mk:34: Drivers/src/stm32f4xx_cus_spi.o] Error 1
+make: *** [Drivers/src/subdir.mk:34: Drivers/src/stm32f4xx_cus_uart.o] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+08:46:37 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2988	      8	   1576	   4572	   11dc	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+08:46:39 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   2988	      8	   1576	   4572	   11dc	Protocols.elf
+Finished building: default.size.stdout
+ 
+08:48:51 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:66:20: error: 'SPI2_IRQn' undeclared (first use in this function); did you mean 'SPI2_IRQ36'?
+   66 |         IRQ_Config(SPI2_IRQn, ENABLE);  // SPI2_IRQn is typically 36
+      |                    ^~~~~~~~~
+      |                    SPI2_IRQ36
+../Src/spiSlaveSendAndReceive.c:66:20: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [Src/subdir.mk:25: Src/spiSlaveSendAndReceive.o] Error 1
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+08:49:13 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3500	     12	   1596	   5108	   13f4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+08:49:15 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3500	     12	   1596	   5108	   13f4	Protocols.elf
+Finished building: default.size.stdout
+ 
+08:55:57 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3500	     12	   1596	   5108	   13f4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:06:18 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3596	     12	   1596	   5204	   1454	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:06:38 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3608	     12	   1596	   5216	   1460	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:09:23 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3608	     12	   1596	   5216	   1460	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:10:08 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3512	     12	   1596	   5120	   1400	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:19:37 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3652	     12	   1596	   5260	   148c	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:28:34 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3636	     12	   1596	   5244	   147c	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:30:56 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3636	     12	   1596	   5244	   147c	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:39:45 **** Clean-only build of configuration Debug for project Protocols ****
+make -j12 clean 
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/spiSlaveSendAndReceive.cyclo ./Src/spiSlaveSendAndReceive.d ./Src/spiSlaveSendAndReceive.o ./Src/spiSlaveSendAndReceive.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
+rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
+ 
+09:39:45 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_i2c.d" -MT"Drivers/src/stm32f4xx_cus_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_i2c.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_uart.d" -MT"Drivers/src/stm32f4xx_cus_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_uart.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:80:17: warning: implicit declaration of function 'SPI_SendReceive_FullDuplex_Slave_Polling'; did you mean 'SPI_SendReceive_FullDuplex_Slave'? [-Wimplicit-function-declaration]
+   80 |                 SPI_SendReceive_FullDuplex_Slave_Polling(&spi2_slave, &txData[1],
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                 SPI_SendReceive_FullDuplex_Slave
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3072	      8	   1576	   4656	   1230	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:42:50 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:68:63: warning: passing argument 2 of 'SPI_SendReceive_FullDuplex' makes pointer from integer without a cast [-Wint-conversion]
+   68 |                 SPI_SendReceive_FullDuplex(&spi2_slave, txData[0], rxData, 1);
+      |                                                         ~~~~~~^~~
+      |                                                               |
+      |                                                               uint8_t {aka unsigned char}
+In file included from ../Src/spiSlaveSendAndReceive.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:115:26: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'uint8_t' {aka 'unsigned char'}
+  115 |                 uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
+      |                 ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2976	      8	   1576	   4560	   11d0	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:44:17 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:68:69: warning: passing argument 2 of 'SPI_SendReceive_FullDuplex_Slave' makes pointer from integer without a cast [-Wint-conversion]
+   68 |                 SPI_SendReceive_FullDuplex_Slave(&spi2_slave, txData[0], rxData, 0)
+      |                                                               ~~~~~~^~~
+      |                                                                     |
+      |                                                                     uint8_t {aka unsigned char}
+In file included from ../Src/spiSlaveSendAndReceive.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:128:26: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'uint8_t' {aka 'unsigned char'}
+  128 |                 uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
+      |                 ~~~~~~~~~^~~~~~~~
+../Src/spiSlaveSendAndReceive.c:68:84: error: expected ';' before 'while'
+   68 |                 SPI_SendReceive_FullDuplex_Slave(&spi2_slave, txData[0], rxData, 0)
+      |                                                                                    ^
+      |                                                                                    ;
+......
+   71 |                 while (GPIOB->IDR & (1 << 12))
+      |                 ~~~~~                                                               
+make: *** [Src/subdir.mk:25: Src/spiSlaveSendAndReceive.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j12 all" terminated with exit code 2. Build might be incomplete.
+09:44:27 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:68:69: warning: passing argument 2 of 'SPI_SendReceive_FullDuplex_Slave' makes pointer from integer without a cast [-Wint-conversion]
+   68 |                 SPI_SendReceive_FullDuplex_Slave(&spi2_slave, txData[0], rxData, 0);
+      |                                                               ~~~~~~^~~
+      |                                                                     |
+      |                                                                     uint8_t {aka unsigned char}
+In file included from ../Src/spiSlaveSendAndReceive.c:1:
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc/stm32f4xx_cus_spi.h:128:26: note: expected 'uint8_t *' {aka 'unsigned char *'} but argument is of type 'uint8_t' {aka 'unsigned char'}
+  128 |                 uint8_t *txBuffer, uint8_t *rxBuffer, uint32_t len);
+      |                 ~~~~~~~~~^~~~~~~~
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3060	      8	   1576	   4644	   1224	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:44:29 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3060	      8	   1576	   4644	   1224	Protocols.elf
+Finished building: default.size.stdout
+ 
+09:44:40 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3060	      8	   1576	   4644	   1224	Protocols.elf
+Finished building: default.size.stdout
+ 
+09:45:24 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3052	      8	   1576	   4636	   121c	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:46:02 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3052	      8	   1576	   4636	   121c	Protocols.elf
+Finished building: default.size.stdout
+ 
+09:48:06 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+../Src/spiSlaveSendAndReceive.c: In function 'main':
+../Src/spiSlaveSendAndReceive.c:80:17: warning: implicit declaration of function 'SPI_SendReceive_FullDuplex_Slave_Polling'; did you mean 'SPI_SendReceive_FullDuplex_Slave'? [-Wimplicit-function-declaration]
+   80 |                 SPI_SendReceive_FullDuplex_Slave_Polling(&spi2_slave, &txData[1],
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                 SPI_SendReceive_FullDuplex_Slave
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: ./Src/spiSlaveSendAndReceive.o: in function `main':
+C:/Users/ADMIN/Desktop/Protocols/Protocols/Debug/../Src/spiSlaveSendAndReceive.c:80:(.text.main+0x80): undefined reference to `SPI_SendReceive_FullDuplex_Slave_Polling'
 collect2.exe: error: ld returned 1 exit status
 make: *** [makefile:64: Protocols.elf] Error 1
 "make -j12 all" terminated with exit code 2. Build might be incomplete.
-10:37:20 **** Clean-only build of configuration Debug for project Protocols ****
-make -j12 clean 
-rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
-rm -rf ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
-rm -rf ./Drivers/src/stm32f4xx_cus.cyclo ./Drivers/src/stm32f4xx_cus.d ./Drivers/src/stm32f4xx_cus.o ./Drivers/src/stm32f4xx_cus.su ./Drivers/src/stm32f4xx_cus_can.cyclo ./Drivers/src/stm32f4xx_cus_can.d ./Drivers/src/stm32f4xx_cus_can.o ./Drivers/src/stm32f4xx_cus_can.su ./Drivers/src/stm32f4xx_cus_gpio.cyclo ./Drivers/src/stm32f4xx_cus_gpio.d ./Drivers/src/stm32f4xx_cus_gpio.o ./Drivers/src/stm32f4xx_cus_gpio.su ./Drivers/src/stm32f4xx_cus_i2c.cyclo ./Drivers/src/stm32f4xx_cus_i2c.d ./Drivers/src/stm32f4xx_cus_i2c.o ./Drivers/src/stm32f4xx_cus_i2c.su ./Drivers/src/stm32f4xx_cus_spi.cyclo ./Drivers/src/stm32f4xx_cus_spi.d ./Drivers/src/stm32f4xx_cus_spi.o ./Drivers/src/stm32f4xx_cus_spi.su ./Drivers/src/stm32f4xx_cus_uart.cyclo ./Drivers/src/stm32f4xx_cus_uart.d ./Drivers/src/stm32f4xx_cus_uart.o ./Drivers/src/stm32f4xx_cus_uart.su
-rm -rf Protocols.elf Protocols.list Protocols.map default.size.stdout
- 
-10:37:21 **** Incremental Build of configuration Debug for project Protocols ****
+09:48:15 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
-arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
-arm-none-eabi-gcc "../Src/CANNormalModeTX_RX_IT.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/CANNormalModeTX_RX_IT.d" -MT"Src/CANNormalModeTX_RX_IT.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/CANNormalModeTX_RX_IT.o"
-arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
-arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3072	      8	   1576	   4656	   1230	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:48:17 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3072	      8	   1576	   4656	   1230	Protocols.elf
+Finished building: default.size.stdout
+ 
+09:48:46 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3072	      8	   1576	   4656	   1230	Protocols.elf
+Finished building: default.size.stdout
+ 
+09:51:42 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3088	      8	   1576	   4672	   1240	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:52:44 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3076	      8	   1576	   4660	   1234	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:53:01 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   3076	      8	   1576	   4660	   1234	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:54:21 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2876	      8	   1576	   4460	   116c	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:55:59 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
+arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_spi.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_spi.d" -MT"Drivers/src/stm32f4xx_cus_spi.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_spi.o"
+arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
+Finished building target: Protocols.elf
+ 
+arm-none-eabi-size  Protocols.elf 
+arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
+   text	   data	    bss	    dec	    hex	filename
+   2932	      8	   1576	   4516	   11a4	Protocols.elf
+Finished building: default.size.stdout
+ 
+Finished building: Protocols.list
+ 
+09:56:13 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-size  Protocols.elf 
+   text	   data	    bss	    dec	    hex	filename
+   2932	      8	   1576	   4516	   11a4	Protocols.elf
+Finished building: default.size.stdout
+ 
+09:57:59 **** Incremental Build of configuration Debug for project Protocols ****
+make -j12 all 
+arm-none-eabi-gcc "../Src/spiSlaveSendAndReceive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/spiSlaveSendAndReceive.d" -MT"Src/spiSlaveSendAndReceive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/spiSlaveSendAndReceive.o"
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus.d" -MT"Drivers/src/stm32f4xx_cus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus.o"
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_can.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_can.d" -MT"Drivers/src/stm32f4xx_cus_can.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_can.o"
 arm-none-eabi-gcc "../Drivers/src/stm32f4xx_cus_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Drivers/src/stm32f4xx_cus_gpio.d" -MT"Drivers/src/stm32f4xx_cus_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/src/stm32f4xx_cus_gpio.o"
@@ -109,15 +599,8 @@ Finished building target: Protocols.elf
 arm-none-eabi-size  Protocols.elf 
 arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-  10724	    100	   1964	  12788	   31f4	Protocols.elf
+   2932	      8	   1576	   4516	   11a4	Protocols.elf
 Finished building: default.size.stdout
  
 Finished building: Protocols.list
- 
-10:37:23 **** Incremental Build of configuration Debug for project Protocols ****
-make -j12 all 
-arm-none-eabi-size  Protocols.elf 
-   text	   data	    bss	    dec	    hex	filename
-  10724	    100	   1964	  12788	   31f4	Protocols.elf
-Finished building: default.size.stdout
  

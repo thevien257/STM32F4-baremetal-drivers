@@ -1,0 +1,162 @@
+#include <stm32f4xx_cus_timer.h>
+
+volatile uint32_t mil = 0;
+
+void TIM_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	if (timHandleTypeDef->TIMx == TIM2) {
+		TIM2_EN();
+	} else if (timHandleTypeDef->TIMx == TIM3) {
+		TIM3_EN();
+	} else if (timHandleTypeDef->TIMx == TIM4) {
+		TIM4_EN();
+	} else if (timHandleTypeDef->TIMx == TIM5) {
+		TIM5_EN();
+	}
+
+	// Ensure Counter is disable
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_0_pos);
+
+	// Clock prescaler
+	timHandleTypeDef->TIMx->PSC = timHandleTypeDef->prescaler;
+
+	// Select Auto-reload value
+	timHandleTypeDef->TIMx->ARR = timHandleTypeDef->autoReload;
+
+	/*	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+	 TIM2->ARR = 1000;  // New value is buffered
+	 // Counter continues using old ARR value until next overflow
+	 // At next update event, ARR = 1000 takes effect
+	 ```
+
+	 ## Visual Example
+	 ```
+	 Without Preload:
+	 CNT: 0 → 500 → 999 → 1000 (overflow)
+	 You write ARR = 500 while CNT = 750
+	 CNT: 750 → 751 → ... → 65535 → 0 → ... → 500 (finally overflows!) ❌
+
+	 With Preload:
+	 CNT: 0 → 500 → 999 → 1000 (overflow, new ARR loaded)
+	 You write ARR = 500 while CNT = 750
+	 CNT: 750 → 999 → 1000 (overflow with old ARR)
+	 0 → 499 → 500 (now using new ARR) ✓*/
+
+	// autoReloadPreload
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_7_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->autoReloadPreload
+			<< Shift_7_pos);
+
+	// Select direction counter
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_4_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->directionCounter
+			<< Shift_4_pos);
+
+	// Update disable
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_1_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->updateDisable
+			<< Shift_1_pos);
+
+	// Update request source (Select source)
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_2_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->updateRequestSource
+			<< Shift_2_pos);
+
+	// Timer enable
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_0_pos);
+
+	/*	UG: Update generation
+	 This bit can be set by software, it is automatically cleared by hardware.
+	 0: No action
+	 1: Re-initialize the counter and generates an update of the registers.*/
+	timHandleTypeDef->TIMx->EGR |= (HIGH << Shift_0_pos);
+
+	// Clear the update flag that was just set
+	timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_0_pos);
+}
+
+void TIM_ENABLE(TIM_HandleTypeDef *timHandleTypeDef) {
+	// Timer enable
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_0_pos);
+
+	/*	UG: Update generation
+	 This bit can be set by software, it is automatically cleared by hardware.
+	 0: No action
+	 1: Re-initialize the counter and generates an update of the registers.*/
+	timHandleTypeDef->TIMx->EGR |= (HIGH << Shift_0_pos);
+
+	// Clear the update flag that was just set
+	timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_0_pos);
+}
+
+void TIM_DELAY_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	if (timHandleTypeDef->TIMx == TIM2) {
+		TIM2_EN();
+	} else if (timHandleTypeDef->TIMx == TIM3) {
+		TIM3_EN();
+	} else if (timHandleTypeDef->TIMx == TIM4) {
+		TIM4_EN();
+	} else if (timHandleTypeDef->TIMx == TIM5) {
+		TIM5_EN();
+	}
+
+	Get_APB1_Clock_Speed();
+
+	uint32_t psc = SystemClockSrc / ONE_MEGA_HERT;
+
+	// Ensure Counter is disable
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_0_pos);
+
+	// Clock prescaler
+	timHandleTypeDef->TIMx->PSC = (psc - 1);
+
+	// Select Auto-reload value
+	timHandleTypeDef->TIMx->ARR = 0xFFFF;
+
+	// autoReloadPreload
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_7_pos);
+
+	// Count up
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_4_pos);
+
+	// Enable update
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_1_pos);
+
+	// Update request source (Select source)
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_2_pos);
+}
+
+void TIM_MILLIS_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	TIM_DELAY_INIT(timHandleTypeDef);
+	timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_0_pos);
+
+	if (timHandleTypeDef->TIMx == TIM2) {
+		IRQ_Config(TIM2_IRQ28, HIGH);
+	} else if (timHandleTypeDef->TIMx == TIM3) {
+		IRQ_Config(TIM3_IRQ29, HIGH);
+	} else if (timHandleTypeDef->TIMx == TIM4) {
+		IRQ_Config(TIM4_IRQ30, HIGH);
+	} else if (timHandleTypeDef->TIMx == TIM5) {
+		IRQ_Config(TIM5_IRQ50, HIGH);
+	}
+}
+
+void TIM_Handling(TIM_HandleTypeDef *timHandleTypeDef) {
+	if (((timHandleTypeDef->TIMx->SR) >> Shift_0_pos) & 0x1) {
+		// Clear the update flag that was just set
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_0_pos);
+		mil++;
+	}
+}
+
+void delay_us(TIM_HandleTypeDef *timHandleTypeDef, uint32_t us) {
+	timHandleTypeDef->TIMx->CNT = 0;
+
+	while (timHandleTypeDef->TIMx->CNT < us)
+		;
+}
+
+void delay_ms(TIM_HandleTypeDef *timHandleTypeDef, uint32_t ms) {
+	for (uint32_t i = 0; i < ms; i++) {
+		delay_us(timHandleTypeDef, 1000);
+	}
+}

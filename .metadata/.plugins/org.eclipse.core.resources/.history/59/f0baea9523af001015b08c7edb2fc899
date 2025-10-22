@@ -1,0 +1,40 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+TIM_HandleTypeDef tim_handle;
+
+void GPIO_USER_INIT(void);
+void TIMER_USER_INIT(void);
+
+int main(void) {
+	GPIO_USER_INIT();
+	while (1) {
+		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, HIGH);
+		for (uint32_t i = 0; i < 50000; i++)
+			;
+		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, LOW);
+		for (uint32_t i = 0; i < 50000; i++)
+			;
+	}
+}
+
+void GPIO_USER_INIT(void) {
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_8;
+	gpio_handle.mode = GPIO_MODE_OUTPUT;
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	gpio_handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+}
+
+void TIMER_USER_INIT(void) {
+	tim_handle.TIMx = TIM2;
+	tim_handle.autoReload = 0;
+	tim_handle.autoReloadPreload = HIGH;
+	tim_handle.directionCounter = TIM_COUNT_UP;
+	tim_handle.prescaler = 15;
+	tim_handle.updateDisable = HIGH;
+	tim_handle.updateRequestSource = HIGH;
+}

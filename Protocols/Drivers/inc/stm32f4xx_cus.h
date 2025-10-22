@@ -150,6 +150,12 @@ void Get_APB2_Clock_Speed(void);
 #define CAN1_EN() (RCC->APB1ENR |= (HIGH << Shift_25_pos))
 #define CAN2_EN() (RCC->APB1ENR |= (HIGH << Shift_26_pos))
 
+// Timer Enable
+#define TIM2_EN() (RCC->APB1ENR |= (HIGH << Shift_0_pos))
+#define TIM3_EN() (RCC->APB1ENR |= (HIGH << Shift_1_pos))
+#define TIM4_EN() (RCC->APB1ENR |= (HIGH << Shift_2_pos))
+#define TIM5_EN() (RCC->APB1ENR |= (HIGH << Shift_3_pos))
+
 // System configuration
 typedef struct {
 	__IO uint32_t MEMRMP; /*!< SYSCFG memory remap register,                    Address offset: 0x00 */
@@ -219,6 +225,12 @@ typedef struct {
 #define CAN2_RX1_IRQ65  65  // CAN2 RX1 interrupt
 #define CAN2_SCE_IRQ66  66  // CAN2 SCE interrupt (Status Change Error)
 
+// Timer IRQ Numbers
+#define TIM2_IRQ28      28  // TIM2 global interrupt
+#define TIM3_IRQ29      29  // TIM3 global interrupt
+#define TIM4_IRQ30      30  // TIM4 global interrupt
+#define TIM5_IRQ50      50  // TIM5 global interrupt
+
 #define ISER_BASE_ADDR (__IO uint32_t*)(0xE000E100)
 #define ICER_BASE_ADDR (__IO uint32_t*)(0XE000E180)
 #define IPR_BASE_ADDR ((__IO uint32_t*)0xE000E400)
@@ -231,5 +243,6 @@ typedef struct {
 #include "stm32f4xx_cus_uart.h"
 #include "stm32f4xx_cus_scb.h"
 #include "stm32f4xx_cus_can.h"
+#include "stm32f4xx_cus_timer.h"
 
 #endif // STM32F4XX_CUS_H

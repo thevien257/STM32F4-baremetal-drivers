@@ -5,19 +5,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/spiSlaveSendAndReceive.c \
 ../Src/syscalls.c \
-../Src/sysmem.c 
+../Src/sysmem.c \
+../Src/timerMillis.c 
 
 OBJS += \
-./Src/spiSlaveSendAndReceive.o \
 ./Src/syscalls.o \
-./Src/sysmem.o 
+./Src/sysmem.o \
+./Src/timerMillis.o 
 
 C_DEPS += \
-./Src/spiSlaveSendAndReceive.d \
 ./Src/syscalls.d \
-./Src/sysmem.d 
+./Src/sysmem.d \
+./Src/timerMillis.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/spiSlaveSendAndReceive.cyclo ./Src/spiSlaveSendAndReceive.d ./Src/spiSlaveSendAndReceive.o ./Src/spiSlaveSendAndReceive.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/timerMillis.cyclo ./Src/timerMillis.d ./Src/timerMillis.o ./Src/timerMillis.su
 
 .PHONY: clean-Src
 

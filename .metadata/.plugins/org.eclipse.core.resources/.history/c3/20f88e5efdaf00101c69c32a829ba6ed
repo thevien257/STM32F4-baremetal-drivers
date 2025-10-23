@@ -1,0 +1,139 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+TIM_HandleTypeDef tim_ic_handle;
+TIM_HandleTypeDef tim_delay_handle;
+
+// ✅ MUST be volatile for interrupt variables!
+volatile uint32_t captureValue1 = 0;
+volatile uint32_t captureValue2 = 0;
+volatile uint8_t captureReady = 0;
+volatile uint8_t firstCapture = 1;
+
+void GPIO_USER_INIT(void);
+void TIMER_IC_USER_INIT(void);
+
+int main(void) {
+	// Enable FPU
+	SCB->CPACR |= ((3UL << 20) | (3UL << 22));
+	__asm volatile ("DSB");
+	__asm volatile ("ISB");
+
+	GPIO_USER_INIT();
+	TIMER_IC_USER_INIT();
+
+	float frequency = 0;
+	uint32_t printCounter = 0;
+
+	printf("Starting frequency measurement with interrupt mode...\r\n");
+
+	while (1) {
+		// Generate test signal on PA8
+		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, HIGH);
+		delay_ms(&tim_delay_handle, 500);  // 500μs HIGH
+		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, LOW);
+		delay_ms(&tim_delay_handle, 500);  // 500μs LOW
+
+		// ✅ ONLY check captureReady flag - don't check TIM_IC_GetFlag!
+		if (captureReady) {
+			captureReady = 0;  // Clear flag
+
+			uint32_t difference;
+			uint32_t cap1, cap2;
+
+			// ✅ Copy volatile variables to local (atomic read)
+			cap1 = captureValue1;
+			cap2 = captureValue2;
+
+			// Calculate difference (handle overflow)
+			if (cap2 >= cap1) {
+				difference = cap2 - cap1;
+			} else {
+				// Overflow occurred
+				difference = (0xFFFFFFFF - cap1) + cap2 + 1;
+			}
+
+			// Calculate frequency
+			if (difference > 0) {
+				frequency = 1000000.0f / difference;  // Hz
+			}
+
+			// Print every 100th measurement
+			if (++printCounter >= 100) {
+				printCounter = 0;
+				printf("Frequency: %.2f Hz\r\n", frequency);
+			}
+		}
+	}
+}
+
+void GPIO_USER_INIT(void) {
+	// PA8 - OUTPUT (generates test signal)
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_8;
+	gpio_handle.mode = GPIO_MODE_OUTPUT;
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+
+	// PA0 - INPUT CAPTURE (TIM2_CH1)
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_0;
+	gpio_handle.mode = GPIO_MODE_AF;
+	gpio_handle.alternate_function_select = GPIO_AF1;  // TIM2
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+}
+
+void TIMER_IC_USER_INIT(void) {
+	// TIM2 for input capture
+	tim_ic_handle.TIMx = TIM2;
+	tim_ic_handle.timerMode = TIM_INPUT_CAPTURE_MODE;
+	tim_ic_handle.prescaler = 15;  // 16MHz / 16 = 1MHz (1μs per tick)
+	tim_ic_handle.autoReload = 0xFFFFFFFF;  // Max for 32-bit TIM2
+	tim_ic_handle.directionCounter = TIM_COUNT_UP;
+	tim_ic_handle.autoReloadPreload = LOW;
+	tim_ic_handle.updateDisable = LOW;
+	tim_ic_handle.updateRequestSource = LOW;
+
+	// Input capture configuration
+	tim_ic_handle.TIM_IC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.polarity = TIM_IC_RISING_EDGE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.selection = TIM_IC_SELECTION_TI1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.prescaler = TIM_ICPSC_DIV1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.filter = TIM_IC_FILTER_NONE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.enableInterrupt = ENABLE; // ✅ Enable interrupt!
+
+	TIM_INIT(&tim_ic_handle);
+
+	// TIM3 for delay functions
+	tim_delay_handle.TIMx = TIM3;
+	TIM_DELAY_INIT(&tim_delay_handle);
+	TIM_ENABLE(&tim_delay_handle);
+
+	printf("Timers initialized.\r\n");
+}
+
+void TIM2_IRQHandler(void) {
+	if (TIM_IC_GetFlag(&tim_ic_handle, TIM_CHANNEL_1)) {
+
+		if (firstCapture) {
+			// First capture - just save the value
+			captureValue1 = TIM_IC_ReadCapture(&tim_ic_handle, TIM_CHANNEL_1);
+			firstCapture = 0;
+		} else {
+			// Second capture - save and set ready flag
+			captureValue2 = TIM_IC_ReadCapture(&tim_ic_handle, TIM_CHANNEL_1);
+			captureReady = 1;  // Signal main loop
+
+			// ✅ FIX: Update captureValue1 for next measurement!
+			captureValue1 = captureValue2;
+		}
+
+		// Clear the capture flag
+		TIM_IC_ClearFlag(&tim_ic_handle, TIM_CHANNEL_1);
+	}
+}

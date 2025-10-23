@@ -37,7 +37,45 @@ typedef struct {
 	uint8_t autoReloadPreload;
 	uint8_t updateRequestSource;
 	uint8_t updateDisable;
+
+	struct {
+		uint8_t channel;              // TIM_CHANNEL_1 to TIM_CHANNEL_4
+		uint8_t polarity;             // Rising, falling, or both edges
+		uint8_t selection;            // Direct TI or indirect TI
+		uint8_t prescaler;            // Input capture prescaler
+		uint8_t filter;               // Input filter value
+		uint8_t enableInterrupt;      // Enable capture interrupt
+	} TIM_IC_HandleTypeDef;
+
 } TIM_HandleTypeDef;
+
+// Input Capture Channel Selection
+#define TIM_CHANNEL_1    0
+#define TIM_CHANNEL_2    1
+#define TIM_CHANNEL_3    2
+#define TIM_CHANNEL_4    3
+
+// Input Capture Prescaler
+#define TIM_ICPSC_DIV1   0  // No prescaler, capture every edge
+#define TIM_ICPSC_DIV2   1  // Capture every 2 events
+#define TIM_ICPSC_DIV4   2  // Capture every 4 events
+#define TIM_ICPSC_DIV8   3  // Capture every 8 events
+
+// Input Capture Filter (0-15, higher = more filtering)
+#define TIM_IC_FILTER_NONE  0
+#define TIM_IC_FILTER_2     1
+#define TIM_IC_FILTER_4     2
+#define TIM_IC_FILTER_8     3
+
+// Input Capture Polarity
+#define TIM_IC_RISING_EDGE   0  // Capture on rising edge
+#define TIM_IC_FALLING_EDGE  1  // Capture on falling edge
+#define TIM_IC_BOTH_EDGES    3  // Capture on both edges
+
+// Input Capture Selection
+#define TIM_IC_SELECTION_TI1    1  // Map to TI1
+#define TIM_IC_SELECTION_TI2  2  // Map to TI2
+#define TIM_IC_SELECTION_TRC         3  // Map to TRC
 
 // Base address definitions
 #define TIM2_BASE           0x40000000UL
@@ -73,8 +111,13 @@ void TIM_MILLIS_INIT(TIM_HandleTypeDef *timHandleTypeDef);
 void delay_us(TIM_HandleTypeDef *timHandleTypeDef, uint32_t us);
 void delay_ms(TIM_HandleTypeDef *timHandleTypeDef, uint32_t ms);
 uint32_t millis();
+void TIM_MICROS_INIT(TIM_HandleTypeDef *timHandleTypeDef);
+uint32_t micros();
 void TIM_Handling(TIM_HandleTypeDef *timHandleTypeDef);
-
+uint32_t TIM_IC_ReadCapture(TIM_HandleTypeDef *timHandleTypeDef,
+		uint8_t channel);
+void TIM_IC_ClearFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel);
+uint8_t TIM_IC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel);
 // TIM10/11/13/14 register structure
 typedef struct {
 	volatile uint32_t CR1;      // Control register 1,              Offset: 0x00

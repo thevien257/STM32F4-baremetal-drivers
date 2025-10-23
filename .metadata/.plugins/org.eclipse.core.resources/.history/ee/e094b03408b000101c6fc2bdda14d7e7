@@ -1,0 +1,164 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+TIM_HandleTypeDef tim_ic_handle;
+TIM_HandleTypeDef tim_millis_handle;
+
+// ✅ MUST be volatile for interrupt variables!
+volatile uint32_t captureValue1 = 0;
+volatile uint32_t captureValue2 = 0;
+volatile uint8_t captureReady = 0;
+volatile uint8_t firstCapture = 1;
+volatile uint32_t difference;
+void GPIO_USER_INIT(void);
+void TIMER_IC_USER_INIT(void);
+volatile float frequency = 0;
+int main(void) {
+	// Enable FPU
+	SCB->CPACR |= ((3UL << 20) | (3UL << 22));
+	__asm volatile ("DSB");
+	__asm volatile ("ISB");
+
+	GPIO_USER_INIT();
+	TIMER_IC_USER_INIT();
+
+	// Set interrupt priority
+	IRQ_SetPriority(TIM2_IRQ28, 2);
+
+	printf("Starting frequency measurement with interrupt mode...\r\n");
+
+	// ✅ Non-blocking timing variables
+	uint32_t lastToggleTime = 0;
+	uint8_t pinState = 0;
+
+	while (1) {
+		// ✅ Generate test signal using millis() - NON-BLOCKING!
+		uint32_t currentTime = micros();
+		if (currentTime - lastToggleTime >= 500) {
+			lastToggleTime = currentTime;
+			pinState = !pinState;
+			GPIO_OUTPUT(GPIOA, GPIO_PIN_8, pinState);
+		}
+
+//		// ✅ Check capture flag frequently (not blocked by delays)
+//		if (captureReady) {
+//			captureReady = 0;  // Clear flag
+//
+//
+//			uint32_t cap1, cap2;
+//
+//			// ✅ Copy volatile variables to local (atomic read)
+//			cap1 = captureValue1;
+//			cap2 = captureValue2;
+//
+//			// Calculate difference (handle overflow)
+//			if (cap2 >= cap1) {
+//				difference = cap2 - cap1;
+//			} else {
+//				// Overflow occurred
+//				difference = (0xFFFFFFFF - cap1) + cap2 + 1;
+//			}
+//
+//			// Calculate frequency
+//			if (difference > 0) {
+//				frequency = 1000000.0f / difference;  // Hz
+//			}
+//
+//			printf("Frequency: %.2f Hz\r\n", frequency);
+//
+//		}
+	}
+}
+
+void GPIO_USER_INIT(void) {
+	// PA8 - OUTPUT (generates test signal)
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_8;
+	gpio_handle.mode = GPIO_MODE_OUTPUT;
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+
+	// PA0 - INPUT CAPTURE (TIM2_CH1)
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_0;
+	gpio_handle.mode = GPIO_MODE_AF;
+	gpio_handle.alternate_function_select = GPIO_AF1;  // TIM2
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+}
+
+void TIMER_IC_USER_INIT(void) {
+	// ✅ TIM3 for millis() function - MUST INITIALIZE FIRST!
+	tim_millis_handle.TIMx = TIM3;
+	TIM_MICROS_INIT(&tim_millis_handle); // This enables interrupts for millis()
+	TIM_ENABLE(&tim_millis_handle);
+
+	// TIM2 for input capture
+	tim_ic_handle.TIMx = TIM2;
+	tim_ic_handle.timerMode = TIM_INPUT_CAPTURE_MODE;
+	tim_ic_handle.prescaler = 15;  // 16MHz / 16 = 1MHz (1μs per tick)
+	tim_ic_handle.autoReload = 0xFFFFFFFF;  // Max for 32-bit TIM2
+	tim_ic_handle.directionCounter = TIM_COUNT_UP;
+	tim_ic_handle.autoReloadPreload = LOW;
+	tim_ic_handle.updateDisable = LOW;
+	tim_ic_handle.updateRequestSource = LOW;
+
+	// Input capture configuration
+	tim_ic_handle.TIM_IC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.polarity = TIM_IC_RISING_EDGE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.selection = TIM_IC_SELECTION_TI1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.prescaler = TIM_ICPSC_DIV1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.filter = TIM_IC_FILTER_NONE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.enableInterrupt = ENABLE;
+
+	TIM_INIT(&tim_ic_handle);
+
+	printf("Timers initialized.\r\n");
+}
+
+void TIM2_IRQHandler(void) {
+	if (TIM_IC_GetFlag(&tim_ic_handle, TIM_CHANNEL_1)) {
+		if (firstCapture) {
+			// First capture - just save the value
+			captureValue1 = TIM_IC_ReadCapture(&tim_ic_handle,
+			TIM_CHANNEL_1);
+			firstCapture = 0;
+		} else {
+			// Second capture - calculate frequency
+			captureValue2 = TIM_IC_ReadCapture(&tim_ic_handle,
+			TIM_CHANNEL_1);
+
+			// Calculate difference (handle overflow for 32-bit TIM2)
+			if (captureValue2 >= captureValue1) {
+				difference = captureValue2 - captureValue1;
+			} else {
+				// Overflow occurred
+				difference = (0xFFFFFFFF - captureValue1) + captureValue2 + 1;
+			}
+
+			// Calculate frequency
+			// Timer is running at 1MHz (1μs per tick)
+			// Frequency = 1,000,000 / difference
+			if (difference > 0) {
+				frequency = 1000000.0f / difference;  // Hz
+			}
+
+			// Reset for next measurement
+			captureValue1 = captureValue2;
+
+			printf("Frequency: %.2f Hz\r\n", frequency);
+		}
+
+		// Clear the capture flag
+		TIM_IC_ClearFlag(&tim_ic_handle, TIM_CHANNEL_1);
+	}
+}
+
+// ✅ TIM3 interrupt handler for millis()
+void TIM3_IRQHandler(void) {
+	TIM_Handling(&tim_millis_handle);
+}

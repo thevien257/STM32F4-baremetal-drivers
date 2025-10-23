@@ -1,0 +1,159 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+TIM_HandleTypeDef tim_ic_handle;
+TIM_HandleTypeDef tim_delay_handle;
+
+volatile uint32_t captureValue1 = 0;
+volatile uint32_t captureValue2 = 0;
+volatile uint8_t captureReady = 0;
+volatile uint8_t firstCapture = 1;
+volatile uint32_t interruptCount = 0;  // ✅ Debug counter
+
+void GPIO_USER_INIT(void);
+void TIMER_IC_USER_INIT(void);
+
+int main(void) {
+	SCB->CPACR |= ((3UL << 20) | (3UL << 22));
+	__asm volatile ("DSB");
+	__asm volatile ("ISB");
+
+	GPIO_USER_INIT();
+	TIMER_IC_USER_INIT();
+
+	float frequency = 0;
+	uint32_t printCounter = 0;
+	uint32_t loopCounter = 0;
+
+	printf("Starting frequency measurement with interrupt mode...\r\n");
+
+	while (1) {
+		// Generate test signal on PA8
+		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, HIGH);
+		delay_us(&tim_delay_handle, 500);
+		GPIO_OUTPUT(GPIOA, GPIO_PIN_8, LOW);
+		delay_us(&tim_delay_handle, 500);
+
+		// Check if capture ready
+		if (captureReady) {
+			captureReady = 0;
+
+			uint32_t difference;
+			uint32_t cap1, cap2;
+
+			cap1 = captureValue1;
+			cap2 = captureValue2;
+
+			if (cap2 >= cap1) {
+				difference = cap2 - cap1;
+			} else {
+				difference = (0xFFFFFFFF - cap1) + cap2 + 1;
+			}
+
+			if (difference > 0) {
+				frequency = 1000000.0f / difference;
+			}
+
+			if (++printCounter >= 100) {
+				printCounter = 0;
+				printf("Frequency: %.2f Hz\r\n", frequency);
+			}
+		}
+
+		// ✅ Debug: Print status every ~1000 loops
+		if (++loopCounter >= 1000) {
+			loopCounter = 0;
+			printf(
+					"DEBUG: Interrupts=%lu, Captures=%u, TIM2_CNT=%lu, SR=0x%08lX\r\n",
+					interruptCount, printCounter, TIM2->CNT, TIM2->SR);
+		}
+	}
+}
+
+void GPIO_USER_INIT(void) {
+	// PA8 - OUTPUT
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_8;
+	gpio_handle.mode = GPIO_MODE_OUTPUT;
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+
+	// PA0 - INPUT CAPTURE
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_0;
+	gpio_handle.mode = GPIO_MODE_AF;
+	gpio_handle.alternate_function_select = GPIO_AF1;
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+}
+
+void TIMER_IC_USER_INIT(void) {
+	// TIM2 for input capture
+	tim_ic_handle.TIMx = TIM2;
+	tim_ic_handle.timerMode = TIM_INPUT_CAPTURE_MODE;
+	tim_ic_handle.prescaler = 15;
+	tim_ic_handle.autoReload = 0xFFFFFFFF;
+	tim_ic_handle.directionCounter = TIM_COUNT_UP;
+	tim_ic_handle.autoReloadPreload = LOW;
+	tim_ic_handle.updateDisable = LOW;
+	tim_ic_handle.updateRequestSource = LOW;
+
+	tim_ic_handle.TIM_IC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.polarity = TIM_IC_RISING_EDGE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.selection = TIM_IC_SELECTION_TI1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.prescaler = TIM_ICPSC_DIV1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.filter = TIM_IC_FILTER_NONE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.enableInterrupt = ENABLE;
+
+	TIM_INIT(&tim_ic_handle);
+
+	// TIM3 for delay
+	tim_delay_handle.TIMx = TIM3;
+	TIM_DELAY_INIT(&tim_delay_handle);
+	TIM_ENABLE(&tim_delay_handle);
+
+	// ✅ Debug: Print all register values
+	printf("\r\n=== TIM2 Register Debug ===\r\n");
+	printf("TIM2->CR1   = 0x%08lX (bit 0 should be 1)\r\n", TIM2->CR1);
+	printf("TIM2->PSC   = %lu (should be 15)\r\n", TIM2->PSC);
+	printf("TIM2->ARR   = 0x%08lX (should be 0xFFFFFFFF)\r\n", TIM2->ARR);
+	printf("TIM2->CCMR1 = 0x%08lX (should be 0x00000001)\r\n", TIM2->CCMR1);
+	printf("TIM2->CCER  = 0x%08lX (should be 0x00000001)\r\n", TIM2->CCER);
+	printf("TIM2->DIER  = 0x%08lX (should be 0x00000002)\r\n", TIM2->DIER);
+	printf("TIM2->SR    = 0x%08lX\r\n", TIM2->SR);
+	printf("TIM2->CNT   = %lu (should be counting)\r\n", TIM2->CNT);
+
+	delay_ms(&tim_delay_handle, 10);
+	printf("TIM2->CNT after 10ms = %lu (should be ~10000)\r\n", TIM2->CNT);
+
+	// Check NVIC
+	printf("\r\n=== NVIC Debug ===\r\n");
+	uint32_t nvic_iser = NVIC->ISER[0];  // TIM2 is IRQ 28, in ISER[0]
+	printf("NVIC->ISER[0] = 0x%08lX\r\n", nvic_iser);
+	printf("TIM2 IRQ 28 enabled? %s\r\n",
+			(nvic_iser & (1 << 28)) ? "YES" : "NO");
+
+	printf("===========================\r\n\r\n");
+	printf("Timers initialized.\r\n");
+}
+
+void TIM2_IRQHandler(void) {
+	interruptCount++;  // ✅ Count every entry to ISR
+
+	if (TIM_IC_GetFlag(&tim_ic_handle, TIM_CHANNEL_1)) {
+		if (firstCapture) {
+			captureValue1 = TIM_IC_ReadCapture(&tim_ic_handle, TIM_CHANNEL_1);
+			firstCapture = 0;
+		} else {
+			captureValue2 = TIM_IC_ReadCapture(&tim_ic_handle, TIM_CHANNEL_1);
+			captureReady = 1;
+			captureValue1 = captureValue2;
+		}
+
+		TIM_IC_ClearFlag(&tim_ic_handle, TIM_CHANNEL_1);
+	}
+}

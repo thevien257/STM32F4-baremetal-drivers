@@ -1,4 +1,0 @@
-../Src/timerMillis.c:10:5:main	24	static
-../Src/timerMillis.c:32:6:GPIO_USER_INIT	8	static
-../Src/timerMillis.c:42:6:TIMER_USER_INIT	8	static
-../Src/timerMillis.c:49:6:TIM2_IRQHandler	8	static

@@ -1,0 +1,90 @@
+#include <stdint.h>
+#include <main.h>
+
+GPIO_Handle_TypeDef gpio_handle;
+TIM_HandleTypeDef tim_ic_handle;
+
+void GPIO_USER_INIT(void);
+void TIMER_IC_USER_INIT(void);
+
+int main(void) {
+	GPIO_USER_INIT();
+	TIMER_IC_USER_INIT();
+
+	uint32_t captureValue1 = 0;
+	uint32_t captureValue2 = 0;
+	uint32_t difference = 0;
+	float frequency = 0;
+	uint8_t firstCapture = 1;
+
+	while (1) {
+		// Wait for capture event on channel 1
+		if (TIM_IC_GetFlag(&tim_ic_handle, TIM_CHANNEL_1)) {
+			if (firstCapture) {
+				// First capture - just save the value
+				captureValue1 = TIM_IC_ReadCapture(&tim_ic_handle,
+						TIM_CHANNEL_1);
+				firstCapture = 0;
+			} else {
+				// Second capture - calculate frequency
+				captureValue2 = TIM_IC_ReadCapture(&tim_ic_handle,
+						TIM_CHANNEL_1);
+
+				// Calculate difference (handle overflow for 32-bit TIM2)
+				if (captureValue2 >= captureValue1) {
+					difference = captureValue2 - captureValue1;
+				} else {
+					// Overflow occurred
+					difference = (0xFFFFFFFF - captureValue1) + captureValue2
+							+ 1;
+				}
+
+				// Calculate frequency
+				// Timer is running at 1MHz (1μs per tick)
+				// Frequency = 1,000,000 / difference
+				if (difference > 0) {
+					frequency = 1000000.0f / difference;  // Hz
+				}
+
+				// Reset for next measurement
+				captureValue1 = captureValue2;
+
+				// Use frequency here...
+				printf("Frequency: %.2f Hz\n", frequency);
+			}
+
+			// Clear the capture flag
+			TIM_IC_ClearFlag(&tim_ic_handle, TIM_CHANNEL_1);
+		}
+
+		// Your other code can run here
+	}
+}
+
+void GPIO_USER_INIT(void) {
+	// Configure PA0 as TIM2_CH1 input (Alternate Function)
+	gpio_handle.GPIOX = GPIOA;
+	gpio_handle.pin_number = GPIO_PIN_0;
+	gpio_handle.mode = GPIO_MODE_AF;  // Alternate function mode
+	gpio_handle.alternate_function_select = GPIO_AF1;  // AF1 for TIM2
+	gpio_handle.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_handle);
+}
+
+void TIMER_IC_USER_INIT(void) {
+	// Timer basic configuration
+	tim_ic_handle.TIMx = TIM2;
+	tim_ic_handle.timerMode = TIM_INPUT_CAPTURE_MODE;
+
+	// Input capture configuration
+	tim_ic_handle.TIM_IC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.polarity = TIM_IC_RISING_EDGE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.selection = TIM_IC_SELECTION_TI1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.prescaler = TIM_ICPSC_DIV1;
+	tim_ic_handle.TIM_IC_HandleTypeDef.filter = TIM_IC_FILTER_NONE;
+	tim_ic_handle.TIM_IC_HandleTypeDef.enableInterrupt = DISABLE; // Polling mode
+
+	TIM_DELAY_INIT(&tim_ic_handle);
+	TIM_ENABLE(&tim_ic_handle);
+}

@@ -7,17 +7,17 @@
 C_SRCS += \
 ../Src/syscalls.c \
 ../Src/sysmem.c \
-../Src/timerICIT.c 
+../Src/timerPWM.c 
 
 OBJS += \
 ./Src/syscalls.o \
 ./Src/sysmem.o \
-./Src/timerICIT.o 
+./Src/timerPWM.o 
 
 C_DEPS += \
 ./Src/syscalls.d \
 ./Src/sysmem.d \
-./Src/timerICIT.d 
+./Src/timerPWM.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/timerICIT.cyclo ./Src/timerICIT.d ./Src/timerICIT.o ./Src/timerICIT.su
+	-$(RM) ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/timerPWM.cyclo ./Src/timerPWM.d ./Src/timerPWM.o ./Src/timerPWM.su
 
 .PHONY: clean-Src
 

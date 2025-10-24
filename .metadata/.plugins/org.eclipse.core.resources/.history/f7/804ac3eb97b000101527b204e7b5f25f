@@ -1,0 +1,51 @@
+#include "stm32f4xx_cus.h"
+#include "stm32f4xx_cus_gpio.h"
+#include "stm32f4xx_cus_timer.h"
+
+// Global handles
+TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim2;  // For delay functions
+GPIO_Handle_TypeDef gpio_pwm;
+
+/*==============================================================================
+ * Function Prototypes
+ *============================================================================*/
+void Motor_PWM_Init(void);
+
+/*==============================================================================
+ * Motor PWM Initialization
+ *============================================================================*/
+void Motor_PWM_Init(void) {
+	// Step 1: Configure PB6 as TIM4_CH1 (Alternate Function)
+	gpio_pwm.GPIOX = GPIOB;
+	gpio_pwm.pin_number = GPIO_PIN_6;
+	gpio_pwm.mode = GPIO_MODE_AF;
+	gpio_pwm.alternate_function_select = GPIO_AF2;  // TIM4 Alternate Function
+	gpio_pwm.output_type = GPIO_OUTPUT_TYPE_PP;     // Push-Pull
+	gpio_pwm.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_pwm.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_pwm);
+
+	// Step 2: Configure TIM4 for 20kHz PWM
+	htim4.TIMx = TIM4;
+	htim4.timerMode = TIM_PWM_MODE;
+	htim4.prescaler = 0;                      // No prescaler: 16MHz timer clock
+	htim4.autoReload = 799;                 // 16MHz / 800 = 20kHz PWM frequency
+	htim4.autoReloadPreload = HIGH;         // Enable preload for smooth updates
+	htim4.directionCounter = TIM_COUNT_UP;
+	htim4.updateRequestSource = 0;
+	htim4.updateDisable = 0;
+
+	// Step 3: Configure PWM Channel 1
+	htim4.TIM_PWM_HandleTypeDef.channel = TIM_CHANNEL_1;
+	htim4.TIM_PWM_HandleTypeDef.mode = TIM_OC_MODE_PWM1;      // PWM Mode 1
+	htim4.TIM_PWM_HandleTypeDef.pulse = 0;            // Start at 0% (motor off)
+	htim4.TIM_PWM_HandleTypeDef.polarity = TIM_OC_POLARITY_HIGH;
+
+	// Step 4: Initialize Timer
+	TIM_INIT(&htim4);
+
+	// Initialize delay timer
+	TIM_DELAY_INIT(&htim2);
+	TIM_ENABLE(&htim2);
+}

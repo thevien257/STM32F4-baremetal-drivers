@@ -7,5 +7,5 @@
 "./Drivers/src/stm32f4xx_cus_uart.o"
 "./Src/syscalls.o"
 "./Src/sysmem.o"
-"./Src/timerICIT.o"
+"./Src/timerPWM.o"
 "./Startup/startup_stm32f407vgtx.o"

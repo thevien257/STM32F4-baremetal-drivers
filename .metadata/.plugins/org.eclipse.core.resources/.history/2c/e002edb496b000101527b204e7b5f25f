@@ -1,0 +1,658 @@
+#include <stm32f4xx_cus_timer.h>
+
+volatile uint32_t mil = 0;
+
+void TIM_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	if (timHandleTypeDef->TIMx == TIM2) {
+		TIM2_EN();
+	} else if (timHandleTypeDef->TIMx == TIM3) {
+		TIM3_EN();
+	} else if (timHandleTypeDef->TIMx == TIM4) {
+		TIM4_EN();
+	} else if (timHandleTypeDef->TIMx == TIM5) {
+		TIM5_EN();
+	}
+
+	// Ensure Counter is disable
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_0_pos);
+
+	// Clock prescaler
+	timHandleTypeDef->TIMx->PSC = timHandleTypeDef->prescaler;
+
+	// Select Auto-reload value
+	timHandleTypeDef->TIMx->ARR = timHandleTypeDef->autoReload;
+
+	/*	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+	 TIM2->ARR = 1000;  // New value is buffered
+	 // Counter continues using old ARR value until next overflow
+	 // At next update event, ARR = 1000 takes effect
+	 ```
+
+	 ## Visual Example
+	 ```
+	 Without Preload:
+	 CNT: 0 → 500 → 999 → 1000 (overflow)
+	 You write ARR = 500 while CNT = 750
+	 CNT: 750 → 751 → ... → 65535 → 0 → ... → 500 (finally overflows!) ❌
+
+	 With Preload:
+	 CNT: 0 → 500 → 999 → 1000 (overflow, new ARR loaded)
+	 You write ARR = 500 while CNT = 750
+	 CNT: 750 → 999 → 1000 (overflow with old ARR)
+	 0 → 499 → 500 (now using new ARR) ✓*/
+
+	// autoReloadPreload
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_7_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->autoReloadPreload
+			<< Shift_7_pos);
+
+	// Select direction counter
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_4_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->directionCounter
+			<< Shift_4_pos);
+
+	// Update disable
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_1_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->updateDisable
+			<< Shift_1_pos);
+
+	// Update request source (Select source)
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_2_pos);
+	timHandleTypeDef->TIMx->CR1 |= (timHandleTypeDef->updateRequestSource
+			<< Shift_2_pos);
+
+	// Configure Input Capture if mode is selected
+	if (timHandleTypeDef->timerMode == TIM_INPUT_CAPTURE_MODE) {
+		uint8_t channel = timHandleTypeDef->TIM_IC_HandleTypeDef.channel;
+		uint8_t selection = timHandleTypeDef->TIM_IC_HandleTypeDef.selection;
+		uint8_t prescaler = timHandleTypeDef->TIM_IC_HandleTypeDef.prescaler;
+		uint8_t filter = timHandleTypeDef->TIM_IC_HandleTypeDef.filter;
+		uint8_t polarity = timHandleTypeDef->TIM_IC_HandleTypeDef.polarity;
+		uint8_t enableInt =
+				timHandleTypeDef->TIM_IC_HandleTypeDef.enableInterrupt;
+
+		if (channel == TIM_CHANNEL_1) {
+			// CC1S[1:0]: Capture/Compare 1 selection (bits 1:0)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (selection << Shift_0_pos);
+
+			// IC1PSC[1:0]: Input capture 1 prescaler (bits 3:2)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_2_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (prescaler << Shift_2_pos);
+
+			// IC1F[3:0]: Input capture 1 filter (bits 7:4)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0xF << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (filter << Shift_4_pos);
+
+			// Configure polarity: Clear CC1P (bit 1) and CC1NP (bit 3)
+			timHandleTypeDef->TIMx->CCER &= ~((HIGH << Shift_1_pos)
+					| (HIGH << Shift_3_pos));
+			if (polarity == TIM_IC_FALLING_EDGE) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_1_pos); // CC1P = 1
+			} else if (polarity == TIM_IC_BOTH_EDGES) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_1_pos)
+						| (HIGH << Shift_3_pos);
+			}
+			// Rising edge: both bits = 0 (default)
+
+			// CC1E: Enable capture on channel 1 (bit 0)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_0_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_1_pos);  // CC1IE
+			}
+
+		} else if (channel == TIM_CHANNEL_2) {
+			// CC2S[1:0]: Capture/Compare 2 selection (bits 9:8)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (selection << Shift_8_pos);
+
+			// IC2PSC[1:0]: Input capture 2 prescaler (bits 11:10)
+			timHandleTypeDef->TIMx->CCMR1 &=
+					~(GPIO_BIT_11_Mask << Shift_10_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (prescaler << Shift_10_pos);
+
+			// IC2F[3:0]: Input capture 2 filter (bits 15:12)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0xF << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (filter << Shift_12_pos);
+
+			// Configure polarity: Clear CC2P (bit 5) and CC2NP (bit 7)
+			timHandleTypeDef->TIMx->CCER &= ~((HIGH << Shift_5_pos)
+					| (HIGH << Shift_7_pos));
+			if (polarity == TIM_IC_FALLING_EDGE) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_5_pos); // CC2P = 1
+			} else if (polarity == TIM_IC_BOTH_EDGES) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_5_pos)
+						| (HIGH << Shift_7_pos);
+			}
+
+			// CC2E: Enable capture on channel 2 (bit 4)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_4_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_2_pos);  // CC2IE
+			}
+
+		} else if (channel == TIM_CHANNEL_3) {
+			// CC3S[1:0]: Capture/Compare 3 selection (bits 1:0 of CCMR2)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (selection << Shift_0_pos);
+
+			// IC3PSC[1:0]: Input capture 3 prescaler (bits 3:2)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_2_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (prescaler << Shift_2_pos);
+
+			// IC3F[3:0]: Input capture 3 filter (bits 7:4)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0xF << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (filter << Shift_4_pos);
+
+			// Configure polarity: Clear CC3P (bit 9) and CC3NP (bit 11)
+			timHandleTypeDef->TIMx->CCER &= ~((HIGH << Shift_9_pos)
+					| (HIGH << Shift_11_pos));
+			if (polarity == TIM_IC_FALLING_EDGE) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_9_pos); // CC3P = 1
+			} else if (polarity == TIM_IC_BOTH_EDGES) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_9_pos)
+						| (HIGH << Shift_11_pos);
+			}
+
+			// CC3E: Enable capture on channel 3 (bit 8)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_8_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_3_pos);  // CC3IE
+			}
+
+		} else if (channel == TIM_CHANNEL_4) {
+			// CC4S[1:0]: Capture/Compare 4 selection (bits 9:8 of CCMR2)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (selection << Shift_8_pos);
+
+			// IC4PSC[1:0]: Input capture 4 prescaler (bits 11:10)
+			timHandleTypeDef->TIMx->CCMR2 &=
+					~(GPIO_BIT_11_Mask << Shift_10_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (prescaler << Shift_10_pos);
+
+			// IC4F[3:0]: Input capture 4 filter (bits 15:12)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0xF << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (filter << Shift_12_pos);
+
+			// Configure polarity: Clear CC4P (bit 13) and CC4NP (bit 15)
+			timHandleTypeDef->TIMx->CCER &= ~((HIGH << Shift_13_pos)
+					| (HIGH << Shift_15_pos));
+			if (polarity == TIM_IC_FALLING_EDGE) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_13_pos); // CC4P = 1
+			} else if (polarity == TIM_IC_BOTH_EDGES) {
+				timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_13_pos)
+						| (HIGH << Shift_15_pos);
+			}
+
+			// CC4E: Enable capture on channel 4 (bit 12)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_12_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_4_pos);  // CC4IE
+			}
+		}
+
+		// Enable NVIC interrupt for the timer if any channel interrupt is enabled
+		if (enableInt) {
+			if (timHandleTypeDef->TIMx == TIM2) {
+				IRQ_Config(TIM2_IRQ28, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM3) {
+				IRQ_Config(TIM3_IRQ29, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM4) {
+				IRQ_Config(TIM4_IRQ30, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM5) {
+				IRQ_Config(TIM5_IRQ50, HIGH);
+			}
+		}
+	}
+
+	if (timHandleTypeDef->timerMode == TIM_OUTPUT_COMPARE_MODE) {
+		uint8_t channel = timHandleTypeDef->TIM_OC_HandleTypeDef.channel;
+		uint8_t mode = timHandleTypeDef->TIM_OC_HandleTypeDef.mode;
+		uint32_t pulse = timHandleTypeDef->TIM_OC_HandleTypeDef.pulse;
+		uint8_t polarity = timHandleTypeDef->TIM_OC_HandleTypeDef.polarity;
+		uint8_t enableInt =
+				timHandleTypeDef->TIM_OC_HandleTypeDef.enableInterrupt;
+
+		if (channel == TIM_CHANNEL_1) {
+			// CC1S[1:0]: Channel 1 configured as output (bits 1:0 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC1M[2:0]: Output compare mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_4_pos);
+
+			// OC1PE: Output compare preload enable (bit 3)
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_3_pos);
+
+			// CC1P: Output polarity (bit 1)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_1_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_1_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR1 = pulse;
+
+			// CC1E: Enable output on channel 1 (bit 0)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_0_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_1_pos);  // CC1IE
+			}
+
+		} else if (channel == TIM_CHANNEL_2) {
+
+			// CC2S[1:0]: Channel 2 configured as output (bits 9:8 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC2M[2:0]: Output compare mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_12_pos);
+
+			// OC2PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_11_pos);
+
+			// CC2P: Output polarity (bit 5)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_5_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_5_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR2 = pulse;
+
+			// CC2E: Enable output on channel 2 (bit 4)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_4_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_2_pos);  // CC2IE
+			}
+
+		} else if (channel == TIM_CHANNEL_3) {
+			// CC3S[1:0]: Channel 3 configured as output (bits 1:0 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC3M[2:0]: Output compare mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_4_pos);
+
+			// OC3PE: Output compare preload enable (bit 3)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_3_pos);
+
+			// CC3P: Output polarity (bit 9)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_9_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_9_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR3 = pulse;
+
+			// CC3E: Enable output on channel 3 (bit 8)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_8_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_3_pos);  // CC3IE
+			}
+		} else if (channel == TIM_CHANNEL_4) {
+			// CC4S[1:0]: Channel 4 configured as output (bits 9:8 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC4M[2:0]: Output compare mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_12_pos);
+
+			// OC4PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_11_pos);
+
+			// CC4P: Output polarity (bit 13)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_13_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_13_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR4 = pulse;
+
+			// CC4E: Enable output on channel 4 (bit 12)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_12_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_4_pos);  // CC4IE
+			}
+		}
+
+		// Enable NVIC interrupt for the timer if any channel interrupt is enabled
+		if (enableInt) {
+			if (timHandleTypeDef->TIMx == TIM2) {
+				IRQ_Config(TIM2_IRQ28, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM3) {
+				IRQ_Config(TIM3_IRQ29, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM4) {
+				IRQ_Config(TIM4_IRQ30, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM5) {
+				IRQ_Config(TIM5_IRQ50, HIGH);
+			}
+		}
+	}
+
+	if (timHandleTypeDef->timerMode == TIM_PWM_MODE) {
+		uint8_t channel = timHandleTypeDef->TIM_PWM_HandleTypeDef.channel;
+		uint8_t mode = timHandleTypeDef->TIM_PWM_HandleTypeDef.mode;
+		uint32_t pulse = timHandleTypeDef->TIM_PWM_HandleTypeDef.pulse;
+		uint8_t polarity = timHandleTypeDef->TIM_PWM_HandleTypeDef.polarity;
+
+		if (channel == TIM_CHANNEL_1) {
+			// CC1S[1:0]: Channel 1 configured as output (bits 1:0 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC1M[2:0]: PWM mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_4_pos);
+
+			// OC1PE: Output compare preload enable (bit 3) - IMPORTANT for PWM
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_3_pos);
+
+			// CC1P: Output polarity (bit 1)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_1_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_1_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR1 = pulse;
+
+			// CC1E: Enable output on channel 1 (bit 0)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_0_pos);
+
+		} else if (channel == TIM_CHANNEL_2) {
+			// CC2S[1:0]: Channel 2 configured as output (bits 9:8 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC2M[2:0]: PWM mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_12_pos);
+
+			// OC2PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_11_pos);
+
+			// CC2P: Output polarity (bit 5)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_5_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_5_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR2 = pulse;
+
+			// CC2E: Enable output on channel 2 (bit 4)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_4_pos);
+
+		} else if (channel == TIM_CHANNEL_3) {
+			// CC3S[1:0]: Channel 3 configured as output (bits 1:0 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC3M[2:0]: PWM mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_4_pos);
+
+			// OC3PE: Output compare preload enable (bit 3)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_3_pos);
+
+			// CC3P: Output polarity (bit 9)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_9_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_9_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR3 = pulse;
+
+			// CC3E: Enable output on channel 3 (bit 8)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_8_pos);
+
+		} else if (channel == TIM_CHANNEL_4) {
+			// CC4S[1:0]: Channel 4 configured as output (bits 9:8 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC4M[2:0]: PWM mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_12_pos);
+
+			// OC4PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_11_pos);
+
+			// CC4P: Output polarity (bit 13)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_13_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_13_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR4 = pulse;
+
+			// CC4E: Enable output on channel 4 (bit 12)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_12_pos);
+		}
+	}
+
+	// Timer enable
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_0_pos);
+
+	/*	UG: Update generation
+	 This bit can be set by software, it is automatically cleared by hardware.
+	 0: No action
+	 1: Re-initialize the counter and generates an update of the registers.*/
+	timHandleTypeDef->TIMx->EGR |= (HIGH << Shift_0_pos);
+
+	// Clear the update flag that was just set
+	timHandleTypeDef->TIMx->SR = 0;
+}
+
+uint32_t TIM_IC_ReadCapture(TIM_HandleTypeDef *timHandleTypeDef,
+		uint8_t channel) {
+	switch (channel) {
+	case TIM_CHANNEL_1:
+		return timHandleTypeDef->TIMx->CCR1;
+	case TIM_CHANNEL_2:
+		return timHandleTypeDef->TIMx->CCR2;
+	case TIM_CHANNEL_3:
+		return timHandleTypeDef->TIMx->CCR3;
+	case TIM_CHANNEL_4:
+		return timHandleTypeDef->TIMx->CCR4;
+	default:
+		return 0;
+	}
+}
+
+void TIM_IC_ClearFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
+	// Clear CCxIF flag (bit 1, 2, 3, or 4 in SR)
+	if (channel == TIM_CHANNEL_1) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_1_pos);
+	} else if (channel == TIM_CHANNEL_2) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_2_pos);
+	} else if (channel == TIM_CHANNEL_3) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_3_pos);
+	} else if (channel == TIM_CHANNEL_4) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_4_pos);
+	}
+}
+
+uint8_t TIM_IC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
+	// Check CCxIF flag (bit 1, 2, 3, or 4 in SR)
+	if (channel == TIM_CHANNEL_1) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_1_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_2) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_2_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_3) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_3_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_4) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_4_pos) & GPIO_BIT_1_Mask;
+	}
+	return 0;
+}
+
+// Update compare value dynamically
+void TIM_OC_SetCompare(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel,
+		uint32_t value) {
+	switch (channel) {
+	case TIM_CHANNEL_1:
+		timHandleTypeDef->TIMx->CCR1 = value;
+		break;
+	case TIM_CHANNEL_2:
+		timHandleTypeDef->TIMx->CCR2 = value;
+		break;
+	case TIM_CHANNEL_3:
+		timHandleTypeDef->TIMx->CCR3 = value;
+		break;
+	case TIM_CHANNEL_4:
+		timHandleTypeDef->TIMx->CCR4 = value;
+		break;
+	}
+}
+
+// Get compare flag
+uint8_t TIM_OC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
+	if (channel == TIM_CHANNEL_1) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_1_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_2) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_2_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_3) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_3_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_4) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_4_pos) & GPIO_BIT_1_Mask;
+	}
+	return 0;
+}
+
+// Clear compare flag
+void TIM_OC_ClearFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
+	if (channel == TIM_CHANNEL_1) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_1_pos);
+	} else if (channel == TIM_CHANNEL_2) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_2_pos);
+	} else if (channel == TIM_CHANNEL_3) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_3_pos);
+	} else if (channel == TIM_CHANNEL_4) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_4_pos);
+	}
+}
+
+void TIM_ENABLE(TIM_HandleTypeDef *timHandleTypeDef) {
+	// Timer enable
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_0_pos);
+
+	/*	UG: Update generation
+	 This bit can be set by software, it is automatically cleared by hardware.
+	 0: No action
+	 1: Re-initialize the counter and generates an update of the registers.*/
+	timHandleTypeDef->TIMx->EGR |= (HIGH << Shift_0_pos);
+
+	while (!((timHandleTypeDef->TIMx->SR >> Shift_0_pos) & 0x1))
+		;
+
+	// Clear the update flag that was just set
+	timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_0_pos);
+}
+
+void TIM_DELAY_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	if (timHandleTypeDef->TIMx == TIM2) {
+		TIM2_EN();
+	} else if (timHandleTypeDef->TIMx == TIM3) {
+		TIM3_EN();
+	} else if (timHandleTypeDef->TIMx == TIM4) {
+		TIM4_EN();
+	} else if (timHandleTypeDef->TIMx == TIM5) {
+		TIM5_EN();
+	}
+
+	Get_APB1_Clock_Speed();
+
+	uint32_t psc = SystemClockSrc / ONE_MEGA_HERT;
+
+	// Ensure Counter is disable
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_0_pos);
+
+	// Clock prescaler
+	timHandleTypeDef->TIMx->PSC = (psc - 1);
+
+	if (timHandleTypeDef->TIMx == TIM2 || timHandleTypeDef->TIMx == TIM5) {
+		timHandleTypeDef->TIMx->ARR = 0xFFFFFFFF;  // 32-bit max
+	} else {
+		timHandleTypeDef->TIMx->ARR = 0xFFFF;      // 16-bit max
+	}
+
+	// autoReloadPreload
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_7_pos);
+
+	// Count up
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_4_pos);
+
+	// Enable update
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_1_pos);
+
+	// Update request source (Select source)
+	timHandleTypeDef->TIMx->CR1 &= ~(HIGH << Shift_2_pos);
+}
+
+void TIM_MILLIS_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	TIM_DELAY_INIT(timHandleTypeDef);
+
+	// Select Auto-reload value (This will generate interrupt every 1ms for millis, but if use delay fuction then this ARR actually don't care)
+	timHandleTypeDef->TIMx->ARR = 999;
+
+	timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_0_pos);
+
+	if (timHandleTypeDef->TIMx == TIM2) {
+		IRQ_Config(TIM2_IRQ28, HIGH);
+	} else if (timHandleTypeDef->TIMx == TIM3) {
+		IRQ_Config(TIM3_IRQ29, HIGH);
+	} else if (timHandleTypeDef->TIMx == TIM4) {
+		IRQ_Config(TIM4_IRQ30, HIGH);
+	} else if (timHandleTypeDef->TIMx == TIM5) {
+		IRQ_Config(TIM5_IRQ50, HIGH);
+	}
+}
+
+void TIM_MICROS_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
+	// Basic setup (1 MHz clock tick = 1 µs)
+	TIM_DELAY_INIT(timHandleTypeDef);
+
+	// Use full 32-bit range for wide counting
+	if (timHandleTypeDef->TIMx == TIM2 || timHandleTypeDef->TIMx == TIM5) {
+		timHandleTypeDef->TIMx->ARR = 0xFFFFFFFF;  // 32-bit timer
+	} else {
+		timHandleTypeDef->TIMx->ARR = 0xFFFF;      // 16-bit timer
+	}
+
+	// Disable interrupt (we just want to read CNT)
+	timHandleTypeDef->TIMx->DIER &= ~(HIGH << Shift_0_pos);
+
+	// Enable the timer
+	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_0_pos);
+}
+
+uint32_t millis() {
+	return mil;
+}
+
+uint32_t micros() {
+	return TIM2->CNT; // Current clock is 1MHZ, so each tich (count) will take 1us --> meet the condition
+}
+
+void TIM_Handling(TIM_HandleTypeDef *timHandleTypeDef) {
+	if (((timHandleTypeDef->TIMx->SR) >> Shift_0_pos) & 0x1) {
+		// Clear the update flag that was just set
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_0_pos);
+		mil++;
+	}
+}
+
+void delay_us(TIM_HandleTypeDef *timHandleTypeDef, uint32_t us) {
+	timHandleTypeDef->TIMx->CNT = 0;
+
+	while (timHandleTypeDef->TIMx->CNT < us)
+		;
+}
+
+void delay_ms(TIM_HandleTypeDef *timHandleTypeDef, uint32_t ms) {
+	for (uint32_t i = 0; i < ms; i++) {
+		delay_us(timHandleTypeDef, 1000);
+	}
+}

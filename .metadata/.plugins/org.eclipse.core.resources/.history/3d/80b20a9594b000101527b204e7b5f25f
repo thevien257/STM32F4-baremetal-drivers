@@ -1,0 +1,326 @@
+/*
+ * Output Compare Mode Examples for STM32F4
+ * Demonstrates ACTIVE, INACTIVE, and TOGGLE modes
+ *
+ * Hardware Setup:
+ * - TIM3_CH1 -> PA6 (AF2)
+ * - TIM3_CH2 -> PA7 (AF2)
+ * - TIM4_CH1 -> PB6 (AF2)
+ */
+
+#include "stm32f4xx_cus_gpio.h"
+#include "stm32f4xx_cus_timer.h"
+
+// Timer handles
+TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
+
+// GPIO handles
+GPIO_Handle_TypeDef gpio_tim3_ch1;
+GPIO_Handle_TypeDef gpio_tim3_ch2;
+GPIO_Handle_TypeDef gpio_tim4_ch1;
+
+// Variables for state tracking
+volatile uint8_t toggle_count = 0;
+volatile uint8_t pulse_sequence = 0;
+
+/*==============================================================================
+ * Example 1: TOGGLE MODE - Automatically toggle output on each match
+ * Use Case: Generate square wave without CPU intervention
+ * Output: 1Hz square wave (500ms HIGH, 500ms LOW)
+ *============================================================================*/
+void Example1_ToggleMode(void) {
+	// Configure PA6 as TIM3_CH1 (Alternate Function)
+	gpio_tim3_ch1.GPIOX = GPIOA;
+	gpio_tim3_ch1.pin_number = GPIO_PIN_6;
+	gpio_tim3_ch1.mode = GPIO_MODE_AF;
+	gpio_tim3_ch1.alternate_function_select = GPIO_AF2;  // TIM3_CH1
+	gpio_tim3_ch1.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_tim3_ch1.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_tim3_ch1.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_tim3_ch1);
+
+	// Configure TIM3 for Toggle Mode
+	htim3.TIMx = TIM3;
+	htim3.timerMode = TIM_OUTPUT_COMPARE_MODE;
+	htim3.prescaler = 15999;                  // 16MHz / 16000 = 1kHz tick
+	htim3.autoReload = 999;                   // 1kHz / 1000 = 1Hz period
+	htim3.autoReloadPreload = HIGH;
+	htim3.directionCounter = TIM_COUNT_UP;
+	htim3.updateRequestSource = 0;
+	htim3.updateDisable = 0;
+
+	// Output Compare Configuration - TOGGLE MODE
+	htim3.TIM_OC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	htim3.TIM_OC_HandleTypeDef.mode = TIM_OC_MODE_TOGGLE;  // Toggle on match
+	htim3.TIM_OC_HandleTypeDef.pulse = 500;                // Toggle at halfway
+	htim3.TIM_OC_HandleTypeDef.polarity = TIM_OC_POLARITY_HIGH;
+	htim3.TIM_OC_HandleTypeDef.enableInterrupt = LOW;     // No interrupt needed
+
+	TIM_INIT(&htim3);
+
+	// Output will automatically toggle: HIGH for 500ms, LOW for 500ms
+	// No CPU intervention needed!
+}
+
+/*==============================================================================
+ * Example 2: ACTIVE MODE - Set output HIGH on match
+ * Use Case: Generate one-shot pulses or synchronized signals
+ * Pattern: Pulse goes HIGH at specific time, need software to reset it LOW
+ *============================================================================*/
+void Example2_ActiveMode(void) {
+	// Configure PA7 as TIM3_CH2 (Alternate Function)
+	gpio_tim3_ch2.GPIOX = GPIOA;
+	gpio_tim3_ch2.pin_number = GPIO_PIN_7;
+	gpio_tim3_ch2.mode = GPIO_MODE_AF;
+	gpio_tim3_ch2.alternate_function_select = GPIO_AF2;  // TIM3_CH2
+	gpio_tim3_ch2.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_tim3_ch2.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_tim3_ch2.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_tim3_ch2);
+
+	// Configure TIM3 for Active Mode
+	htim3.TIMx = TIM3;
+	htim3.timerMode = TIM_OUTPUT_COMPARE_MODE;
+	htim3.prescaler = 15999;                  // 16MHz / 16000 = 1kHz
+	htim3.autoReload = 1999;                  // 2 second period
+	htim3.autoReloadPreload = HIGH;
+	htim3.directionCounter = TIM_COUNT_UP;
+	htim3.updateRequestSource = 0;
+	htim3.updateDisable = 0;
+
+	// Output Compare Configuration - ACTIVE MODE
+	htim3.TIM_OC_HandleTypeDef.channel = TIM_CHANNEL_2;
+	htim3.TIM_OC_HandleTypeDef.mode = TIM_OC_MODE_ACTIVE;  // Set HIGH on match
+	htim3.TIM_OC_HandleTypeDef.pulse = 500;                // Set HIGH at 500ms
+	htim3.TIM_OC_HandleTypeDef.polarity = TIM_OC_POLARITY_HIGH;
+	htim3.TIM_OC_HandleTypeDef.enableInterrupt = HIGH;     // Use interrupt
+
+	TIM_INIT(&htim3);
+
+	// When CNT reaches 500, output goes HIGH and interrupt fires
+	// In ISR, you can manually set it LOW or change the mode
+}
+
+/*==============================================================================
+ * Example 3: INACTIVE MODE - Set output LOW on match
+ * Use Case: Create falling edges at specific times
+ * Pattern: Output is HIGH initially, goes LOW when match occurs
+ *============================================================================*/
+void Example3_InactiveMode(void) {
+	// Configure PB6 as TIM4_CH1 (Alternate Function)
+	gpio_tim4_ch1.GPIOX = GPIOB;
+	gpio_tim4_ch1.pin_number = GPIO_PIN_6;
+	gpio_tim4_ch1.mode = GPIO_MODE_AF;
+	gpio_tim4_ch1.alternate_function_select = GPIO_AF2;  // TIM4_CH1
+	gpio_tim4_ch1.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_tim4_ch1.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_tim4_ch1.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_tim4_ch1);
+
+	// Configure TIM4 for Inactive Mode
+	htim4.TIMx = TIM4;
+	htim4.timerMode = TIM_OUTPUT_COMPARE_MODE;
+	htim4.prescaler = 15999;                  // 16MHz / 16000 = 1kHz
+	htim4.autoReload = 999;                   // 1 second period
+	htim4.autoReloadPreload = HIGH;
+	htim4.directionCounter = TIM_COUNT_UP;
+	htim4.updateRequestSource = 0;
+	htim4.updateDisable = 0;
+
+	// Output Compare Configuration - INACTIVE MODE
+	htim4.TIM_OC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	htim4.TIM_OC_HandleTypeDef.mode = TIM_OC_MODE_INACTIVE;  // Set LOW on match
+	htim4.TIM_OC_HandleTypeDef.pulse = 500;                  // Set LOW at 500ms
+	htim4.TIM_OC_HandleTypeDef.polarity = TIM_OC_POLARITY_HIGH;
+	htim4.TIM_OC_HandleTypeDef.enableInterrupt = HIGH;
+
+	TIM_INIT(&htim4);
+
+	// Initially HIGH, goes LOW when CNT reaches 250
+}
+
+/*==============================================================================
+ * Example 4: Combined - Pulse Generation with ACTIVE + INACTIVE
+ * Creates precise pulses using two channels
+ * CH1 sets HIGH, CH2 sets LOW -> Creates defined pulse width
+ *============================================================================*/
+void Example4_PulseGeneration(void) {
+	// Configure GPIO for both channels
+	gpio_tim3_ch1.GPIOX = GPIOA;
+	gpio_tim3_ch1.pin_number = GPIO_PIN_6;
+	gpio_tim3_ch1.mode = GPIO_MODE_AF;
+	gpio_tim3_ch1.alternate_function_select = GPIO_AF2;
+	gpio_tim3_ch1.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_tim3_ch1.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_tim3_ch1.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_tim3_ch1);
+
+	// Configure Timer
+	htim3.TIMx = TIM3;
+	htim3.timerMode = TIM_OUTPUT_COMPARE_MODE;
+	htim3.prescaler = 15999;                  // 1kHz tick rate
+	htim3.autoReload = 999;                   // 1 second period
+	htim3.autoReloadPreload = HIGH;
+	htim3.directionCounter = TIM_COUNT_UP;
+	htim3.updateRequestSource = 0;
+	htim3.updateDisable = 0;
+
+	// Channel 1: Set HIGH at 200ms (ACTIVE)
+	htim3.TIM_OC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	htim3.TIM_OC_HandleTypeDef.mode = TIM_OC_MODE_ACTIVE;
+	htim3.TIM_OC_HandleTypeDef.pulse = 200;
+	htim3.TIM_OC_HandleTypeDef.polarity = TIM_OC_POLARITY_HIGH;
+	htim3.TIM_OC_HandleTypeDef.enableInterrupt = LOW;
+	TIM_INIT(&htim3);
+
+	// Need to reconfigure for Channel 2 (set LOW at 700ms)
+	// In practice, you'd initialize CH2 separately with INACTIVE mode at 700
+	// Result: 500ms pulse width (from 200ms to 700ms)
+}
+
+/*==============================================================================
+ * Example 5: TOGGLE with Interrupt - Count toggles
+ * Demonstrates using interrupt with toggle mode for event tracking
+ *============================================================================*/
+void Example5_ToggleWithInterrupt(void) {
+	// Configure GPIO
+	gpio_tim3_ch1.GPIOX = GPIOA;
+	gpio_tim3_ch1.pin_number = GPIO_PIN_6;
+	gpio_tim3_ch1.mode = GPIO_MODE_AF;
+	gpio_tim3_ch1.alternate_function_select = GPIO_AF2;
+	gpio_tim3_ch1.output_type = GPIO_OUTPUT_TYPE_PP;
+	gpio_tim3_ch1.output_speed = GPIO_OUTPUT_SPEED_HIGH;
+	gpio_tim3_ch1.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&gpio_tim3_ch1);
+
+	// Configure Timer with interrupt enabled
+	htim3.TIMx = TIM3;
+	htim3.timerMode = TIM_OUTPUT_COMPARE_MODE;
+	htim3.prescaler = 15999;                  // 1kHz
+	htim3.autoReload = 499;                   // 500ms period
+	htim3.autoReloadPreload = HIGH;
+	htim3.directionCounter = TIM_COUNT_UP;
+	htim3.updateRequestSource = 0;
+	htim3.updateDisable = 0;
+
+	htim3.TIM_OC_HandleTypeDef.channel = TIM_CHANNEL_1;
+	htim3.TIM_OC_HandleTypeDef.mode = TIM_OC_MODE_TOGGLE;
+	htim3.TIM_OC_HandleTypeDef.pulse = 250;    // Toggle at 250ms
+	htim3.TIM_OC_HandleTypeDef.polarity = TIM_OC_POLARITY_HIGH;
+	htim3.TIM_OC_HandleTypeDef.enableInterrupt = HIGH;  // Enable interrupt
+
+	TIM_INIT(&htim3);
+}
+
+/*==============================================================================
+ * Interrupt Service Routines
+ *============================================================================*/
+
+// TIM3 ISR - Handles both CH1 and CH2
+void TIM3_IRQHandler(void) {
+	// Check Channel 1 (Toggle mode example)
+	if (TIM_OC_GetFlag(&htim3, TIM_CHANNEL_1)) {
+		TIM_OC_ClearFlag(&htim3, TIM_CHANNEL_1);
+
+		toggle_count++;
+
+		// Every 10 toggles, do something
+		if (toggle_count >= 10) {
+			toggle_count = 0;
+			// Perform some action
+		}
+	}
+
+	// Check Channel 2 (Active mode example)
+	if (TIM_OC_GetFlag(&htim3, TIM_CHANNEL_2)) {
+		TIM_OC_ClearFlag(&htim3, TIM_CHANNEL_2);
+
+		// Output went HIGH, manually set it LOW after some delay
+		// Or change to INACTIVE mode to automatically pull it LOW
+		htim3.TIM_OC_HandleTypeDef.mode = TIM_OC_MODE_INACTIVE;
+		htim3.TIM_OC_HandleTypeDef.pulse = 1500;  // Will go LOW at 1.5s
+		// Need to reconfigure - or use a second channel
+
+		TIM_INIT(&htim3);
+	}
+}
+
+// TIM4 ISR - Dynamic update example
+void TIM4_IRQHandler(void) {
+	if (TIM_OC_GetFlag(&htim4, TIM_CHANNEL_1)) {
+		TIM_OC_ClearFlag(&htim4, TIM_CHANNEL_1);
+
+		// Cycle through different pulse positions
+		pulse_sequence++;
+		switch (pulse_sequence) {
+		case 1:
+			TIM_OC_SetCompare(&htim4, TIM_CHANNEL_1, 250);  // 25%
+			break;
+		case 2:
+			TIM_OC_SetCompare(&htim4, TIM_CHANNEL_1, 500);  // 50%
+			break;
+		case 3:
+			TIM_OC_SetCompare(&htim4, TIM_CHANNEL_1, 750);  // 75%
+			break;
+		default:
+			TIM_OC_SetCompare(&htim4, TIM_CHANNEL_1, 100);  // 10%
+			pulse_sequence = 0;
+			break;
+		}
+	}
+}
+
+/*==============================================================================
+ * Main Application
+ *============================================================================*/
+int main(void) {
+	// Choose one example to run:
+
+//	Example1_ToggleMode();           // Auto-toggling square wave
+//	Example2_ActiveMode();           // Set HIGH on match
+//	Example3_InactiveMode();         // Set LOW on match
+//	Example4_PulseGeneration();      // Precise pulse generation
+	// Example5_ToggleWithInterrupt();  // Toggle with event counting
+//	Example6_DynamicUpdate();        // Dynamic timing changes
+
+	while (1) {
+		// Main loop - Output Compare runs in hardware/interrupts
+	}
+}
+
+/*==============================================================================
+ * USAGE SUMMARY
+ *============================================================================*/
+/*
+ * TOGGLE MODE (mode = 3):
+ * - Best for: Square wave generation, periodic signals
+ * - Behavior: Output automatically toggles HIGH<->LOW on each match
+ * - No CPU needed: Runs completely in hardware
+ * - Example: Generate clock signals, heartbeat LEDs
+ *
+ * ACTIVE MODE (mode = 1):
+ * - Best for: Starting pulses, synchronization signals
+ * - Behavior: Output goes HIGH when CNT == CCRx
+ * - CPU needed: Must manually set LOW or use another channel
+ * - Example: Start of data transmission, trigger signals
+ *
+ * INACTIVE MODE (mode = 2):
+ * - Best for: Ending pulses, timeout signals
+ * - Behavior: Output goes LOW when CNT == CCRx
+ * - CPU needed: Must manually set HIGH or use another channel
+ * - Example: End of pulse, timeout indicators
+ *
+ * COMBINED ACTIVE + INACTIVE:
+ * - Use two channels on same timer
+ * - CH1 ACTIVE at time T1 -> output goes HIGH
+ * - CH2 INACTIVE at time T2 -> output goes LOW
+ * - Result: Precise pulse from T1 to T2
+ *
+ * KEY POINTS:
+ * 1. Configure GPIO as Alternate Function (AF2 for TIM3/TIM4)
+ * 2. Set correct mode in TIM_OC_HandleTypeDef.mode
+ * 3. pulse value sets when compare occurs (CNT == CCRx)
+ * 4. Enable interrupts if you need to react to compare events
+ * 5. Use TIM_OC_SetCompare() to change timing dynamically
+ */

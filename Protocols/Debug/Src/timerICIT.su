@@ -1,5 +1,0 @@
-../Src/timerICIT.c:17:5:main	24	static,ignoring_inline_asm
-../Src/timerICIT.c:46:6:GPIO_USER_INIT	8	static
-../Src/timerICIT.c:66:6:TIMER_IC_USER_INIT	8	static
-../Src/timerICIT.c:95:6:TIM2_IRQHandler	8	static
-../Src/timerICIT.c:137:6:TIM3_IRQHandler	8	static

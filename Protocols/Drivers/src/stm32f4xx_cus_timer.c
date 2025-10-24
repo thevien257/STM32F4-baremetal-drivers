@@ -213,6 +213,225 @@ void TIM_INIT(TIM_HandleTypeDef *timHandleTypeDef) {
 		}
 	}
 
+	if (timHandleTypeDef->timerMode == TIM_OUTPUT_COMPARE_MODE) {
+		uint8_t channel = timHandleTypeDef->TIM_OC_HandleTypeDef.channel;
+		uint8_t mode = timHandleTypeDef->TIM_OC_HandleTypeDef.mode;
+		uint32_t pulse = timHandleTypeDef->TIM_OC_HandleTypeDef.pulse;
+		uint8_t polarity = timHandleTypeDef->TIM_OC_HandleTypeDef.polarity;
+		uint8_t enableInt =
+				timHandleTypeDef->TIM_OC_HandleTypeDef.enableInterrupt;
+
+		if (channel == TIM_CHANNEL_1) {
+			// CC1S[1:0]: Channel 1 configured as output (bits 1:0 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC1M[2:0]: Output compare mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_4_pos);
+
+			// OC1PE: Output compare preload enable (bit 3)
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_3_pos);
+
+			// CC1P: Output polarity (bit 1)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_1_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_1_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR1 = pulse;
+
+			// CC1E: Enable output on channel 1 (bit 0)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_0_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_1_pos);  // CC1IE
+			}
+
+		} else if (channel == TIM_CHANNEL_2) {
+
+			// CC2S[1:0]: Channel 2 configured as output (bits 9:8 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC2M[2:0]: Output compare mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_12_pos);
+
+			// OC2PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_11_pos);
+
+			// CC2P: Output polarity (bit 5)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_5_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_5_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR2 = pulse;
+
+			// CC2E: Enable output on channel 2 (bit 4)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_4_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_2_pos);  // CC2IE
+			}
+
+		} else if (channel == TIM_CHANNEL_3) {
+			// CC3S[1:0]: Channel 3 configured as output (bits 1:0 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC3M[2:0]: Output compare mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_4_pos);
+
+			// OC3PE: Output compare preload enable (bit 3)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_3_pos);
+
+			// CC3P: Output polarity (bit 9)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_9_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_9_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR3 = pulse;
+
+			// CC3E: Enable output on channel 3 (bit 8)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_8_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_3_pos);  // CC3IE
+			}
+		} else if (channel == TIM_CHANNEL_4) {
+			// CC4S[1:0]: Channel 4 configured as output (bits 9:8 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC4M[2:0]: Output compare mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_12_pos);
+
+			// OC4PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_11_pos);
+
+			// CC4P: Output polarity (bit 13)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_13_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_13_pos);
+
+			// Set compare value
+			timHandleTypeDef->TIMx->CCR4 = pulse;
+
+			// CC4E: Enable output on channel 4 (bit 12)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_12_pos);
+
+			// Enable interrupt if requested
+			if (enableInt) {
+				timHandleTypeDef->TIMx->DIER |= (HIGH << Shift_4_pos);  // CC4IE
+			}
+		}
+
+		// Enable NVIC interrupt for the timer if any channel interrupt is enabled
+		if (enableInt) {
+			if (timHandleTypeDef->TIMx == TIM2) {
+				IRQ_Config(TIM2_IRQ28, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM3) {
+				IRQ_Config(TIM3_IRQ29, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM4) {
+				IRQ_Config(TIM4_IRQ30, HIGH);
+			} else if (timHandleTypeDef->TIMx == TIM5) {
+				IRQ_Config(TIM5_IRQ50, HIGH);
+			}
+		}
+	}
+
+	if (timHandleTypeDef->timerMode == TIM_PWM_MODE) {
+		uint8_t channel = timHandleTypeDef->TIM_PWM_HandleTypeDef.channel;
+		uint8_t mode = timHandleTypeDef->TIM_PWM_HandleTypeDef.mode;
+		uint32_t pulse = timHandleTypeDef->TIM_PWM_HandleTypeDef.pulse;
+		uint8_t polarity = timHandleTypeDef->TIM_PWM_HandleTypeDef.polarity;
+
+		if (channel == TIM_CHANNEL_1) {
+			// CC1S[1:0]: Channel 1 configured as output (bits 1:0 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC1M[2:0]: PWM mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_4_pos);
+
+			// OC1PE: Output compare preload enable (bit 3) - IMPORTANT for PWM
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_3_pos);
+
+			// CC1P: Output polarity (bit 1)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_1_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_1_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR1 = pulse;
+
+			// CC1E: Enable output on channel 1 (bit 0)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_0_pos);
+
+		} else if (channel == TIM_CHANNEL_2) {
+			// CC2S[1:0]: Channel 2 configured as output (bits 9:8 = 00)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC2M[2:0]: PWM mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR1 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR1 |= (mode << Shift_12_pos);
+
+			// OC2PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR1 |= (HIGH << Shift_11_pos);
+
+			// CC2P: Output polarity (bit 5)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_5_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_5_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR2 = pulse;
+
+			// CC2E: Enable output on channel 2 (bit 4)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_4_pos);
+
+		} else if (channel == TIM_CHANNEL_3) {
+			// CC3S[1:0]: Channel 3 configured as output (bits 1:0 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_0_pos);
+
+			// OC3M[2:0]: PWM mode (bits 6:4)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_4_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_4_pos);
+
+			// OC3PE: Output compare preload enable (bit 3)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_3_pos);
+
+			// CC3P: Output polarity (bit 9)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_9_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_9_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR3 = pulse;
+
+			// CC3E: Enable output on channel 3 (bit 8)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_8_pos);
+
+		} else if (channel == TIM_CHANNEL_4) {
+			// CC4S[1:0]: Channel 4 configured as output (bits 9:8 of CCMR2 = 00)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(GPIO_BIT_11_Mask << Shift_8_pos);
+
+			// OC4M[2:0]: PWM mode (bits 14:12)
+			timHandleTypeDef->TIMx->CCMR2 &= ~(0x7 << Shift_12_pos);
+			timHandleTypeDef->TIMx->CCMR2 |= (mode << Shift_12_pos);
+
+			// OC4PE: Output compare preload enable (bit 11)
+			timHandleTypeDef->TIMx->CCMR2 |= (HIGH << Shift_11_pos);
+
+			// CC4P: Output polarity (bit 13)
+			timHandleTypeDef->TIMx->CCER &= ~(HIGH << Shift_13_pos);
+			timHandleTypeDef->TIMx->CCER |= (polarity << Shift_13_pos);
+
+			// Set duty cycle
+			timHandleTypeDef->TIMx->CCR4 = pulse;
+
+			// CC4E: Enable output on channel 4 (bit 12)
+			timHandleTypeDef->TIMx->CCER |= (HIGH << Shift_12_pos);
+		}
+	}
+
 	// Timer enable
 	timHandleTypeDef->TIMx->CR1 |= (HIGH << Shift_0_pos);
 
@@ -267,6 +486,152 @@ uint8_t TIM_IC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
 		return (timHandleTypeDef->TIMx->SR >> Shift_4_pos) & GPIO_BIT_1_Mask;
 	}
 	return 0;
+}
+
+// Update compare value dynamically
+void TIM_OC_SetCompare(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel,
+		uint32_t value) {
+	switch (channel) {
+	case TIM_CHANNEL_1:
+		timHandleTypeDef->TIMx->CCR1 = value;
+		break;
+	case TIM_CHANNEL_2:
+		timHandleTypeDef->TIMx->CCR2 = value;
+		break;
+	case TIM_CHANNEL_3:
+		timHandleTypeDef->TIMx->CCR3 = value;
+		break;
+	case TIM_CHANNEL_4:
+		timHandleTypeDef->TIMx->CCR4 = value;
+		break;
+	}
+}
+
+// Get compare flag
+uint8_t TIM_OC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
+	if (channel == TIM_CHANNEL_1) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_1_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_2) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_2_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_3) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_3_pos) & GPIO_BIT_1_Mask;
+	} else if (channel == TIM_CHANNEL_4) {
+		return (timHandleTypeDef->TIMx->SR >> Shift_4_pos) & GPIO_BIT_1_Mask;
+	}
+	return 0;
+}
+
+// Clear compare flag
+void TIM_OC_ClearFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel) {
+	if (channel == TIM_CHANNEL_1) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_1_pos);
+	} else if (channel == TIM_CHANNEL_2) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_2_pos);
+	} else if (channel == TIM_CHANNEL_3) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_3_pos);
+	} else if (channel == TIM_CHANNEL_4) {
+		timHandleTypeDef->TIMx->SR &= ~(HIGH << Shift_4_pos);
+	}
+}
+
+/*Example: ARR = 999 (1000 steps)
+ Case 1: CCR = 0 (0% Duty Cycle)
+ CNT:     0    1    2    3  ...  998   999    0    1
+ CCR:     0    0    0    0  ...    0     0    0    0
+ Compare: 0<0  1<0  2<0  3<0 ... 998<0 999<0  0<0  1<0
+ NO   NO   NO   NO  ...   NO    NO   NO   NO
+ Output:  LOW  LOW  LOW  LOW ... LOW   LOW  LOW  LOW
+
+ Result: Always LOW = 0% duty cycle
+ Case 2: CCR = 250 (25% Duty Cycle)
+ CNT:     0    1    2  ...  249   250   251 ...  999    0
+ CCR:   250  250  250 ...  250   250   250 ...  250  250
+ Compare: 0<250 1<250 ... 249<250 250<250 251<250 ... 999<250
+ YES   YES  ...   YES    NO     NO   ...   NO
+ Output:  HIGH HIGH ...  HIGH   LOW    LOW  ...  LOW
+
+ Result: HIGH for 250 ticks, LOW for 750 ticks = 25% duty
+ Case 3: CCR = 500 (50% Duty Cycle)
+ CNT:     0    1  ...  499   500   501 ...  999
+ CCR:   500  500 ...  500   500   500 ...  500
+ Compare: YES YES ... YES   NO    NO  ...  NO
+ Output:  HIGH ... HIGH  LOW   LOW ...  LOW
+
+ Result: HIGH for 500 ticks, LOW for 500 ticks = 50% duty
+ Case 4: CCR = 999 (99.9% Duty Cycle)
+ CNT:     0    1  ...  998   999    0
+ CCR:   999  999 ... 999   999  999
+ Compare: YES YES ... YES   NO   YES
+ Output:  HIGH ... HIGH  LOW  HIGH
+
+ Result: HIGH for 999 ticks, LOW for 1 tick = 99.9% duty
+ Case 5: CCR = 1000 or higher (100% Duty Cycle)
+ CNT:     0    1    2  ...  998   999    0
+ CCR:  1000 1000 1000 ... 1000  1000 1000
+ Compare: 0<1000 1<1000 ... 998<1000 999<1000
+ YES    YES    ...    YES      YES
+ Output:  HIGH  HIGH   ...   HIGH     HIGH
+
+ Result: Always HIGH = 100% duty cycle*/
+
+/*
+ Duty Cycle % = (CCR / ARR) × 100%
+ If ARR = 999 (which gives 1000 steps: 0, 1, 2, ..., 999):
+
+ Resolution
+ The ARR value determines your PWM resolution:
+ ARR = 99 → 100 steps → 1% resolution (coarse)
+ ARR = 255 → 256 steps → 0.39% resolution (8-bit, common for RGB)
+ ARR = 999 → 1000 steps → 0.1% resolution (fine)
+ ARR = 9999 → 10,000 steps → 0.01% resolution (very fine)
+ */
+
+// Set PWM duty cycle (0 to ARR)
+void TIM_PWM_SetDutyCycle(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel,
+		uint32_t duty) {
+	switch (channel) {
+	case TIM_CHANNEL_1:
+		timHandleTypeDef->TIMx->CCR1 = duty;
+		break;
+	case TIM_CHANNEL_2:
+		timHandleTypeDef->TIMx->CCR2 = duty;
+		break;
+	case TIM_CHANNEL_3:
+		timHandleTypeDef->TIMx->CCR3 = duty;
+		break;
+	case TIM_CHANNEL_4:
+		timHandleTypeDef->TIMx->CCR4 = duty;
+		break;
+	}
+}
+
+// Set PWM duty cycle as percentage (0-100%)
+void TIM_PWM_SetDutyCyclePercent(TIM_HandleTypeDef *timHandleTypeDef,
+		uint8_t channel, uint8_t percent) {
+	if (percent > 100)
+		percent = 100;
+
+	uint32_t arr = timHandleTypeDef->TIMx->ARR;
+	uint32_t duty = (arr * percent) / 100;
+
+	TIM_PWM_SetDutyCycle(timHandleTypeDef, channel, duty);
+}
+
+// Get current duty cycle
+uint32_t TIM_PWM_GetDutyCycle(TIM_HandleTypeDef *timHandleTypeDef,
+		uint8_t channel) {
+	switch (channel) {
+	case TIM_CHANNEL_1:
+		return timHandleTypeDef->TIMx->CCR1;
+	case TIM_CHANNEL_2:
+		return timHandleTypeDef->TIMx->CCR2;
+	case TIM_CHANNEL_3:
+		return timHandleTypeDef->TIMx->CCR3;
+	case TIM_CHANNEL_4:
+		return timHandleTypeDef->TIMx->CCR4;
+	default:
+		return 0;
+	}
 }
 
 void TIM_ENABLE(TIM_HandleTypeDef *timHandleTypeDef) {

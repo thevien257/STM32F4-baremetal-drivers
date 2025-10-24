@@ -47,6 +47,21 @@ typedef struct {
 		uint8_t enableInterrupt;      // Enable capture interrupt
 	} TIM_IC_HandleTypeDef;
 
+	struct {
+		uint8_t channel;              // TIM_CHANNEL_1 to TIM_CHANNEL_4
+		uint8_t mode;                 // Output compare mode
+		uint32_t pulse;               // Compare value (CCRx)
+		uint8_t polarity;             // Output polarity
+		uint8_t enableInterrupt;      // Enable compare interrupt
+	} TIM_OC_HandleTypeDef;
+
+	struct {
+		uint8_t channel;              // TIM_CHANNEL_1 to TIM_CHANNEL_4
+		uint8_t mode;                 // PWM1 or PWM2
+		uint32_t pulse;               // Duty cycle (0 to ARR)
+		uint8_t polarity;             // Output polarity
+	} TIM_PWM_HandleTypeDef;
+
 } TIM_HandleTypeDef;
 
 // Input Capture Channel Selection
@@ -76,6 +91,18 @@ typedef struct {
 #define TIM_IC_SELECTION_TI1    1  // Map to TI1
 #define TIM_IC_SELECTION_TI2  2  // Map to TI2
 #define TIM_IC_SELECTION_TRC         3  // Map to TRC
+
+#define TIM_OC_MODE_FROZEN          0  // No effect on output
+#define TIM_OC_MODE_ACTIVE          1  // Set output high on match
+#define TIM_OC_MODE_INACTIVE        2  // Set output low on match
+#define TIM_OC_MODE_TOGGLE          3  // Toggle output on match
+#define TIM_OC_MODE_FORCE_LOW       4  // Force output low
+#define TIM_OC_MODE_FORCE_HIGH      5  // Force output high
+#define TIM_OC_MODE_PWM1            6  // PWM mode 1
+#define TIM_OC_MODE_PWM2            7  // PWM mode 2
+
+#define TIM_OC_POLARITY_HIGH        0  // Active high
+#define TIM_OC_POLARITY_LOW         1  // Active low
 
 // Base address definitions
 #define TIM2_BASE           0x40000000UL
@@ -118,6 +145,17 @@ uint32_t TIM_IC_ReadCapture(TIM_HandleTypeDef *timHandleTypeDef,
 		uint8_t channel);
 void TIM_IC_ClearFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel);
 uint8_t TIM_IC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel);
+void TIM_OC_ClearFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel);
+uint8_t TIM_OC_GetFlag(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel);
+void TIM_OC_SetCompare(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel,
+		uint32_t value);
+void TIM_PWM_SetDutyCycle(TIM_HandleTypeDef *timHandleTypeDef, uint8_t channel,
+		uint32_t duty);
+void TIM_PWM_SetDutyCyclePercent(TIM_HandleTypeDef *timHandleTypeDef,
+		uint8_t channel, uint8_t percent);
+uint32_t TIM_PWM_GetDutyCycle(TIM_HandleTypeDef *timHandleTypeDef,
+		uint8_t channel);
+
 // TIM10/11/13/14 register structure
 typedef struct {
 	volatile uint32_t CR1;      // Control register 1,              Offset: 0x00

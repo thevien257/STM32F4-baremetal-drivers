@@ -1,0 +1,6 @@
+#ifndef DS1307_H_
+#define DS1307_H_
+
+#include <stm32f4xx_cus.h>
+
+#endif /* DS1307_H_ */

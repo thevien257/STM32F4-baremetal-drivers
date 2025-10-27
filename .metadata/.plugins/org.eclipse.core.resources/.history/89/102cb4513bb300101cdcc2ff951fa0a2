@@ -1,0 +1,21 @@
+#ifndef DS1307_H_
+#define DS1307_H_
+
+#include <stm32f4xx_cus.h>
+
+#define DS1307_BUS_ADDR 0x68
+#define DS1307_SEC_REG 0x0
+#define DS1307_MIN_REG 0x1
+#define DS1307_HOUR_REG 0x2
+#define DS1307_DAY_REG 0x3
+#define DS1307_DATE_REG 0x4
+#define DS1307_MONTH_REG 0x5
+#define DS1307_YEAR_REG 0x6
+#define DS1307_CONTROL_REG 0x7
+#define DS1307_RAM_REG 0x8
+
+void DS1307_INIT();
+void DS1307_SET_TIME();
+void DS1307_SET_DATE();
+
+#endif /* DS1307_H_ */

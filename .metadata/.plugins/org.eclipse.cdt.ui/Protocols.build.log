@@ -1,6 +1,6 @@
-12:14:07 **** Incremental Build of configuration Debug for project Protocols ****
+22:37:55 **** Incremental Build of configuration Debug for project Protocols ****
 make -j12 all 
-arm-none-eabi-gcc "../Src/timerPWM.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/timerPWM.d" -MT"Src/timerPWM.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/timerPWM.o"
+arm-none-eabi-gcc "../Src/DS1307Example.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Library" -I"C:/Users/ADMIN/Desktop/Protocols/Protocols/Drivers/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/DS1307Example.d" -MT"Src/DS1307Example.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/DS1307Example.o"
 arm-none-eabi-gcc -o "Protocols.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ADMIN\Desktop\Protocols\Protocols\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Protocols.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 D:/STM32CubeIDE_1.18.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: warning: Protocols.elf has a LOAD segment with RWX permissions
 Finished building target: Protocols.elf
@@ -8,11 +8,11 @@ Finished building target: Protocols.elf
 arm-none-eabi-size  Protocols.elf 
 arm-none-eabi-objdump -h -S Protocols.elf  > "Protocols.list"
    text	   data	    bss	    dec	    hex	filename
-  19884	    464	   2032	  22380	   576c	Protocols.elf
+  19864	    464	   1992	  22320	   5730	Protocols.elf
 Finished building: default.size.stdout
  
 Finished building: Protocols.list
  
 
-12:14:08 Build Finished. 0 errors, 1 warnings. (took 608ms)
+22:37:56 Build Finished. 0 errors, 1 warnings. (took 693ms)
 

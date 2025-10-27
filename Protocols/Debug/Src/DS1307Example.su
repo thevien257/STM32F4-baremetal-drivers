@@ -1,0 +1,6 @@
+../Src/DS1307Example.c:15:5:main	40	static
+../Src/DS1307Example.c:103:13:get_day_name	16	static
+../Src/DS1307Example.c:124:6:I2C_USER_INIT	8	static
+../Src/DS1307Example.c:135:6:GPIO_USER_INIT	8	static
+../Src/DS1307Example.c:158:6:TIMER_USER_INIT	8	static
+../Src/DS1307Example.c:165:6:TIM2_IRQHandler	8	static

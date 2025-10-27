@@ -1,0 +1,94 @@
+#include <ds1307.h>
+
+static uint8_t decimal_to_bcd(uint8_t decimal) {
+	uint8_t first = decimal % 10;
+	uint8_t second = decimal / 10;
+	return ((second << Shift_4_pos) | first);
+}
+
+static uint8_t bcd_to_decimal(uint8_t bcd) {
+	uint8_t first = bcd & 0xF;
+	uint8_t second = ((bcd >> Shift_4_pos) * 10);
+	return (second + first);
+}
+
+void DS1307_WRITE(I2C_Handle_TypeDef *i2c_handle, uint8_t reg_addr,
+		uint8_t data) {
+	uint8_t value[2];
+	value[0] = reg_addr;
+	value[1] = data;
+	I2C_Master_Write(i2c_handle, DS1307_BUS_ADDR, value, 2, I2C_SR_DIS);
+}
+
+void DS1307_READ(I2C_Handle_TypeDef *i2c_handle, uint8_t reg_addr,
+		uint8_t *data) {
+	I2C_Master_Write(i2c_handle, DS1307_BUS_ADDR, &reg_addr, 1, I2C_SR_DIS);
+	I2C_Master_Read(i2c_handle, DS1307_BUS_ADDR, data, 1, I2C_SR_DIS);
+}
+
+// Return 1: CH = 1 --> INIT FAILED
+// Return 0: CH = 0 --> INIT SUCCESS
+uint8_t DS1307_INIT(I2C_Handle_TypeDef *i2c_handle) {
+// Make clock halt
+	uint8_t clock_state;
+	DS1307_WRITE(i2c_handle, DS1307_SEC_REG, 0);
+	DS1307_READ(i2c_handle, 0, &clock_state);
+	return ((clock_state >> Shift_7_pos) & HIGH);
+}
+
+void DS1307_SET_TIME(I2C_Handle_TypeDef *i2c_handle, DS1307_time_t *ds1307_time) {
+	uint8_t seconds = decimal_to_bcd(ds1307_time->seconds);
+	uint8_t minutes = decimal_to_bcd(ds1307_time->minutes);
+	uint8_t hours = decimal_to_bcd(ds1307_time->hours);
+	if (ds1307_time->time_format != DS1307_TIME_FORMAT_24HRS) {
+		// 12-hour mode
+		hours |= (HIGH << Shift_6_pos); // Set bit 6 for 12-hour mode
+
+		if (ds1307_time->time_format == DS1307_TIME_FORMAT_12HRS_PM) {
+			hours |= (HIGH << Shift_5_pos); // Set bit 5 for PM
+		}
+
+	} else if (ds1307_time->time_format == DS1307_TIME_FORMAT_24HRS) {
+		// 24-hour mode
+		hours &= ~(HIGH << Shift_6_pos); // Clear bit 6 for 24-hour mode
+	}
+	DS1307_WRITE(i2c_handle, DS1307_SEC_REG, seconds);
+	DS1307_WRITE(i2c_handle, DS1307_MIN_REG, minutes);
+	DS1307_WRITE(i2c_handle, DS1307_HOUR_REG, hours);
+
+}
+
+void DS1307_GET_TIME(I2C_Handle_TypeDef *i2c_handle, DS1307_time_t *ds1307_time) {
+	uint8_t seconds, minutes, hours;
+	// Read from DS1307
+	DS1307_READ(i2c_handle, DS1307_SEC_REG, &seconds);
+	DS1307_READ(i2c_handle, DS1307_MIN_REG, &minutes);
+	DS1307_READ(i2c_handle, DS1307_HOUR_REG, &hours);
+
+	// Clear CH bit from seconds
+	seconds &= ~(1 << Shift_7_pos);
+	ds1307_time->seconds = bcd_to_decimal(seconds);
+	ds1307_time->minutes = bcd_to_dec(minutes);
+
+	uint8_t hour_mode = ((hours >> Shift_6_pos) & 0x1);
+	if (hour_mode == HIGH) {
+		uint8_t AM_PM = ((hours >> Shift_5_pos) & 0x1);
+		if (AM_PM == HIGH) {
+			ds1307_time->time_format = DS1307_TIME_FORMAT_12HRS_PM;
+		} else {
+			ds1307_time->time_format = DS1307_TIME_FORMAT_12HRS_AM;
+
+		}
+	} else {
+		// 24-hour mode
+		hours &= ~(HIGH << Shift_6_pos); // Clear bit 6 for 24-hour mode
+	}
+}
+
+void DS1307_SET_DATE(DS1307_date_t *ds1307_date) {
+
+}
+
+void DS1307_GET_DATE(DS1307_date_t *ds1307_date) {
+
+}

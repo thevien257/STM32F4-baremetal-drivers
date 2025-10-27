@@ -1,0 +1,151 @@
+#include <stdint.h>
+#include <stdio.h>
+#include <main.h>
+#include <ds1307.h>
+
+I2C_Handle_TypeDef I2C_Handle;
+GPIO_Handle_TypeDef GPIO_Handle;
+TIM_HandleTypeDef TIM_Handle;
+
+void I2C_USER_INIT(void);
+void GPIO_USER_INIT(void);
+void TIMER_USER_INIT(void);
+const char* get_day_name(uint8_t day);
+
+int main(void) {
+	GPIO_USER_INIT();
+	I2C_USER_INIT();
+	TIMER_USER_INIT();
+
+	printf("Starting DS1307 initialization...\r\n");
+
+	// Initialize DS1307
+	if (DS1307_INIT(&I2C_Handle) == 0) {
+		printf("DS1307 initialized successfully!\r\n");
+	} else {
+		printf("DS1307 initialization FAILED!\r\n");
+		while (1)
+			;
+	}
+
+	// Set time to 10:21:45 PM
+	// DS1307_time_t set_time;
+	// set_time.hours = 10;
+	// set_time.minutes = 21;
+	// set_time.seconds = 45;
+	// set_time.time_format = DS1307_TIME_FORMAT_12HRS_PM;
+
+	// Set time to 22:21:45 (24-hour format)
+	DS1307_time_t set_time;
+	set_time.hours = 22;
+	set_time.minutes = 34;
+	set_time.seconds = 45;
+	set_time.time_format = DS1307_TIME_FORMAT_24HRS;
+
+	DS1307_SET_TIME(&I2C_Handle, &set_time);
+	printf("Time set to: %02d:%02d:%02d\r\n", set_time.hours, set_time.minutes,
+			set_time.seconds);
+
+	// Set date to Monday, October 27, 2025
+	DS1307_date_t set_date;
+	set_date.day = MONDAY;
+	set_date.date = 27;
+	set_date.month = 10;
+	set_date.year = 25;  // Last 2 digits of year (2025)
+
+	DS1307_SET_DATE(&I2C_Handle, &set_date);
+	printf("Date set to: %s, %02d/%02d/20%02d\r\n", get_day_name(set_date.day),
+			set_date.date, set_date.month, set_date.year);
+
+	delay_ms(&TIM_Handle, 2000); // Wait 2 seconds
+
+	printf("\r\n--- Reading Time and Date ---\r\n");
+
+	// Read back the time and date continuously
+	while (1) {
+		DS1307_time_t current_time;
+		DS1307_date_t current_date;
+
+		DS1307_GET_TIME(&I2C_Handle, &current_time);
+		DS1307_GET_DATE(&I2C_Handle, &current_date);
+
+		// Display date
+		printf("Date: %s, %02d/%02d/20%02d | ", get_day_name(current_date.day),
+				current_date.date, current_date.month, current_date.year);
+
+		// Display time based on format
+		if (current_time.time_format == DS1307_TIME_FORMAT_12HRS_AM) {
+			printf("Time: %02d:%02d:%02d AM\r\n", current_time.hours,
+					current_time.minutes, current_time.seconds);
+		} else if (current_time.time_format == DS1307_TIME_FORMAT_12HRS_PM) {
+			printf("Time: %02d:%02d:%02d PM\r\n", current_time.hours,
+					current_time.minutes, current_time.seconds);
+		} else {
+			printf("Time: %02d:%02d:%02d (24H)\r\n", current_time.hours,
+					current_time.minutes, current_time.seconds);
+		}
+
+		delay_ms(&TIM_Handle, 1000); // Update every 1 second
+	}
+}
+
+const char* get_day_name(uint8_t day) {
+	switch (day) {
+	case SUNDAY:
+		return "Sunday";
+	case MONDAY:
+		return "Monday";
+	case TUESDAY:
+		return "Tuesday";
+	case WEDNESDAY:
+		return "Wednesday";
+	case THURSDAY:
+		return "Thursday";
+	case FRIDAY:
+		return "Friday";
+	case SATURDAY:
+		return "Saturday";
+	default:
+		return "Unknown";
+	}
+}
+
+void I2C_USER_INIT(void) {
+	I2C_Handle.I2Cx = I2C1;
+	I2C_Handle.MasterOrSlave = I2C_Master_Mode;
+	I2C_Handle.ack_en = I2C_ACK_EN;
+	I2C_Handle.address = 0x61;
+	I2C_Handle.address_select_bit = I2C_7_Bit_Adress;
+	I2C_Handle.mode = I2C_Standard_Mode;
+	I2C_Handle.scl_speed = I2C_SCL_SPEED_100;
+	I2C_INIT(&I2C_Handle);
+}
+
+void GPIO_USER_INIT(void) {
+	// PA0 - USER BUTTON
+	GPIO_Handle.GPIOX = GPIOA;
+	GPIO_Handle.mode = GPIO_MODE_INPUT;
+	GPIO_Handle.pin_number = GPIO_PIN_0;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_NONE;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PB6 - I2C1_SCL
+	GPIO_Handle.GPIOX = GPIOB;
+	GPIO_Handle.mode = GPIO_MODE_AF;
+	GPIO_Handle.output_speed = GPIO_OUTPUT_SPEED_VERY_HIGH;
+	GPIO_Handle.output_type = GPIO_OUTPUT_TYPE_OD;
+	GPIO_Handle.pin_number = GPIO_PIN_6;
+	GPIO_Handle.pull_up_pull_down = GPIO_PUPD_PU;
+	GPIO_Handle.alternate_function_select = GPIO_AF4;
+	GPIO_INIT(&GPIO_Handle);
+
+	// PB9 - I2C1_SDA
+	GPIO_Handle.pin_number = GPIO_PIN_9;
+	GPIO_INIT(&GPIO_Handle);
+}
+
+void TIMER_USER_INIT(void) {
+	TIM_Handle.TIMx = TIM2;
+	TIM_DELAY_INIT(&TIM_Handle);
+	TIM_ENABLE(&TIM_Handle);
+}
